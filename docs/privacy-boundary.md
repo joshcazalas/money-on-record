@@ -14,6 +14,13 @@ The pipeline is default-deny:
 5. Generated development fixtures retain headers and null patterns but replace
    every non-null source value with deterministic synthetic data.
 
+The source allowlist is a maximum eligibility boundary, not a page or download
+schema. Each public artifact must choose the smallest fields and rows needed for
+its claim, then pass the scanner after that selection. Exact-row Socrata links
+must include an allowlisted `$select`; a `$where` alone is not a privacy
+boundary. Official dataset or filing links leave Money on Record and must be
+labeled as such rather than proxied or cached as product data.
+
 Names involved in a public transaction may be necessary factual content, but
 direct contact and street-address fields are never public product fields. L0
 cross-domain matching is further limited to records explicitly typed as entities;
@@ -21,4 +28,9 @@ there is no person matching or inference from name shape.
 
 A scanner pass is a guardrail, not proof. Before launch, a hostile human review
 must inspect the public schema, samples, URLs, free-text fields, downloadable
-files, and error/log payloads.
+files, and error/log payloads. Scanner output, build logs, errors, analytics,
+traces, and PR comments must never repeat even a partial matched value or raw
+source row.
+
+The AI-assisted L0 review and production requirements are recorded in
+[`analysis/hostile-privacy-review.md`](analysis/hostile-privacy-review.md).

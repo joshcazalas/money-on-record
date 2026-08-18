@@ -60,6 +60,10 @@ uv run mor-l0 profile --all
 # Validate a public CSV projection with both a field allowlist and PII scanner.
 uv run mor-l0 privacy-check path/to/public.csv --source campaign-contributions
 
+# Audit allowlisted values in the private source snapshots without exporting them.
+# A nonzero result identifies fields/rows that require narrowing before publication.
+uv run mor-l0 privacy-audit --all
+
 # Produce conservative organization-only candidates for manual review.
 uv run mor-l0 candidates --limit 50
 

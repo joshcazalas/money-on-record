@@ -27,6 +27,11 @@ of scope until these gates pass.
   civic-data user; write down what was and was not useful.
 - [x] Every displayed aggregate in the mock profile links to the exact source
   rows used to calculate it.
+- [x] Complete an AI-assisted hostile review of the prototype, schemas, exact
+  projections, URLs, candidate names, and scanner/log behavior; remediate the
+  identified implementation risks.
+- [ ] Record Josh's human sign-off on the hostile-review findings and carry the
+  documented production controls into product/deployment work.
 - [ ] Resolve or document every City data-owner question in
   [`city-questions.md`](city-questions.md).
 

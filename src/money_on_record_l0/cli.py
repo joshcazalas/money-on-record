@@ -9,6 +9,7 @@ from .acquire import (
     AcquisitionError,
     acquire_csv,
     freeze_metadata,
+    latest_artifact,
     project_root,
     verify_artifacts,
 )
@@ -17,7 +18,7 @@ from .candidates import CandidateError, generate_candidates
 from .contracts import ContractError, Inventory, load_inventory
 from .dictionary import write_field_dictionary
 from .fixtures import create_redacted_fixture
-from .privacy import PublicSchemaError, scan_public_csv
+from .privacy import PublicSchemaError, scan_public_csv, scan_source_csv
 from .profile import profile_csv, summarize_profiles
 from .review import (
     REVIEW_PROVENANCES,
@@ -90,6 +91,13 @@ def build_parser() -> argparse.ArgumentParser:
     privacy.add_argument("path", type=Path)
     privacy.add_argument("--source", required=True)
     privacy.add_argument("--maximum-findings", type=int, default=25)
+
+    privacy_audit = subparsers.add_parser(
+        "privacy-audit",
+        help="scan allowlisted values in acquired private source artifacts without exporting them",
+    )
+    _add_selection(privacy_audit)
+    privacy_audit.add_argument("--maximum-findings", type=int, default=25)
 
     candidates = subparsers.add_parser(
         "candidates", help="produce conservative organization candidates for manual review"
@@ -182,6 +190,33 @@ def run(args: argparse.Namespace) -> int:
             return 1
         print(f"PASS: {args.path} is allowlisted and had no scanner findings")
         return 0
+
+    if args.command == "privacy-audit":
+        total_findings = 0
+        for slug in _selected(args, inventory):
+            source = inventory.require(slug)
+            artifact = latest_artifact(source, "acquire-csv", args.root)
+            findings = scan_source_csv(
+                artifact,
+                source,
+                root=args.root,
+                maximum_findings=args.maximum_findings,
+            )
+            if not findings:
+                print(f"PASS: {slug} allowlisted values had no scanner findings")
+                continue
+            total_findings += len(findings)
+            print(
+                f"REVIEW: {slug} has {len(findings)} potential PII finding(s)",
+                file=sys.stderr,
+            )
+            for finding in findings:
+                print(
+                    f"row={finding.row_number} field={finding.field} "
+                    f"kind={finding.kind} preview={finding.preview}",
+                    file=sys.stderr,
+                )
+        return 1 if total_findings else 0
 
     if args.command == "candidates":
         output = generate_candidates(inventory, limit=args.limit, root=args.root)

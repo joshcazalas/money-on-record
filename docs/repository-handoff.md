@@ -21,6 +21,7 @@ uv run mor-l0 candidates --limit 50
 uv run mor-l0 review-init
 uv run mor-l0 review-validate
 uv run mor-l0 identity-audit
+uv run mor-l0 privacy-audit --all
 ```
 
 The six raw snapshots are already present on this machine. Re-running `acquire`
@@ -36,14 +37,17 @@ refuses to overwrite an existing worksheet.
 2. Correct any disputed worksheet rows, rerun validation and
    `mor-l0 review-summary --provenance AI_ASSISTED`, then decide whether the
    human-audit gate can be accepted.
-3. Run the five-task static-profile test with a reporter or civic-data user and
+3. Review and sign off on `analysis/hostile-privacy-review.md`; the AI-assisted
+   review and implementation remediations are complete, but the human gate is
+   deliberately still open.
+4. Run the five-task static-profile test with a reporter or civic-data user and
    record results in `mock-profile-test.md`.
-4. Send the documented questions to the relevant City data owners, especially
+5. Send the documented questions to the relevant City data owners, especially
    the malformed board-award years, `MIS` code semantics, report/transaction key
    behavior, and contract history.
-5. Revise the profile and match policy from that evidence, then make the formal
+6. Revise the profile and match policy from that evidence, then make the formal
    L0 pass/pivot decision.
-6. Only after the gate passes, scaffold product and deployment code.
+7. Only after the gate passes, scaffold product and deployment code.
 
 ## Hosting direction after L0
 

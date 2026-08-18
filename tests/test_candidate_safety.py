@@ -1,7 +1,10 @@
 import csv
 import json
+from urllib.parse import parse_qs, urlparse
 
-from money_on_record_l0.candidates import _load_campaign_entities, _source_rows_url
+import pytest
+
+from money_on_record_l0.candidates import CandidateError, _load_campaign_entities, _source_rows_url
 from money_on_record_l0.contracts import load_inventory
 
 
@@ -49,6 +52,9 @@ def test_campaign_loader_admits_only_explicit_entity_rows(tmp_path) -> None:
         writer.writerow(
             {"Donor": "Example Person", "Donor_Type": "INDIVIDUAL", "Contribution_Amount": "20"}
         )
+        writer.writerow(
+            {"Donor": "123 Main Street", "Donor_Type": "ENTITY", "Contribution_Amount": "30"}
+        )
     _write_manifest(
         tmp_path,
         source=source,
@@ -71,3 +77,12 @@ def test_source_url_escapes_soql_names() -> None:
 
     assert "O%27%27Brien%20%26%20Co" in url
     assert url.startswith("https://data.austintexas.gov/resource/3kfv-biw6.json?")
+    query = parse_qs(urlparse(url).query)
+    assert query["$select"] == [",".join(source.public_fields)]
+
+
+def test_source_url_rejects_private_filter_fields() -> None:
+    source = load_inventory().require("campaign-contributions")
+
+    with pytest.raises(CandidateError, match="is not public"):
+        _source_rows_url(source, {"donor_address": ["123 Main Street"]})

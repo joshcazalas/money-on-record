@@ -180,12 +180,21 @@ def test_completed_review_writes_only_safe_aggregate_data(tmp_path: Path) -> Non
     )
     _write_review(review, fieldnames, review_rows)
 
-    assert write_review_summary(review, candidates, summary) == summary
+    assert (
+        write_review_summary(
+            review,
+            candidates,
+            summary,
+            provenance="AI_ASSISTED",
+        )
+        == summary
+    )
     validate_review_summary(summary)
     report = json.loads(summary.read_text(encoding="utf-8"))
     serialized = json.dumps(report)
 
     assert report["complete"] is True
+    assert report["review_provenance"] == "AI_ASSISTED"
     assert report["totals"] == {"candidates": 2, "reviewed": 2, "unreviewed": 0}
     assert report["decisions"] == {"NO": 1, "UNCERTAIN": 0, "YES": 1}
     assert report["evidence_tiers"]["A_STRICT"]["reviewed"] == 1
@@ -207,6 +216,7 @@ def test_versioned_summary_contract_rejects_extra_candidate_data(tmp_path: Path)
         json.dumps(
             {
                 "review_summary_version": 1,
+                "review_provenance": "AI_ASSISTED",
                 "candidate_set_sha256": "a" * 64,
                 "complete": True,
                 "totals": {"candidates": 1, "reviewed": 1, "unreviewed": 0},

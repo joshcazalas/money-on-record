@@ -23,6 +23,7 @@ class ReviewError(RuntimeError):
 
 
 REVIEW_SCHEMA_VERSION = 1
+REVIEW_PROVENANCES = ("HUMAN", "AI_ASSISTED")
 REVIEW_FIELDNAMES = (
     "candidate_fingerprint",
     "review_status",
@@ -197,11 +198,21 @@ def validate_review(
     )
 
 
-def write_review_summary(review: Path, candidates: Path, output: Path) -> Path:
+def write_review_summary(
+    review: Path,
+    candidates: Path,
+    output: Path,
+    *,
+    provenance: str,
+) -> Path:
+    if provenance not in REVIEW_PROVENANCES:
+        allowed = ", ".join(REVIEW_PROVENANCES)
+        raise ReviewError(f"review provenance must be one of: {allowed}")
     validation = validate_review(review, candidates=candidates, require_complete=True)
+    report = {**validation.report, "review_provenance": provenance}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
-        json.dumps(validation.report, indent=2, sort_keys=True) + "\n",
+        json.dumps(report, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     return output
@@ -218,6 +229,7 @@ def validate_review_summary(path: Path) -> None:
         payload,
         {
             "review_summary_version",
+            "review_provenance",
             "candidate_set_sha256",
             "complete",
             "totals",
@@ -231,6 +243,8 @@ def validate_review_summary(path: Path) -> None:
     )
     if payload["review_summary_version"] != REVIEW_SCHEMA_VERSION:
         raise ReviewError(f"{path}: unsupported review_summary_version")
+    if payload["review_provenance"] not in REVIEW_PROVENANCES:
+        raise ReviewError(f"{path}: review_provenance is not recognized")
     digest = payload["candidate_set_sha256"]
     if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
         raise ReviewError(f"{path}: candidate_set_sha256 must be lowercase SHA-256")

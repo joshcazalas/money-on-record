@@ -9,4 +9,4 @@ def test_checked_in_data_contract_is_self_consistent() -> None:
     assert summary.metadata_artifacts == 6
     assert summary.profiles == 6
     assert summary.fixtures == 6
-    assert summary.review_summaries == 0
+    assert summary.review_summaries == 1

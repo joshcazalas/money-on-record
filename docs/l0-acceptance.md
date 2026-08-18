@@ -20,9 +20,9 @@ of scope until these gates pass.
 - [x] Acquire and exactly profile every complete v1 source snapshot.
 - [x] Generate value-free fixtures from every source and commit only fixtures
   that pass the privacy check.
-- [ ] Manually inspect 25–50 cross-domain organization candidates, preserving
-  the evidence and rejection reason for each; validate the worksheet and commit
-  only its aggregate summary.
+- [ ] Human-audit the completed AI-assisted review of 41 cross-domain
+  organization candidates, focusing on all Tier B rows and a strict-tier sample;
+  preserve evidence and reasons locally and commit only the aggregate summary.
 - [ ] Test one static organization profile with at least one reporter or
   civic-data user; write down what was and was not useful.
 - [x] Every displayed aggregate in the mock profile links to the exact source

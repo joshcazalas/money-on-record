@@ -2,10 +2,12 @@
 
 ## Status
 
-The candidate worksheet has a complete AI-assisted first-pass adjudication. This
-does not satisfy the remaining human-audit gate by itself. Josh should audit all
-13 Tier B rows and the suggested strict-tier sample in the ignored local file
-`data/derived/l0-ai-review-audit.md` before accepting the result as final.
+The candidate worksheet has a complete AI-assisted first-pass adjudication. It
+is sufficient to support implementation of a beta whose cross-domain identities
+remain visibly `unverified`; it is not a human verification result. Before any
+identity displayed in the beta is labeled verified, audit all displayed Tier B
+rows and the suggested strict-tier sample in the ignored local file
+`data/derived/l0-ai-review-audit.md`.
 
 ## Method
 
@@ -48,5 +50,6 @@ general entity resolver.
 
 The concentrated audit risk is Tier B, especially legal-form differences,
 association abbreviations, and identities repeated across City sources. Human
-audit remains required before the L0 identity-review gate can be checked off or
-the result used as the basis for a product-level verified-match claim.
+audit remains required before the result can support a product-level
+verified-match claim. It does not block building or deploying a beta that
+preserves the unverified status and explanation.

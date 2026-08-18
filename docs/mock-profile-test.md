@@ -6,7 +6,15 @@ The page intentionally uses an unverified strict-name candidate and labels that 
 top, beside the identity explanation, and in the footer. It is a local research artifact, not a
 publication decision.
 
-## Participant gate
+## Deployed-beta participant gate
+
+Status: **DEFERRED UNTIL A NAVIGABLE BETA IS DEPLOYED**
+
+This test does not block implementation or the first AWS deployment. A relevant
+participant should receive a stable browser URL with representative data—not a
+GitHub repository, local HTML file, setup instructions, or hypothetical product
+description. Until then, preserve the script and do not claim external
+validation.
 
 - [ ] One reporter, campaign-finance researcher, or civic-data user has completed the test.
 - [ ] Participant role and test date are recorded without unnecessary personal details.
@@ -32,7 +40,7 @@ Ask the participant to think aloud and avoid explaining the interface first.
 
 ## Results
 
-Status: **NOT YET TESTED**
+Status: **NOT YET TESTED — TRACKED IN ISSUE #14**
 
 Source-link verification on August 18, 2026: the official APIs returned 53 rows
 and `$240,133.82` for the campaign filter, and 208 rows and `$106,072.10` for the
@@ -40,5 +48,6 @@ eCheckbook filter. These match the frozen-snapshot calculations displayed in the
 prototype. The links now request only allowlisted fields, and a local scan of
 both exact frozen projections produced zero PII-pattern findings.
 
-Record observations, confusion, requested context, and resulting changes here. Do not mark the L0
-usability gate complete until an eligible external participant has actually performed the tasks.
+Record observations, confusion, requested context, and resulting changes here.
+Do not describe the beta as externally validated until an eligible participant
+has actually performed the tasks.

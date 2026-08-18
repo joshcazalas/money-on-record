@@ -10,8 +10,11 @@ Regenerate from the frozen local artifacts:
 ```bash
 uv run mor-l0 profile --all
 uv run mor-l0 candidates --limit 50
+uv run mor-l0 review-init
+uv run mor-l0 review-validate
 uv run mor-l0 identity-audit
 ```
 
-Raw CSVs, metadata responses, network manifests, candidate names, and the full
-identity-audit JSON remain under ignored `data/` storage.
+Raw CSVs, candidate names, human evidence, reviewer details, and the full
+identity-audit JSON remain under ignored `data/` storage. Completed candidate
+reviews can produce a versionable aggregate with `mor-l0 review-summary`.

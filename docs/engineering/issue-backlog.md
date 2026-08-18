@@ -9,6 +9,7 @@ GitHub Issues is the source of truth for deferred work:
 - [#5 — Automate dependency and toolchain update PRs](https://github.com/joshcazalas/money-on-record/issues/5)
 - [#6 — Define the long-term dependency vulnerability severity policy](https://github.com/joshcazalas/money-on-record/issues/6)
 - [#7 — Configure moneyonrecord.org DNS, TLS, and environment hostnames](https://github.com/joshcazalas/money-on-record/issues/7)
+- [#9 — Complete L0 evidence review and pass/pivot decision](https://github.com/joshcazalas/money-on-record/issues/9)
 
 Repository governance was configured during bootstrap. The active `Protect main`
 ruleset requires pull requests, one code-owner approval, resolved review threads,

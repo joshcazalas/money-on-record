@@ -19,6 +19,7 @@ from .dictionary import write_field_dictionary
 from .fixtures import create_redacted_fixture
 from .privacy import PublicSchemaError, scan_public_csv
 from .profile import profile_csv, summarize_profiles
+from .review import ReviewError, initialize_review, validate_review, write_review_summary
 from .versioned import VersionedDataError, validate_versioned_data
 
 
@@ -59,7 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers.add_parser(
         "validate-versioned",
-        help="validate checked-in manifests, metadata, profiles, and redacted fixtures",
+        help="validate checked-in manifests, profiles, fixtures, and review summaries",
     )
     freeze = subparsers.add_parser("freeze-metadata", help="save immutable Socrata metadata")
     _add_selection(freeze)
@@ -88,6 +89,27 @@ def build_parser() -> argparse.ArgumentParser:
         "candidates", help="produce conservative organization candidates for manual review"
     )
     candidates.add_argument("--limit", type=int, default=50)
+    review_init = subparsers.add_parser(
+        "review-init", help="create a protected, reviewer-editable candidate worksheet"
+    )
+    review_init.add_argument("--candidates", type=Path)
+    review_init.add_argument("--output", type=Path)
+    review_validate = subparsers.add_parser(
+        "review-validate", help="validate review decisions, evidence, and candidate integrity"
+    )
+    review_validate.add_argument("--review", type=Path)
+    review_validate.add_argument("--candidates", type=Path)
+    review_validate.add_argument(
+        "--require-complete",
+        action="store_true",
+        help="fail unless every candidate has a complete review",
+    )
+    review_summary = subparsers.add_parser(
+        "review-summary", help="write a versionable aggregate from a completed review"
+    )
+    review_summary.add_argument("--review", type=Path)
+    review_summary.add_argument("--candidates", type=Path)
+    review_summary.add_argument("--output", type=Path)
     subparsers.add_parser(
         "identity-audit", help="write deterministic organization-density and placeholder-code audit"
     )
@@ -97,6 +119,11 @@ def build_parser() -> argparse.ArgumentParser:
 def _count_csv_rows(path: Path) -> int:
     with path.open(encoding="utf-8", newline="") as handle:
         return max(sum(1 for _line in csv.reader(handle)) - 1, 0)
+
+
+def _project_path(root: Path, value: Path | None, default: str) -> Path:
+    path = value or Path(default)
+    return path if path.is_absolute() else root / path
 
 
 def run(args: argparse.Namespace) -> int:
@@ -120,7 +147,8 @@ def run(args: argparse.Namespace) -> int:
             "PASS: versioned data is internally consistent "
             f"({summary.manifests} manifests, "
             f"{summary.metadata_artifacts} metadata artifacts, "
-            f"{summary.profiles} profiles, {summary.fixtures} redacted fixtures)"
+            f"{summary.profiles} profiles, {summary.fixtures} redacted fixtures, "
+            f"{summary.review_summaries} review summaries)"
         )
         return 0
 
@@ -146,6 +174,57 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "candidates":
         output = generate_candidates(inventory, limit=args.limit, root=args.root)
         print(f"{output} ({_count_csv_rows(output)} candidates, all require manual review)")
+        return 0
+
+    if args.command == "review-init":
+        candidates_path = _project_path(
+            args.root, args.candidates, "data/derived/l0-organization-candidates.csv"
+        )
+        output = _project_path(
+            args.root,
+            args.output,
+            "data/derived/l0-organization-candidate-review.csv",
+        )
+        initialize_review(candidates_path, output)
+        print(f"{output} ({_count_csv_rows(output)} candidates awaiting human review)")
+        return 0
+
+    if args.command == "review-validate":
+        review_path = _project_path(
+            args.root,
+            args.review,
+            "data/derived/l0-organization-candidate-review.csv",
+        )
+        candidates_path = _project_path(
+            args.root, args.candidates, "data/derived/l0-organization-candidates.csv"
+        )
+        validation = validate_review(
+            review_path,
+            candidates=candidates_path,
+            require_complete=args.require_complete,
+        )
+        print(
+            f"PASS: {validation.reviewed}/{validation.total} candidates reviewed; "
+            f"{validation.unreviewed} remain"
+        )
+        return 0
+
+    if args.command == "review-summary":
+        review_path = _project_path(
+            args.root,
+            args.review,
+            "data/derived/l0-organization-candidate-review.csv",
+        )
+        candidates_path = _project_path(
+            args.root, args.candidates, "data/derived/l0-organization-candidates.csv"
+        )
+        output = _project_path(
+            args.root,
+            args.output,
+            "reports/reviews/l0-organization-candidate-review-summary.json",
+        )
+        write_review_summary(review_path, candidates_path, output)
+        print(f"{output} (aggregate only; safe to review before committing)")
         return 0
 
     if args.command == "identity-audit":
@@ -190,6 +269,7 @@ def main() -> None:
         CandidateError,
         ContractError,
         PublicSchemaError,
+        ReviewError,
         VersionedDataError,
         ValueError,
     ) as exc:

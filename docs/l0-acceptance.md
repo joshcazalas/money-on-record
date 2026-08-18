@@ -21,7 +21,8 @@ of scope until these gates pass.
 - [x] Generate value-free fixtures from every source and commit only fixtures
   that pass the privacy check.
 - [ ] Manually inspect 25–50 cross-domain organization candidates, preserving
-  the evidence and rejection reason for each.
+  the evidence and rejection reason for each; validate the worksheet and commit
+  only its aggregate summary.
 - [ ] Test one static organization profile with at least one reporter or
   civic-data user; write down what was and was not useful.
 - [x] Every displayed aggregate in the mock profile links to the exact source

@@ -1,52 +1,49 @@
 # Repository handoff
 
-The project now lives in the cloned Git repository at
-`/home/joshcaz/develop/money-on-record`, with
-`git@github.com:joshcazalas/money-on-record.git` configured as `origin`. No
-Cloudflare or AWS resources were created during L0 staging.
+The project lives at `/home/joshcaz/develop/money-on-record` and on GitHub at
+[`joshcazalas/money-on-record`](https://github.com/joshcazalas/money-on-record).
+The protected `main` branch, required CI checks, release-impact labels, and
+merge-only repository settings are configured. No Cloudflare or AWS resources
+have been created.
 
-The remote is empty and `main` has no commits yet. Review the initial staged set
-before creating and pushing the first commit:
-
-```bash
-cd /home/joshcaz/develop/money-on-record
-git add .
-git status --short
-```
-
-`data/raw/`, `data/derived/`, old local profile runs, the virtual environment,
-and staging files are ignored.
-Frozen metadata, acquisition manifests, field dictionaries, aggregate profiles,
-synthetic fixtures, source code, tests, and the static prototype are intended to
-be versioned.
+`data/raw/`, `data/derived/`, local profile runs, the uv environment, and staging
+files are ignored. Frozen metadata, acquisition manifests, field dictionaries,
+aggregate profiles, synthetic fixtures, source code, tests, and the static
+prototype are versioned.
 
 ## Rebuild or continue locally
 
 ```bash
-uv sync --extra dev
+uv sync --locked
 uv run pytest
 uv run mor-l0 inventory
 uv run mor-l0 candidates --limit 50
+uv run mor-l0 review-init
+uv run mor-l0 review-validate
 uv run mor-l0 identity-audit
 ```
 
 The six raw snapshots are already present on this machine. Re-running `acquire`
 makes a fresh network observation and content-addresses it; an unchanged response
-reuses the existing hash rather than duplicating the artifact.
+reuses the existing hash rather than duplicating the artifact. `review-init`
+refuses to overwrite an existing worksheet.
 
 ## Next work, in order
 
-1. Adjudicate 25–50 rows in
-   `data/derived/l0-organization-candidates.csv`, keeping rejections and uncertain
-   cases as resolver regression examples.
-2. Run the five-task static-profile test with a reporter or civic-data user and
-   record results in `docs/mock-profile-test.md`.
-3. Send the documented questions to the relevant City data owners, especially
+1. Adjudicate all 41 rows in
+   `data/derived/l0-organization-candidate-review.csv` using
+   [`manual-candidate-review.md`](manual-candidate-review.md). Keep that
+   candidate-level file local.
+2. Validate the completed review and commit only the safe aggregate from
+   `mor-l0 review-summary`.
+3. Run the five-task static-profile test with a reporter or civic-data user and
+   record results in `mock-profile-test.md`.
+4. Send the documented questions to the relevant City data owners, especially
    the malformed board-award years, `MIS` code semantics, report/transaction key
-   behavior, and contracts history.
-4. Revise the profile and match policy from that evidence, then make the formal
+   behavior, and contract history.
+5. Revise the profile and match policy from that evidence, then make the formal
    L0 pass/pivot decision.
-5. Only after the gate passes, scaffold product and deployment code.
+6. Only after the gate passes, scaffold product and deployment code.
 
 ## Hosting direction after L0
 

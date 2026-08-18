@@ -62,6 +62,10 @@ uv run mor-l0 privacy-check path/to/public.csv --source campaign-contributions
 
 # Produce conservative organization-only candidates for manual review.
 uv run mor-l0 candidates --limit 50
+
+# Create and validate the ignored human-review worksheet.
+uv run mor-l0 review-init
+uv run mor-l0 review-validate
 ```
 
 Raw responses are stored under `data/raw/<dataset-id>/<sha256>.csv`. Metadata is
@@ -72,6 +76,8 @@ specific analytical release needs to be reconstructed.
 
 Aggregate-only profile reports are safe to version and are written to
 `reports/profiles/`; they cite the ignored raw artifact by content hash.
+After all candidates are adjudicated, `mor-l0 review-summary` emits a safe,
+aggregate-only review report under `reports/reviews/`.
 
 L0 deliberately does **not** do fuzzy person matching, infer household
 relationships, or trust `MIS...` vendor codes as stable identities. See
@@ -81,6 +87,8 @@ development starts.
 Current results and the repo-ready handoff are in
 [`docs/work-log.md`](docs/work-log.md) and
 [`docs/repository-handoff.md`](docs/repository-handoff.md).
+The complete human adjudication procedure is in
+[`docs/manual-candidate-review.md`](docs/manual-candidate-review.md).
 
 The development toolchain and proposed AWS/release lifecycle are documented in
 [`docs/engineering/toolchain.md`](docs/engineering/toolchain.md) and

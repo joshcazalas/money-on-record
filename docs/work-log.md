@@ -17,6 +17,9 @@
 - Measured and excluded all `MIS...` vendor-code records from identity evidence.
 - Generated a 41-row, source-linked review set from only contribution rows typed
   `ENTITY`.
+- Added a fingerprinted local review worksheet, controlled decisions and
+  reasons, candidate-drift detection, and a privacy-safe aggregate report
+  contract.
 - Built a local, unverified static profile and verified its counts and totals
   against the official source filters.
 - Added executable tests, linting, L0 gates, City questions, manual-review rules,

@@ -8,6 +8,7 @@ from typing import Any
 
 from .contracts import Inventory
 from .privacy import scan_public_csv
+from .review import ReviewError, validate_review_summary
 
 
 class VersionedDataError(ValueError):
@@ -20,6 +21,7 @@ class VersionedDataSummary:
     metadata_artifacts: int
     profiles: int
     fixtures: int
+    review_summaries: int
 
 
 def _object_from_json(path: Path) -> dict[str, Any]:
@@ -160,9 +162,17 @@ def validate_versioned_data(
             )
         fixture_count += 1
 
+    review_summary_paths = sorted((root / "reports" / "reviews").glob("*.json"))
+    for review_summary_path in review_summary_paths:
+        try:
+            validate_review_summary(review_summary_path)
+        except ReviewError as exc:
+            raise VersionedDataError(str(exc)) from exc
+
     return VersionedDataSummary(
         manifests=len(manifest_paths),
         metadata_artifacts=metadata_count,
         profiles=len(profile_paths),
         fixtures=fixture_count,
+        review_summaries=len(review_summary_paths),
     )

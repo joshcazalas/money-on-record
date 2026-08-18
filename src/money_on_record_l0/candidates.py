@@ -19,6 +19,40 @@ class CandidateError(RuntimeError):
     """The conservative candidate experiment cannot be run safely."""
 
 
+CANDIDATE_IMMUTABLE_FIELDNAMES = (
+    "candidate_id",
+    "evidence_tier",
+    "campaign_name",
+    "campaign_names_aggregated",
+    "public_record_name",
+    "public_record_names_aggregated",
+    "public_record_source",
+    "public_record_code",
+    "strict_campaign_key",
+    "strict_public_key",
+    "suffix_candidate_key",
+    "campaign_rows",
+    "public_record_rows",
+    "campaign_amount_field",
+    "campaign_amount",
+    "public_record_amount_field",
+    "public_record_amount",
+    "campaign_artifact_sha256",
+    "public_record_artifact_sha256",
+    "campaign_source_rows_url",
+    "public_record_source_rows_url",
+    "campaign_keys_for_suffix",
+    "public_keys_for_suffix",
+)
+CANDIDATE_REVIEW_FIELDNAMES = (
+    "review_status",
+    "same_organization",
+    "external_evidence_url",
+    "review_notes",
+)
+CANDIDATE_FIELDNAMES = CANDIDATE_IMMUTABLE_FIELDNAMES + CANDIDATE_REVIEW_FIELDNAMES
+
+
 @dataclass
 class EntityAggregate:
     names: Counter[str] = field(default_factory=Counter)
@@ -261,22 +295,12 @@ def generate_candidates(
     output_dir = root / "data" / "derived"
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / "l0-organization-candidates.csv"
-    fieldnames = (
-        list(rows[0])
-        if rows
-        else [
-            "candidate_id",
-            "evidence_tier",
-            "campaign_name",
-            "public_record_name",
-            "review_status",
-            "same_organization",
-            "external_evidence_url",
-            "review_notes",
-        ]
-    )
     with output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=CANDIDATE_FIELDNAMES,
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(selected)
     return output

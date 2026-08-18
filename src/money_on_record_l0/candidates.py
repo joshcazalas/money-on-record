@@ -12,6 +12,7 @@ from urllib.parse import quote, urlencode
 from .acquire import latest_artifact, project_root
 from .contracts import Inventory, SourceContract
 from .normalize import has_invalid_code_prefix, strict_name_key, suffix_candidate_key
+from .privacy import contains_pii
 from .source_schema import resolved_source_header
 
 
@@ -115,6 +116,8 @@ def _load_campaign_entities(
             if type_value not in allowed_types:
                 continue
             name = row[header[source.organization_name_field]].strip()
+            if contains_pii(name):
+                continue
             key = strict_name_key(name)
             if not key:
                 continue
@@ -164,7 +167,11 @@ def _load_public_entities(
                 if source.organization_code_field
                 else ""
             )
-            if not name or has_invalid_code_prefix(code, source.invalid_code_prefixes):
+            if (
+                not name
+                or contains_pii(name)
+                or has_invalid_code_prefix(code, source.invalid_code_prefixes)
+            ):
                 continue
             strict_key = strict_name_key(name)
             if not strict_key:
@@ -314,6 +321,10 @@ def _source_rows_url(
     for field_name, raw_values in field_values.items():
         if not field_name:
             continue
+        if field_name not in source.public_fields:
+            raise CandidateError(
+                f"{source.slug}: source-row filter field {field_name!r} is not public"
+            )
         values = sorted({str(value) for value in raw_values})
         literals = [_soql_literal(value) for value in values]
         if len(literals) == 1:
@@ -321,7 +332,11 @@ def _source_rows_url(
         elif literals:
             clauses.append(f"{field_name} in ({', '.join(literals)})")
     query = urlencode(
-        {"$where": " AND ".join(clauses), "$limit": "50000"},
+        {
+            "$select": ",".join(source.public_fields),
+            "$where": " AND ".join(clauses),
+            "$limit": "50000",
+        },
         quote_via=quote,
     )
     return f"https://data.austintexas.gov/resource/{source.dataset_id}.json?{query}"

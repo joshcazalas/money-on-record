@@ -37,7 +37,8 @@ Status: **NOT YET TESTED**
 Source-link verification on August 18, 2026: the official APIs returned 53 rows
 and `$240,133.82` for the campaign filter, and 208 rows and `$106,072.10` for the
 eCheckbook filter. These match the frozen-snapshot calculations displayed in the
-prototype.
+prototype. The links now request only allowlisted fields, and a local scan of
+both exact frozen projections produced zero PII-pattern findings.
 
 Record observations, confusion, requested context, and resulting changes here. Do not mark the L0
 usability gate complete until an eligible external participant has actually performed the tasks.

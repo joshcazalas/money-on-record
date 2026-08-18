@@ -25,6 +25,10 @@
   AI provenance; focused human audit remains pending.
 - Built a local, unverified static profile and verified its counts and totals
   against the official source filters.
+- Completed an AI-assisted hostile privacy review, scanned the exact 53-row and
+  208-row prototype projections with zero findings, constrained exact-row links
+  to allowlisted fields, and hardened candidate admission, scanner output, CSV
+  parsing, and local prototype browser behavior.
 - Added executable tests, linting, L0 gates, City questions, manual-review rules,
   and an external usability-test script.
 
@@ -34,7 +38,8 @@
   of all Tier B rows and a strict-tier sample is pending.
 - External profile test: not yet performed.
 - City data-owner questions: not yet sent or answered.
-- Hostile human review of the proposed public schema: not yet performed.
+- Hostile privacy review: AI-assisted review and remediations completed; Josh's
+  human sign-off on the findings and production requirements is pending.
 - Formal L0 pass/pivot decision: pending the above evidence.
 
 ## Important findings

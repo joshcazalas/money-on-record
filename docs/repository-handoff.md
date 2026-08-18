@@ -30,12 +30,12 @@ refuses to overwrite an existing worksheet.
 
 ## Next work, in order
 
-1. Adjudicate all 41 rows in
-   `data/derived/l0-organization-candidate-review.csv` using
-   [`manual-candidate-review.md`](manual-candidate-review.md). Keep that
-   candidate-level file local.
-2. Validate the completed review and commit only the safe aggregate from
-   `mor-l0 review-summary`.
+1. Audit the completed AI-assisted review using the ignored local
+   `data/derived/l0-ai-review-audit.md`: inspect every Tier B identity and the
+   proposed strict-tier sample.
+2. Correct any disputed worksheet rows, rerun validation and
+   `mor-l0 review-summary --provenance AI_ASSISTED`, then decide whether the
+   human-audit gate can be accepted.
 3. Run the five-task static-profile test with a reporter or civic-data user and
    record results in `mock-profile-test.md`.
 4. Send the documented questions to the relevant City data owners, especially

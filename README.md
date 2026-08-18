@@ -87,6 +87,8 @@ development starts.
 Current results and the repo-ready handoff are in
 [`docs/work-log.md`](docs/work-log.md) and
 [`docs/repository-handoff.md`](docs/repository-handoff.md).
+The AI-assisted candidate-review aggregate and its limitations are documented in
+[`docs/l0-candidate-review-findings.md`](docs/l0-candidate-review-findings.md).
 The complete human adjudication procedure is in
 [`docs/manual-candidate-review.md`](docs/manual-candidate-review.md).
 

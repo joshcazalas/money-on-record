@@ -68,10 +68,11 @@ uv run mor-l0 review-validate
 
 ```bash
 uv run mor-l0 review-validate --require-complete
-uv run mor-l0 review-summary
+uv run mor-l0 review-summary --provenance HUMAN
 ```
 
 `review-summary` refuses incomplete or drifted reviews. It writes only totals,
 decision/reason counts, tier/source breakdowns, timestamps, and a candidate-set
 hash. It excludes organization names, codes, candidate IDs, evidence URLs,
-notes, and reviewer names. Inspect the JSON before committing it.
+notes, and reviewer names. Use `--provenance AI_ASSISTED` when an AI performed
+or materially supplied the adjudication. Inspect the JSON before committing it.

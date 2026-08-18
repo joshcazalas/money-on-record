@@ -18,3 +18,5 @@ uv run mor-l0 identity-audit
 Raw CSVs, candidate names, human evidence, reviewer details, and the full
 identity-audit JSON remain under ignored `data/` storage. Completed candidate
 reviews can produce a versionable aggregate with `mor-l0 review-summary`.
+Versioned review summaries explicitly declare `HUMAN` or `AI_ASSISTED`
+provenance.

@@ -19,7 +19,13 @@ from .dictionary import write_field_dictionary
 from .fixtures import create_redacted_fixture
 from .privacy import PublicSchemaError, scan_public_csv
 from .profile import profile_csv, summarize_profiles
-from .review import ReviewError, initialize_review, validate_review, write_review_summary
+from .review import (
+    REVIEW_PROVENANCES,
+    ReviewError,
+    initialize_review,
+    validate_review,
+    write_review_summary,
+)
 from .versioned import VersionedDataError, validate_versioned_data
 
 
@@ -110,6 +116,12 @@ def build_parser() -> argparse.ArgumentParser:
     review_summary.add_argument("--review", type=Path)
     review_summary.add_argument("--candidates", type=Path)
     review_summary.add_argument("--output", type=Path)
+    review_summary.add_argument(
+        "--provenance",
+        choices=REVIEW_PROVENANCES,
+        required=True,
+        help="declare whether the completed worksheet was human or AI-assisted",
+    )
     subparsers.add_parser(
         "identity-audit", help="write deterministic organization-density and placeholder-code audit"
     )
@@ -223,7 +235,12 @@ def run(args: argparse.Namespace) -> int:
             args.output,
             "reports/reviews/l0-organization-candidate-review-summary.json",
         )
-        write_review_summary(review_path, candidates_path, output)
+        write_review_summary(
+            review_path,
+            candidates_path,
+            output,
+            provenance=args.provenance,
+        )
         print(f"{output} (aggregate only; safe to review before committing)")
         return 0
 

@@ -3,8 +3,9 @@
 This directory is the repository-ready L0 workspace for **Money on Record**. It
 does not deploy anything and does not require Cloudflare or AWS credentials.
 Its purpose is to prove that the public sources are reproducible, safe to
-publish, and dense enough to support useful organization profiles before product
-code is built.
+publish, and dense enough to justify building a deployed organization-profile
+beta. External usefulness is tested against that beta, not against this local
+workspace.
 
 The initial scope is six official City of Austin open-data sources:
 
@@ -85,8 +86,8 @@ aggregate-only review report under `reports/reviews/`.
 
 L0 deliberately does **not** do fuzzy person matching, infer household
 relationships, or trust `MIS...` vendor codes as stable identities. See
-[`docs/l0-acceptance.md`](docs/l0-acceptance.md) for the gates before product
-development starts.
+[`docs/l0-acceptance.md`](docs/l0-acceptance.md) for the passed build gate and
+the validation deliberately deferred until a browser-accessible beta exists.
 
 Current results and the repo-ready handoff are in
 [`docs/work-log.md`](docs/work-log.md) and

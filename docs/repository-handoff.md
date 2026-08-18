@@ -31,32 +31,28 @@ refuses to overwrite an existing worksheet.
 
 ## Next work, in order
 
-1. Audit the completed AI-assisted review using the ignored local
-   `data/derived/l0-ai-review-audit.md`: inspect every Tier B identity and the
-   proposed strict-tier sample.
-2. Correct any disputed worksheet rows, rerun validation and
-   `mor-l0 review-summary --provenance AI_ASSISTED`, then decide whether the
-   human-audit gate can be accepted.
-3. Review and sign off on `analysis/hostile-privacy-review.md`; the AI-assisted
-   review and implementation remediations are complete, but the human gate is
-   deliberately still open.
-4. Run the five-task static-profile test with a reporter or civic-data user and
-   record results in `mock-profile-test.md`.
-5. Send the documented questions to the relevant City data owners, especially
-   the malformed board-award years, `MIS` code semantics, report/transaction key
-   behavior, and contract history.
-6. Revise the profile and match policy from that evidence, then make the formal
-   L0 pass/pivot decision.
-7. Only after the gate passes, scaffold product and deployment code.
+1. Complete issue #1: record the first deployable architecture and define its
+   thinnest end-to-end product slice.
+2. Complete issue #2: bootstrap the AWS organization/accounts, Terraform state,
+   and repository-bound GitHub OIDC roles without long-lived access keys.
+3. Implement and deploy a representative static-first beta while carrying all
+   hostile-review production controls forward.
+4. Configure `moneyonrecord.org` only when the beta is ready for a stable
+   browser URL.
+5. Run issue #14 against the deployed beta: external usability, focused human
+   identity audit, and City questions tied to displayed semantics.
+6. Revise the product from that evidence and record the post-beta
+   continue/pivot/stop decision.
 
-## Hosting direction after L0
+## Hosting direction for the beta
 
-The current evidence favors a static-first product: precompute reviewed public
-projections, publish a static web build to private S3, and serve it through
-CloudFront. Add Lambda only for interactions that cannot be expressed as static
-artifacts or client-side indexes. The 711 MB eCheckbook CSV is a bulk ingestion
-job and should run on the home server or a scheduled container, not in a Lambda
-request path.
+The current evidence favors a static-first product: precompute narrow,
+scanner-passing public projections whose identity links remain unverified,
+publish a static web build to private S3, and serve it through CloudFront. Add
+Lambda only for interactions that cannot be expressed as static artifacts or
+client-side indexes. The 711 MB eCheckbook CSV is a bulk ingestion job and
+should run on the home server or a scheduled container, not in a Lambda request
+path.
 
 That shape preserves the career-relevant AWS surface while allowing the idle
 portfolio site to remain very cheap. DNS and Cloudflare configuration remain

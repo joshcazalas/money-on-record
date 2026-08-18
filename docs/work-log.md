@@ -29,18 +29,26 @@
   208-row prototype projections with zero findings, constrained exact-row links
   to allowlisted fields, and hardened candidate admission, scanner output, CSV
   parsing, and local prototype browser behavior.
+- Recorded Josh's explicit acceptance of the hostile privacy gate.
+- Passed the technical build gate and deferred external usability, human
+  identity verification, and semantic outreach until a stable deployed beta
+  gives participants something credible and usable to evaluate.
 - Added executable tests, linting, L0 gates, City questions, manual-review rules,
   and an external usability-test script.
 
-## Open gates
+## Deferred deployed-beta validation
 
-- Candidate review: AI-assisted first pass completed for 41 of 41; Josh's audit
-  of all Tier B rows and a strict-tier sample is pending.
-- External profile test: not yet performed.
-- City data-owner questions: not yet sent or answered.
-- Hostile privacy review: AI-assisted review and remediations completed; Josh's
-  human sign-off on the findings and production requirements is pending.
-- Formal L0 pass/pivot decision: pending the above evidence.
+- Human identity verification: audit displayed Tier B rows and a strict-tier
+  sample before changing any beta identity from unverified to verified.
+- External profile test: run against a stable browser-accessible beta, not the
+  repository or local prototype.
+- City data-owner questions: send or disposition questions affecting displayed
+  semantics once the beta makes the requested context concrete.
+- Post-beta validation decision: continue, pivot, or stop based on observed use
+  and audience feedback.
+
+These items are tracked in GitHub issue #14 and do not block product or AWS
+implementation.
 
 ## Important findings
 

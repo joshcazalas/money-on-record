@@ -4,11 +4,11 @@ Review date: August 18, 2026
 
 ## Decision
 
-The current local organization-profile prototype is suitable for the external
-L0 usability test after the remediations in this review. It is **not approved
-for production publication**. Josh's human sign-off, the external usability
-test, City data-owner answers, and production response/logging controls remain
-open gates.
+The current local organization-profile prototype is suitable as the basis for a
+deployed beta after the remediations in this review. It is **not by itself
+approved for production publication**. Production response/logging controls
+must be implemented before serving public artifacts; external usability and
+City data-owner follow-up are deployed-beta validation work.
 
 The exact prototype projections were checked against the frozen source
 artifacts: 53 campaign-contribution rows and 208 eCheckbook rows produced zero
@@ -113,12 +113,13 @@ served, but they do not turn it into a production page.
 - Repeat this review when page fields, source contracts, matching rules,
   downloads, analytics, logging, or hosting behavior changes.
 
-## Human sign-off checklist
+## Human sign-off
 
-Before marking the hostile-review gate complete, Josh should confirm in this
-PR that:
+Josh explicitly accepted this hostile-review gate on August 18, 2026, after
+reviewing and merging PR #13. The acceptance carries these conditions into the
+product and deployment phases:
 
-- the two exact profile projections are an acceptable public minimum;
+- the two exact profile projections are an acceptable beta minimum;
 - broad source fields with findings will remain blocked from bulk publication;
 - outbound official-source links are acceptable with `$select`, no-referrer,
   and clear source labeling; and

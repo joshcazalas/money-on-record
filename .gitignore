@@ -36,3 +36,7 @@ data/.staging/
 data/profiles/
 data/derived/
 !data/.gitkeep
+
+# Architecture decision records are local working notes. GitHub issues carry
+# shared implementation context until a committed decision log is warranted.
+docs/decisions/

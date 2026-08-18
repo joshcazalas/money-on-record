@@ -1,12 +1,12 @@
-# Hosting architecture research — decision pending
+# Hosting architecture research
 
 Date: 2026-08-18
 
 This document compares a static S3 and CloudFront application with an
-application that also uses Lambda. It is research for issue #1, not an accepted
-architecture decision. Prices are public US list prices, generally for US East,
-before tax. AWS can change prices and plan eligibility, so the selected plan
-must be confirmed in the target accounts during bootstrap.
+application that also uses Lambda. It is supporting research for issue #1, not
+a decision log. Prices are public US list prices, generally for US East, before
+tax. AWS can change prices and plan eligibility, so the selected plan must be
+confirmed in the target accounts during bootstrap.
 
 ## Executive result
 
@@ -39,8 +39,8 @@ The strongest starting shape is consequently:
 This preserves a low-cost and low-risk first release without closing the door on
 serverless work. CloudFront supports multiple origins and path-based cache
 behaviors, so adding a dynamic API does not require replacing the static site.
-The final selection remains Josh's decision and should be recorded in an ADR
-after review.
+Implementation scope and any later architecture changes belong in GitHub issues
+rather than committed decision records.
 
 ## What would actually be dynamic?
 
@@ -285,12 +285,12 @@ retention, abuse limit, logs, failure behavior, and cost alarm. The API should
 return narrow public projections rather than exposing raw source-shaped query
 power.
 
-## Decision to record after review
+## Implementation choices informed by this research
 
-Josh can make three separable choices from this research:
+This research separates three implementation choices:
 
-1. **Runtime shape:** static core with no initial API; static core plus one real
-   initial API such as feedback; or Lambda-first rendering/API.
+1. **Runtime shape:** start with a static core and no initial API. Add a real API
+   later when an accepted feature meets an upgrade trigger above.
 2. **CloudFront billing:** flat-rate Free for the no-overage ceiling, or
    pay-as-you-go for its larger Free Tier allowance and full configuration
    control.
@@ -298,9 +298,8 @@ Josh can make three separable choices from this research:
    separately priced capabilities where compatible, or select Pro at $15/month
    for its included logging and larger allowance.
 
-The resulting ADR should explicitly state that the choice can be revisited by
-feature trigger; it need not forecast the final architecture of a successful
-larger product.
+The starting choice can be revisited when a feature trigger appears; it need not
+forecast the final architecture of a successful larger product.
 
 ## Official sources
 

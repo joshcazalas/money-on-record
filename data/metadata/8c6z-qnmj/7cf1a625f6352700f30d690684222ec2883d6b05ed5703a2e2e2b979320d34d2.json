@@ -1,0 +1,2622 @@
+{
+  "id" : "8c6z-qnmj",
+  "name" : "Austin Finance Online eCheckbook",
+  "assetType" : "dataset",
+  "attribution" : "City of Austin, Texas - data.austintexas.gov",
+  "attributionLink" : "https://datahub.austintexas.gov/d/8c6z-qnmj",
+  "averageRating" : 100,
+  "category" : "Budget and Finance",
+  "createdAt" : 1323812233,
+  "description" : "Flat file data set of the data found in the Austin Finance Online eCheckbook application.  The data contained in this dataset is for informational purposes only and contains expenditure information for the City of Austin. Certain Austin Energy transactions have been excluded as competitive matters under Texas Government Code Section 552.133 and City Council Resolution 20051201-002; therefore, the line amounts may not reflect the total check amount if certain Austin Energy invoices were included on the check.  Please visit the Austin Finance Online website for a searchable front end to this data set. https://financeonline.austintexas.gov/afo/finance/",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 10241,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "indexUpdatedAt" : 1569240134,
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 9075435,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1412879936,
+  "publicationGroup" : 259989,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1786968844,
+  "rowsUpdatedBy" : "pcvw-whwy",
+  "tableId" : 1777367,
+  "totalTimesRated" : 1,
+  "viewCount" : 13378,
+  "viewLastModified" : 1773943018,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1412879936,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 674926,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1412879936,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "failureCount" : 0,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "t5rb-t58r",
+      "displayName" : "Chris"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 170502085,
+    "name" : "FY_DC",
+    "dataTypeName" : "text",
+    "fieldName" : "fy_dc",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782054,
+    "width" : 160,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "2026",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2009",
+        "count" : "154998"
+      }, {
+        "item" : "2010",
+        "count" : "141321"
+      }, {
+        "item" : "2011",
+        "count" : "133315"
+      }, {
+        "item" : "2014",
+        "count" : "131715"
+      }, {
+        "item" : "2012",
+        "count" : "130558"
+      }, {
+        "item" : "2015",
+        "count" : "127606"
+      }, {
+        "item" : "2013",
+        "count" : "127533"
+      }, {
+        "item" : "2024",
+        "count" : "120814"
+      }, {
+        "item" : "2016",
+        "count" : "118135"
+      }, {
+        "item" : "2025",
+        "count" : "117562"
+      }, {
+        "item" : "2017",
+        "count" : "111619"
+      }, {
+        "item" : "2019",
+        "count" : "105694"
+      }, {
+        "item" : "2018",
+        "count" : "105381"
+      }, {
+        "item" : "2026",
+        "count" : "104602"
+      }, {
+        "item" : "2023",
+        "count" : "102957"
+      }, {
+        "item" : "2020",
+        "count" : "97541"
+      }, {
+        "item" : "2021",
+        "count" : "92613"
+      }, {
+        "item" : "2022",
+        "count" : "92602"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "2009",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502086,
+    "name" : "PER_CD",
+    "dataTypeName" : "number",
+    "fieldName" : "per_cd",
+    "position" : 2,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782055,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "12",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "208724"
+      }, {
+        "item" : "6",
+        "count" : "196600"
+      }, {
+        "item" : "12",
+        "count" : "181664"
+      }, {
+        "item" : "10",
+        "count" : "179516"
+      }, {
+        "item" : "8",
+        "count" : "176310"
+      }, {
+        "item" : "7",
+        "count" : "175603"
+      }, {
+        "item" : "11",
+        "count" : "174657"
+      }, {
+        "item" : "4",
+        "count" : "174119"
+      }, {
+        "item" : "9",
+        "count" : "173223"
+      }, {
+        "item" : "3",
+        "count" : "160515"
+      }, {
+        "item" : "5",
+        "count" : "158252"
+      }, {
+        "item" : "2",
+        "count" : "157383"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502101,
+    "name" : "DEPT_CD",
+    "dataTypeName" : "number",
+    "fieldName" : "dept_cd",
+    "position" : 3,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782056,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "97",
+      "null" : "0",
+      "top" : [ {
+        "item" : "22",
+        "count" : "383656"
+      }, {
+        "item" : "11",
+        "count" : "278073"
+      }, {
+        "item" : "86",
+        "count" : "124453"
+      }, {
+        "item" : "91",
+        "count" : "108388"
+      }, {
+        "item" : "78",
+        "count" : "103789"
+      }, {
+        "item" : "81",
+        "count" : "75615"
+      }, {
+        "item" : "87",
+        "count" : "70147"
+      }, {
+        "item" : "62",
+        "count" : "69853"
+      }, {
+        "item" : "63",
+        "count" : "66671"
+      }, {
+        "item" : "74",
+        "count" : "61865"
+      }, {
+        "item" : "85",
+        "count" : "56806"
+      }, {
+        "item" : "56",
+        "count" : "55829"
+      }, {
+        "item" : "60",
+        "count" : "53565"
+      }, {
+        "item" : "75",
+        "count" : "53555"
+      }, {
+        "item" : "15",
+        "count" : "51136"
+      }, {
+        "item" : "83",
+        "count" : "50961"
+      }, {
+        "item" : "93",
+        "count" : "48880"
+      }, {
+        "item" : "24",
+        "count" : "38845"
+      }, {
+        "item" : "82",
+        "count" : "36562"
+      }, {
+        "item" : "55",
+        "count" : "36477"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "2",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502102,
+    "name" : "DEPT_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "dept_nm",
+    "position" : 4,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782057,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Wireless",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Austin Water",
+        "count" : "383656"
+      }, {
+        "item" : "Austin Energy",
+        "count" : "278073"
+      }, {
+        "item" : "Parks & Recreation",
+        "count" : "124453"
+      }, {
+        "item" : "Austin Public Health",
+        "count" : "108388"
+      }, {
+        "item" : "Fleet Services",
+        "count" : "103789"
+      }, {
+        "item" : "Aviation",
+        "count" : "75615"
+      }, {
+        "item" : "Police",
+        "count" : "70147"
+      }, {
+        "item" : "Public Works - Transportation",
+        "count" : "69853"
+      }, {
+        "item" : "Watershed Protection",
+        "count" : "66671"
+      }, {
+        "item" : "Financial Services",
+        "count" : "61865"
+      }, {
+        "item" : "Austin Public Library",
+        "count" : "56806"
+      }, {
+        "item" : "Communications & Technology Management",
+        "count" : "55829"
+      }, {
+        "item" : "Public Works",
+        "count" : "53565"
+      }, {
+        "item" : "Building Services",
+        "count" : "53555"
+      }, {
+        "item" : "Austin Resource Recovery",
+        "count" : "51136"
+      }, {
+        "item" : "Fire",
+        "count" : "50961"
+      }, {
+        "item" : "Emergency Medical Services",
+        "count" : "48880"
+      }, {
+        "item" : "Austin Transportation",
+        "count" : "38845"
+      }, {
+        "item" : "Austin Convention Center",
+        "count" : "36562"
+      }, {
+        "item" : "Economic Development",
+        "count" : "36477"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "Animal Services",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502103,
+    "name" : "FUND_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "fund_cd",
+    "position" : 5,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782058,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "9902",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1000",
+        "count" : "422018"
+      }, {
+        "item" : "5010",
+        "count" : "204673"
+      }, {
+        "item" : "5150",
+        "count" : "148953"
+      }, {
+        "item" : "5020",
+        "count" : "115923"
+      }, {
+        "item" : "5030",
+        "count" : "108527"
+      }, {
+        "item" : "5120",
+        "count" : "83784"
+      }, {
+        "item" : "5220",
+        "count" : "65437"
+      }, {
+        "item" : "5070",
+        "count" : "63313"
+      }, {
+        "item" : "5280",
+        "count" : "52437"
+      }, {
+        "item" : "5040",
+        "count" : "48550"
+      }, {
+        "item" : "3250",
+        "count" : "48390"
+      }, {
+        "item" : "5290",
+        "count" : "45978"
+      }, {
+        "item" : "5100",
+        "count" : "39053"
+      }, {
+        "item" : "5140",
+        "count" : "29208"
+      }, {
+        "item" : "5060",
+        "count" : "25075"
+      }, {
+        "item" : "7650",
+        "count" : "24541"
+      }, {
+        "item" : "7050",
+        "count" : "20776"
+      }, {
+        "item" : "9900",
+        "count" : "19071"
+      }, {
+        "item" : "1020",
+        "count" : "18730"
+      }, {
+        "item" : "4480",
+        "count" : "18639"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1000",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502104,
+    "name" : "FUND_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "fund_nm",
+    "position" : 6,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782059,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Zoonosis Control",
+      "null" : "0",
+      "top" : [ {
+        "item" : "General Fund",
+        "count" : "422018"
+      }, {
+        "item" : "Austin Energy Fund",
+        "count" : "153290"
+      }, {
+        "item" : "Support Services Fund",
+        "count" : "104764"
+      }, {
+        "item" : "Transportation Fund",
+        "count" : "83784"
+      }, {
+        "item" : "Water Inventory Fund",
+        "count" : "65437"
+      }, {
+        "item" : "Airport Operating Fund",
+        "count" : "63313"
+      }, {
+        "item" : "Austin Water Water Utility Operating Fund",
+        "count" : "56694"
+      }, {
+        "item" : "Austin Water Wastewater Utility Operating Fund",
+        "count" : "53857"
+      }, {
+        "item" : "Electric Utility Operating Fnd",
+        "count" : "51383"
+      }, {
+        "item" : "E-Distribution Capital",
+        "count" : "48390"
+      }, {
+        "item" : "General Svc Inventories",
+        "count" : "45978"
+      }, {
+        "item" : "Support Services Operating",
+        "count" : "44189"
+      }, {
+        "item" : "Drainage Utility Fund",
+        "count" : "39053"
+      }, {
+        "item" : "Water Utility Operating Fnd",
+        "count" : "37288"
+      }, {
+        "item" : "Fleet Services Fund",
+        "count" : "36354"
+      }, {
+        "item" : "Wastewater Utlty Operating Fnd",
+        "count" : "33391"
+      }, {
+        "item" : "Austin Resource Recovery Fund",
+        "count" : "30935"
+      }, {
+        "item" : "Energy Conserv Rebates & Incen",
+        "count" : "24529"
+      }, {
+        "item" : "Water Utility Operating Fund",
+        "count" : "21941"
+      }, {
+        "item" : "Wastewater Utility Operating Fund",
+        "count" : "21279"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1115 Medicaid Waiver",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502105,
+    "name" : "DIV_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "div_cd",
+    "position" : 7,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782060,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "ZZZZ",
+      "null" : "0",
+      "top" : [ {
+        "item" : "9MGT",
+        "count" : "306590"
+      }, {
+        "item" : "ZZZZ",
+        "count" : "151546"
+      }, {
+        "item" : "7SVC",
+        "count" : "75574"
+      }, {
+        "item" : "7CRS",
+        "count" : "63811"
+      }, {
+        "item" : "OPRS",
+        "count" : "62103"
+      }, {
+        "item" : "9TRQ",
+        "count" : "57713"
+      }, {
+        "item" : "TRMT",
+        "count" : "52648"
+      }, {
+        "item" : "2ESD",
+        "count" : "51284"
+      }, {
+        "item" : "3101",
+        "count" : "49966"
+      }, {
+        "item" : "7BLD",
+        "count" : "48987"
+      }, {
+        "item" : "4FOP",
+        "count" : "39940"
+      }, {
+        "item" : "3DES",
+        "count" : "36757"
+      }, {
+        "item" : "2EVT",
+        "count" : "28143"
+      }, {
+        "item" : "1WIR",
+        "count" : "23895"
+      }, {
+        "item" : "1H2O",
+        "count" : "23416"
+      }, {
+        "item" : "3PST",
+        "count" : "23399"
+      }, {
+        "item" : "2SPM",
+        "count" : "21143"
+      }, {
+        "item" : "4CUS",
+        "count" : "21141"
+      }, {
+        "item" : "10PL",
+        "count" : "20366"
+      }, {
+        "item" : "3SRP",
+        "count" : "19725"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0001",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502120,
+    "name" : "DIV_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "div_nm",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782061,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Zilker Water Pipeline Renewal: Treadwell St Area",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Support Services",
+        "count" : "307560"
+      }, {
+        "item" : "Miscellaneous",
+        "count" : "151546"
+      }, {
+        "item" : "Operations",
+        "count" : "85502"
+      }, {
+        "item" : "Community Services",
+        "count" : "69709"
+      }, {
+        "item" : "Treatment",
+        "count" : "52648"
+      }, {
+        "item" : "Fy2001 Distribution Parent",
+        "count" : "49516"
+      }, {
+        "item" : "Building Services",
+        "count" : "48987"
+      }, {
+        "item" : "Electric Service Delivery",
+        "count" : "48913"
+      }, {
+        "item" : "Facilities Management, Operations and Airport Security",
+        "count" : "39940"
+      }, {
+        "item" : "Fleet Service Centers",
+        "count" : "38202"
+      }, {
+        "item" : "Service Centers",
+        "count" : "37372"
+      }, {
+        "item" : "Operations Support",
+        "count" : "30467"
+      }, {
+        "item" : "Event Operations",
+        "count" : "28143"
+      }, {
+        "item" : "Transfers, Debt Service, and Other Requirements",
+        "count" : "28010"
+      }, {
+        "item" : "Customer Energy Solutions",
+        "count" : "26605"
+      }, {
+        "item" : "Wireless Communication Services",
+        "count" : "23895"
+      }, {
+        "item" : "Water Conservation",
+        "count" : "23416"
+      }, {
+        "item" : "Transfers and Other Requirements",
+        "count" : "22940"
+      }, {
+        "item" : "Street Preventive Maintenance",
+        "count" : "21143"
+      }, {
+        "item" : "Customer Care",
+        "count" : "21141"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "10502 Mellow Meadows Dr Water Service Ext",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502121,
+    "name" : "GP_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "gp_cd",
+    "position" : 9,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782062,
+    "width" : 160,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "ZZZZ",
+      "null" : "0",
+      "top" : [ {
+        "item" : "9ADM",
+        "count" : "283199"
+      }, {
+        "item" : "ZZZZ",
+        "count" : "224976"
+      }, {
+        "item" : "9REQ",
+        "count" : "56174"
+      }, {
+        "item" : "DIST",
+        "count" : "48319"
+      }, {
+        "item" : "7PPM",
+        "count" : "37306"
+      }, {
+        "item" : "TWWT",
+        "count" : "34460"
+      }, {
+        "item" : "7RCA",
+        "count" : "28994"
+      }, {
+        "item" : "TWTR",
+        "count" : "26244"
+      }, {
+        "item" : "2DST",
+        "count" : "24318"
+      }, {
+        "item" : "2H2O",
+        "count" : "23416"
+      }, {
+        "item" : "2PDL",
+        "count" : "23129"
+      }, {
+        "item" : "3FLD",
+        "count" : "23071"
+      }, {
+        "item" : "7MTC",
+        "count" : "21188"
+      }, {
+        "item" : "3DSM",
+        "count" : "20055"
+      }, {
+        "item" : "2CBT",
+        "count" : "18725"
+      }, {
+        "item" : "2WIP",
+        "count" : "17801"
+      }, {
+        "item" : "7VMR",
+        "count" : "17014"
+      }, {
+        "item" : "3CRI",
+        "count" : "16702"
+      }, {
+        "item" : "4BLD",
+        "count" : "15075"
+      }, {
+        "item" : "5PMA",
+        "count" : "14851"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0002",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502122,
+    "name" : "GP_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "gp_nm",
+    "position" : 10,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782063,
+    "width" : 160,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Zoning Code Compliance",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Departmental Support Services",
+        "count" : "275581"
+      }, {
+        "item" : "Miscellaneous",
+        "count" : "224976"
+      }, {
+        "item" : "Other Requirements",
+        "count" : "56170"
+      }, {
+        "item" : "Distribution",
+        "count" : "48319"
+      }, {
+        "item" : "Preventive Maintenance",
+        "count" : "37306"
+      }, {
+        "item" : "Distribution Services",
+        "count" : "24318"
+      }, {
+        "item" : "Water Conservation Rebates",
+        "count" : "23416"
+      }, {
+        "item" : "Materials Control",
+        "count" : "21188"
+      }, {
+        "item" : "Demand Side Management",
+        "count" : "20055"
+      }, {
+        "item" : "Power Delivery Support",
+        "count" : "19896"
+      }, {
+        "item" : "Wireless Infrastructure and Public Safety",
+        "count" : "17801"
+      }, {
+        "item" : "Fleet Maintenance and Repair",
+        "count" : "17014"
+      }, {
+        "item" : "Recreation and Program Services",
+        "count" : "16770"
+      }, {
+        "item" : "Conservation Rebates and Incentives",
+        "count" : "16702"
+      }, {
+        "item" : "Building Maintenance",
+        "count" : "15075"
+      }, {
+        "item" : "Emergency Field Operations",
+        "count" : "14911"
+      }, {
+        "item" : "General Maintenance Support",
+        "count" : "14843"
+      }, {
+        "item" : "Combat Operations",
+        "count" : "14166"
+      }, {
+        "item" : "Transmission",
+        "count" : "13719"
+      }, {
+        "item" : "Routine Roadway & Alley Maintenance",
+        "count" : "13171"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0 Henninger",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502123,
+    "name" : "OCAT_CD",
+    "dataTypeName" : "number",
+    "fieldName" : "ocat_cd",
+    "position" : 11,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782064,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "158",
+      "null" : "0",
+      "top" : [ {
+        "item" : "152",
+        "count" : "1423456"
+      }, {
+        "item" : "154",
+        "count" : "659055"
+      }, {
+        "item" : "158",
+        "count" : "33047"
+      }, {
+        "item" : "0",
+        "count" : "1006"
+      }, {
+        "item" : "155",
+        "count" : "2"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502124,
+    "name" : "OCAT_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "ocat_nm",
+    "position" : 12,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782065,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Transfers",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Contractuals",
+        "count" : "1423456"
+      }, {
+        "item" : "Commodities",
+        "count" : "659055"
+      }, {
+        "item" : "Non-CIP Capital",
+        "count" : "33047"
+      }, {
+        "item" : "Other",
+        "count" : "825"
+      }, {
+        "item" : "Transfers",
+        "count" : "181"
+      }, {
+        "item" : "Indirect Costs",
+        "count" : "2"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "Commodities",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502139,
+    "name" : "OBJ_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "obj_cd",
+    "position" : 13,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782066,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "9999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "5860",
+        "count" : "178629"
+      }, {
+        "item" : "7730",
+        "count" : "145929"
+      }, {
+        "item" : "6551",
+        "count" : "121553"
+      }, {
+        "item" : "5560",
+        "count" : "114867"
+      }, {
+        "item" : "6825",
+        "count" : "86267"
+      }, {
+        "item" : "5590",
+        "count" : "62790"
+      }, {
+        "item" : "7600",
+        "count" : "48922"
+      }, {
+        "item" : "6389",
+        "count" : "45340"
+      }, {
+        "item" : "6383",
+        "count" : "38622"
+      }, {
+        "item" : "7478",
+        "count" : "37420"
+      }, {
+        "item" : "6124",
+        "count" : "36597"
+      }, {
+        "item" : "7134",
+        "count" : "31869"
+      }, {
+        "item" : "7610",
+        "count" : "28180"
+      }, {
+        "item" : "6452",
+        "count" : "27466"
+      }, {
+        "item" : "7601",
+        "count" : "27072"
+      }, {
+        "item" : "6532",
+        "count" : "26585"
+      }, {
+        "item" : "5730",
+        "count" : "26346"
+      }, {
+        "item" : "5725",
+        "count" : "24979"
+      }, {
+        "item" : "5675",
+        "count" : "24698"
+      }, {
+        "item" : "8351",
+        "count" : "24586"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "5220",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502140,
+    "name" : "OBJ_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "obj_nm",
+    "position" : 14,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782067,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Zero Waste Event Rebate",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Services-other",
+        "count" : "178629"
+      }, {
+        "item" : "Inventory purchases",
+        "count" : "145929"
+      }, {
+        "item" : "Mileage reimbursements",
+        "count" : "121553"
+      }, {
+        "item" : "Services-construction contr",
+        "count" : "114867"
+      }, {
+        "item" : "Services-engineering",
+        "count" : "62790"
+      }, {
+        "item" : "Grants to others/subrecipients",
+        "count" : "58776"
+      }, {
+        "item" : "Small tools/minor equipment",
+        "count" : "48922"
+      }, {
+        "item" : "Maintenance-other equipment",
+        "count" : "45340"
+      }, {
+        "item" : "Maintenance-buildings",
+        "count" : "38622"
+      }, {
+        "item" : "Clothing/clothing material",
+        "count" : "37420"
+      }, {
+        "item" : "Rental-copy machines",
+        "count" : "36597"
+      }, {
+        "item" : "Chemicals",
+        "count" : "31869"
+      }, {
+        "item" : "Minor computer hardware",
+        "count" : "28180"
+      }, {
+        "item" : "Grants to subrecipients",
+        "count" : "27491"
+      }, {
+        "item" : "Printing/binding/photo/repr",
+        "count" : "27466"
+      }, {
+        "item" : "Safety equipment",
+        "count" : "27072"
+      }, {
+        "item" : "Educational travel",
+        "count" : "26585"
+      }, {
+        "item" : "Services-testing",
+        "count" : "26346"
+      }, {
+        "item" : "Services-IT staffing",
+        "count" : "24979"
+      }, {
+        "item" : "Services-security",
+        "count" : "24698"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "Advertising/publication",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502141,
+    "name" : "LGL_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "lgl_nm",
+    "position" : 15,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782068,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "ZyLAB DCS USA LLC",
+      "null" : "0",
+      "top" : [ {
+        "item" : "W W GRAINGER INC",
+        "count" : "35879"
+      }, {
+        "item" : "XEROX CORPORATION",
+        "count" : "25826"
+      }, {
+        "item" : "U S BANK TRUST N A",
+        "count" : "23609"
+      }, {
+        "item" : "UNIFIRST HOLDINGS, INC",
+        "count" : "22212"
+      }, {
+        "item" : "MASTEC NORTH AMERICA INC",
+        "count" : "20124"
+      }, {
+        "item" : "PRINTMAILPRO.COM",
+        "count" : "16075"
+      }, {
+        "item" : "DELL MARKETING LP",
+        "count" : "14881"
+      }, {
+        "item" : "AMERICAN AIRLINES INC",
+        "count" : "13879"
+      }, {
+        "item" : "SID TOOL CO INC",
+        "count" : "12625"
+      }, {
+        "item" : "GULF COAST PAPER CO INC",
+        "count" : "11837"
+      }, {
+        "item" : "TRAVIS COUNTY",
+        "count" : "11811"
+      }, {
+        "item" : "MILLER UNIFORMS & EMBLEMS INC",
+        "count" : "11653"
+      }, {
+        "item" : "PIKE ENTERPRISES INC",
+        "count" : "11219"
+      }, {
+        "item" : "AT&T MOBILITY NATIONAL ACCOUNTS LLC",
+        "count" : "10625"
+      }, {
+        "item" : "AT&T",
+        "count" : "10564"
+      }, {
+        "item" : "CELLCO PARTNERSHIP",
+        "count" : "10215"
+      }, {
+        "item" : "PETTY CASH FUND #1311",
+        "count" : "10034"
+      }, {
+        "item" : "TIBH INDUSTRIES, INC",
+        "count" : "9949"
+      }, {
+        "item" : "APAC-TEXAS INC",
+        "count" : "9231"
+      }, {
+        "item" : "USA MOBILITY WIRELESS INC",
+        "count" : "8944"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "10000 Fearless First Responders",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502156,
+    "name" : "VEND_CUST_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "vend_cust_cd",
+    "position" : 16,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782069,
+    "width" : 244,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "ZZZ8321309",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MIS0000024",
+        "count" : "156363"
+      }, {
+        "item" : "WWG2097000",
+        "count" : "35879"
+      }, {
+        "item" : "MIS0000222",
+        "count" : "31849"
+      }, {
+        "item" : "XER5246250",
+        "count" : "25825"
+      }, {
+        "item" : "FIR7043315",
+        "count" : "23609"
+      }, {
+        "item" : "UNI8303823",
+        "count" : "23578"
+      }, {
+        "item" : "MAS7127360",
+        "count" : "21627"
+      }, {
+        "item" : "TEX4818500",
+        "count" : "18594"
+      }, {
+        "item" : "PRI8322492",
+        "count" : "17228"
+      }, {
+        "item" : "DEL1512250",
+        "count" : "15888"
+      }, {
+        "item" : "VC0000100379",
+        "count" : "14977"
+      }, {
+        "item" : "AME0171750",
+        "count" : "13879"
+      }, {
+        "item" : "MIS0000492",
+        "count" : "12756"
+      }, {
+        "item" : "MSC6003170",
+        "count" : "12694"
+      }, {
+        "item" : "VC0000102792",
+        "count" : "12102"
+      }, {
+        "item" : "GUL2165000",
+        "count" : "11837"
+      }, {
+        "item" : "TRA4717750",
+        "count" : "11798"
+      }, {
+        "item" : "MIL3235500",
+        "count" : "11653"
+      }, {
+        "item" : "V00000914477",
+        "count" : "11219"
+      }, {
+        "item" : "NEW8317073",
+        "count" : "10625"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "AAA0002500",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502157,
+    "name" : "VEND_CUST_IND",
+    "dataTypeName" : "text",
+    "fieldName" : "vend_cust_ind",
+    "position" : 17,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782070,
+    "width" : 256,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "V",
+      "null" : "0",
+      "top" : [ {
+        "item" : "V",
+        "count" : "2116566"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "V",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502158,
+    "name" : "RFED_DOC_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "rfed_doc_cd",
+    "position" : 18,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782071,
+    "width" : 232,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "TPP",
+      "null" : "0",
+      "top" : [ {
+        "item" : "PRM",
+        "count" : "1475983"
+      }, {
+        "item" : "GAX",
+        "count" : "311636"
+      }, {
+        "item" : "TPP",
+        "count" : "135404"
+      }, {
+        "item" : "PRC",
+        "count" : "110923"
+      }, {
+        "item" : "GAXI",
+        "count" : "44625"
+      }, {
+        "item" : "GAXD",
+        "count" : "37990"
+      }, {
+        "item" : "PRN",
+        "count" : "5"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "GAX",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502159,
+    "name" : "RFED_DOC_DEPT_CD",
+    "dataTypeName" : "number",
+    "fieldName" : "rfed_doc_dept_cd",
+    "position" : 19,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782072,
+    "width" : 292,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "9700",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2200",
+        "count" : "307871"
+      }, {
+        "item" : "1100",
+        "count" : "254882"
+      }, {
+        "item" : "6100",
+        "count" : "135469"
+      }, {
+        "item" : "7400",
+        "count" : "125290"
+      }, {
+        "item" : "7800",
+        "count" : "108346"
+      }, {
+        "item" : "8600",
+        "count" : "104607"
+      }, {
+        "item" : "5600",
+        "count" : "95364"
+      }, {
+        "item" : "9100",
+        "count" : "91686"
+      }, {
+        "item" : "6200",
+        "count" : "72509"
+      }, {
+        "item" : "8700",
+        "count" : "63138"
+      }, {
+        "item" : "8100",
+        "count" : "62680"
+      }, {
+        "item" : "7500",
+        "count" : "58520"
+      }, {
+        "item" : "1500",
+        "count" : "53155"
+      }, {
+        "item" : "8500",
+        "count" : "50170"
+      }, {
+        "item" : "6300",
+        "count" : "45252"
+      }, {
+        "item" : "8300",
+        "count" : "44347"
+      }, {
+        "item" : "9300",
+        "count" : "44194"
+      }, {
+        "item" : "6400",
+        "count" : "39093"
+      }, {
+        "item" : "5800",
+        "count" : "36111"
+      }, {
+        "item" : "6000",
+        "count" : "36058"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1100",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502160,
+    "name" : "RFED_DOC_ID",
+    "dataTypeName" : "text",
+    "fieldName" : "rfed_doc_id",
+    "position" : 20,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782073,
+    "width" : 232,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "S2606160002",
+      "null" : "0",
+      "top" : [ {
+        "item" : "12020912126",
+        "count" : "396"
+      }, {
+        "item" : "14021413494",
+        "count" : "345"
+      }, {
+        "item" : "11122808219",
+        "count" : "338"
+      }, {
+        "item" : "11123008423",
+        "count" : "320"
+      }, {
+        "item" : "13122008601",
+        "count" : "299"
+      }, {
+        "item" : "14011310623",
+        "count" : "276"
+      }, {
+        "item" : "18010308305",
+        "count" : "250"
+      }, {
+        "item" : "03062600102",
+        "count" : "220"
+      }, {
+        "item" : "13111805449",
+        "count" : "216"
+      }, {
+        "item" : "18101601635",
+        "count" : "211"
+      }, {
+        "item" : "13091935672",
+        "count" : "196"
+      }, {
+        "item" : "13031917263",
+        "count" : "195"
+      }, {
+        "item" : "10022515490",
+        "count" : "192"
+      }, {
+        "item" : "21022412521",
+        "count" : "190"
+      }, {
+        "item" : "16121406983",
+        "count" : "187"
+      }, {
+        "item" : "13050822282",
+        "count" : "182"
+      }, {
+        "item" : "18012910583",
+        "count" : "178"
+      }, {
+        "item" : "18091731252",
+        "count" : "158"
+      }, {
+        "item" : "17120105489",
+        "count" : "158"
+      }, {
+        "item" : "18092632368",
+        "count" : "157"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0029323123",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502161,
+    "name" : "COMM_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "comm_cd",
+    "position" : 21,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782074,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "1586703",
+      "largest" : "CS90001",
+      "null" : "529863",
+      "top" : [ {
+        "item" : "92517",
+        "count" : "40928"
+      }, {
+        "item" : "98526",
+        "count" : "34193"
+      }, {
+        "item" : "92045",
+        "count" : "31413"
+      }, {
+        "item" : "95243",
+        "count" : "30004"
+      }, {
+        "item" : "9613026",
+        "count" : "24581"
+      }, {
+        "item" : "91577",
+        "count" : "22420"
+      }, {
+        "item" : "98836",
+        "count" : "22270"
+      }, {
+        "item" : "96480",
+        "count" : "15818"
+      }, {
+        "item" : "54523",
+        "count" : "15470"
+      }, {
+        "item" : "91059",
+        "count" : "14921"
+      }, {
+        "item" : "91842",
+        "count" : "14861"
+      }, {
+        "item" : "80072",
+        "count" : "14786"
+      }, {
+        "item" : "91505",
+        "count" : "14660"
+      }, {
+        "item" : "7452114",
+        "count" : "13592"
+      }, {
+        "item" : "98176",
+        "count" : "12188"
+      }, {
+        "item" : "47599",
+        "count" : "11982"
+      }, {
+        "item" : "28586",
+        "count" : "11859"
+      }, {
+        "item" : "91575",
+        "count" : "11558"
+      }, {
+        "item" : "96207",
+        "count" : "11403"
+      }, {
+        "item" : "96445",
+        "count" : "11189"
+      } ],
+      "not_null" : "1097632",
+      "smallest" : "00000",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502162,
+    "name" : "COMM_DSCR",
+    "dataTypeName" : "text",
+    "fieldName" : "comm_dscr",
+    "position" : 22,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782075,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "1586703",
+      "largest" : "Zoo Animals, All Types",
+      "null" : "529863",
+      "top" : [ {
+        "item" : "Civil Engineering",
+        "count" : "40928"
+      }, {
+        "item" : "Copy Machine (Including Cost-Per-Copy Type Leases)",
+        "count" : "34193"
+      }, {
+        "item" : "Software Maintenance/Support",
+        "count" : "31413"
+      }, {
+        "item" : "Family and Social Services",
+        "count" : "30004"
+      }, {
+        "item" : "TEMPORARY SERVICES FOR THE EMPLOYMENT OF COMPUTER PROGRAMMER",
+        "count" : "24581"
+      }, {
+        "item" : "Telephone Services, Long Distance and Local (Inclu",
+        "count" : "22420"
+      }, {
+        "item" : "Grounds Maintenance: Mowing, Edging, Plant (Not Trees)",
+        "count" : "21171"
+      }, {
+        "item" : "SECURITY GUARDS",
+        "count" : "15818"
+      }, {
+        "item" : "Impact Tools, Air Powered (Not Road Building)",
+        "count" : "15470"
+      }, {
+        "item" : "Engineering Consulting",
+        "count" : "14861"
+      }, {
+        "item" : "Shoes, Safety Toe",
+        "count" : "14786"
+      }, {
+        "item" : "Answering/Paging Services",
+        "count" : "14660"
+      }, {
+        "item" : "Pest Control (Incl Termite Insp, birds, rodent)",
+        "count" : "13979"
+      }, {
+        "item" : "ASPHALTIC CONCRETE, HOT MIX, IN ACCORDANCE WITH IT",
+        "count" : "13592"
+      }, {
+        "item" : "Traffic Control Equipment and Accessories Rental o",
+        "count" : "12188"
+      }, {
+        "item" : "MEDICAL, DENTAL AND LAB SUPPLY PER PRICE AGREEMENT",
+        "count" : "11982"
+      }, {
+        "item" : "Transformers, Power Distribution (Incl. Fluid Fill",
+        "count" : "11859"
+      }, {
+        "item" : "Telephone Services, Cellular",
+        "count" : "11558"
+      }, {
+        "item" : "GENERAL CONSTRUCTION WORKERS AND HEAVY EQUIPMENT O",
+        "count" : "11189"
+      }, {
+        "item" : "Arts Services (Cultural, Design, Visual, etc.)",
+        "count" : "11186"
+      } ],
+      "not_null" : "1097632",
+      "smallest" : "0.4% Lidocaine D5W 250ml  Hospira (Abbott Labs) # 793132 1g",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502163,
+    "name" : "CHK_EFT_ISS_DT",
+    "dataTypeName" : "date",
+    "fieldName" : "chk_eft_iss_dt",
+    "position" : 23,
+    "renderTypeName" : "date",
+    "tableColumnId" : 1782076,
+    "width" : 268,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "2026-08-14T00:00:00.000Z",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2023-05-15T00:00:00.000Z",
+        "count" : "2307"
+      }, {
+        "item" : "2022-09-01T00:00:00.000Z",
+        "count" : "1890"
+      }, {
+        "item" : "2026-05-15T00:00:00.000Z",
+        "count" : "1783"
+      }, {
+        "item" : "2010-04-16T00:00:00.000Z",
+        "count" : "1778"
+      }, {
+        "item" : "2025-05-15T00:00:00.000Z",
+        "count" : "1775"
+      }, {
+        "item" : "2009-10-16T00:00:00.000Z",
+        "count" : "1695"
+      }, {
+        "item" : "2010-01-07T00:00:00.000Z",
+        "count" : "1670"
+      }, {
+        "item" : "2020-09-01T00:00:00.000Z",
+        "count" : "1629"
+      }, {
+        "item" : "2009-03-04T00:00:00.000Z",
+        "count" : "1575"
+      }, {
+        "item" : "2022-11-15T00:00:00.000Z",
+        "count" : "1573"
+      }, {
+        "item" : "2021-11-15T00:00:00.000Z",
+        "count" : "1557"
+      }, {
+        "item" : "2009-01-30T00:00:00.000Z",
+        "count" : "1556"
+      }, {
+        "item" : "2018-11-15T00:00:00.000Z",
+        "count" : "1552"
+      }, {
+        "item" : "2019-11-15T00:00:00.000Z",
+        "count" : "1529"
+      }, {
+        "item" : "2009-07-29T00:00:00.000Z",
+        "count" : "1504"
+      }, {
+        "item" : "2023-11-15T00:00:00.000Z",
+        "count" : "1503"
+      }, {
+        "item" : "2019-05-15T00:00:00.000Z",
+        "count" : "1483"
+      }, {
+        "item" : "2009-11-17T00:00:00.000Z",
+        "count" : "1438"
+      }, {
+        "item" : "2024-11-15T00:00:00.000Z",
+        "count" : "1413"
+      }, {
+        "item" : "2010-02-04T00:00:00.000Z",
+        "count" : "1412"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "2008-10-01T00:00:00.000Z",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 170502164,
+    "name" : "CVL_CHK_STA_DV",
+    "dataTypeName" : "text",
+    "fieldName" : "cvl_chk_sta_dv",
+    "position" : 24,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782077,
+    "width" : 268,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Paid",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Paid",
+        "count" : "2076219"
+      }, {
+        "item" : "Outstanding",
+        "count" : "39317"
+      }, {
+        "item" : "Escheat",
+        "count" : "1030"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "Escheat",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502165,
+    "name" : "RFED_VEND_LN_NO",
+    "dataTypeName" : "number",
+    "fieldName" : "rfed_vend_ln_no",
+    "position" : 25,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782078,
+    "width" : 280,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "12",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "2110988"
+      }, {
+        "item" : "2",
+        "count" : "930"
+      }, {
+        "item" : "3",
+        "count" : "694"
+      }, {
+        "item" : "4",
+        "count" : "667"
+      }, {
+        "item" : "5",
+        "count" : "633"
+      }, {
+        "item" : "6",
+        "count" : "584"
+      }, {
+        "item" : "7",
+        "count" : "550"
+      }, {
+        "item" : "8",
+        "count" : "532"
+      }, {
+        "item" : "9",
+        "count" : "501"
+      }, {
+        "item" : "10",
+        "count" : "462"
+      }, {
+        "item" : "11",
+        "count" : "24"
+      }, {
+        "item" : "12",
+        "count" : "1"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502166,
+    "name" : "RFED_COMM_LN_NO",
+    "dataTypeName" : "number",
+    "fieldName" : "rfed_comm_ln_no",
+    "position" : 26,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782079,
+    "width" : 280,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "190",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "867693"
+      }, {
+        "item" : "0",
+        "count" : "529655"
+      }, {
+        "item" : "2",
+        "count" : "242935"
+      }, {
+        "item" : "3",
+        "count" : "120450"
+      }, {
+        "item" : "4",
+        "count" : "78594"
+      }, {
+        "item" : "5",
+        "count" : "53438"
+      }, {
+        "item" : "6",
+        "count" : "39229"
+      }, {
+        "item" : "7",
+        "count" : "29162"
+      }, {
+        "item" : "8",
+        "count" : "22844"
+      }, {
+        "item" : "9",
+        "count" : "18064"
+      }, {
+        "item" : "10",
+        "count" : "14921"
+      }, {
+        "item" : "11",
+        "count" : "12319"
+      }, {
+        "item" : "12",
+        "count" : "10370"
+      }, {
+        "item" : "13",
+        "count" : "8546"
+      }, {
+        "item" : "14",
+        "count" : "7388"
+      }, {
+        "item" : "15",
+        "count" : "6279"
+      }, {
+        "item" : "16",
+        "count" : "5408"
+      }, {
+        "item" : "17",
+        "count" : "4606"
+      }, {
+        "item" : "18",
+        "count" : "4178"
+      }, {
+        "item" : "19",
+        "count" : "3542"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502176,
+    "name" : "RFED_ACTG_LN_NO",
+    "dataTypeName" : "number",
+    "fieldName" : "rfed_actg_ln_no",
+    "position" : 27,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782080,
+    "width" : 280,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "220",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "1689730"
+      }, {
+        "item" : "2",
+        "count" : "135901"
+      }, {
+        "item" : "3",
+        "count" : "64631"
+      }, {
+        "item" : "4",
+        "count" : "41578"
+      }, {
+        "item" : "5",
+        "count" : "30253"
+      }, {
+        "item" : "6",
+        "count" : "24664"
+      }, {
+        "item" : "7",
+        "count" : "18511"
+      }, {
+        "item" : "8",
+        "count" : "15740"
+      }, {
+        "item" : "9",
+        "count" : "12801"
+      }, {
+        "item" : "10",
+        "count" : "10756"
+      }, {
+        "item" : "11",
+        "count" : "6481"
+      }, {
+        "item" : "12",
+        "count" : "5359"
+      }, {
+        "item" : "13",
+        "count" : "4449"
+      }, {
+        "item" : "14",
+        "count" : "4052"
+      }, {
+        "item" : "15",
+        "count" : "3540"
+      }, {
+        "item" : "16",
+        "count" : "3137"
+      }, {
+        "item" : "17",
+        "count" : "2939"
+      }, {
+        "item" : "18",
+        "count" : "2694"
+      }, {
+        "item" : "19",
+        "count" : "2405"
+      }, {
+        "item" : "20",
+        "count" : "2168"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502182,
+    "name" : "RF_DOC_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "rf_doc_cd",
+    "position" : 28,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782081,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "1583587",
+      "largest" : "PO",
+      "null" : "532979",
+      "top" : [ {
+        "item" : "DO",
+        "count" : "1267257"
+      }, {
+        "item" : "PO",
+        "count" : "142093"
+      }, {
+        "item" : "DOM",
+        "count" : "85289"
+      }, {
+        "item" : "CT",
+        "count" : "85274"
+      }, {
+        "item" : "CTM",
+        "count" : "3105"
+      }, {
+        "item" : "DOK",
+        "count" : "569"
+      } ],
+      "not_null" : "1095355",
+      "smallest" : "CT",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502183,
+    "name" : "RF_DOC_DEPT_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "rf_doc_dept_cd",
+    "position" : 29,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782082,
+    "width" : 268,
+    "cachedContents" : {
+      "non_null" : "1583587",
+      "largest" : "9700",
+      "null" : "532979",
+      "top" : [ {
+        "item" : "2200",
+        "count" : "240638"
+      }, {
+        "item" : "1100",
+        "count" : "193709"
+      }, {
+        "item" : "6100",
+        "count" : "135045"
+      }, {
+        "item" : "7800",
+        "count" : "108092"
+      }, {
+        "item" : "5600",
+        "count" : "91625"
+      }, {
+        "item" : "8600",
+        "count" : "80345"
+      }, {
+        "item" : "6200",
+        "count" : "64746"
+      }, {
+        "item" : "9100",
+        "count" : "58736"
+      }, {
+        "item" : "8100",
+        "count" : "54845"
+      }, {
+        "item" : "7500",
+        "count" : "54634"
+      }, {
+        "item" : "8700",
+        "count" : "45985"
+      }, {
+        "item" : "1500",
+        "count" : "40009"
+      }, {
+        "item" : "6400",
+        "count" : "36699"
+      }, {
+        "item" : "9300",
+        "count" : "36504"
+      }, {
+        "item" : "7400",
+        "count" : "35421"
+      }, {
+        "item" : "6300",
+        "count" : "33466"
+      }, {
+        "item" : "8500",
+        "count" : "28077"
+      }, {
+        "item" : "8200",
+        "count" : "27415"
+      }, {
+        "item" : "5500",
+        "count" : "25737"
+      }, {
+        "item" : "7200",
+        "count" : "22834"
+      } ],
+      "not_null" : "1095355",
+      "smallest" : "1100",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502184,
+    "name" : "RF_DOC_ID",
+    "dataTypeName" : "text",
+    "fieldName" : "rf_doc_id",
+    "position" : 30,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782083,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "1583587",
+      "largest" : "VS0000022362",
+      "null" : "532979",
+      "top" : [ {
+        "item" : "15100100005",
+        "count" : "1493"
+      }, {
+        "item" : "13100100047",
+        "count" : "1328"
+      }, {
+        "item" : "17100300377",
+        "count" : "1212"
+      }, {
+        "item" : "12100100052",
+        "count" : "1208"
+      }, {
+        "item" : "22100400325",
+        "count" : "1192"
+      }, {
+        "item" : "11100100051",
+        "count" : "1104"
+      }, {
+        "item" : "17120503722",
+        "count" : "1020"
+      }, {
+        "item" : "21100700754",
+        "count" : "1013"
+      }, {
+        "item" : "13111303215",
+        "count" : "1007"
+      }, {
+        "item" : "13120604511",
+        "count" : "966"
+      }, {
+        "item" : "14123005770",
+        "count" : "948"
+      }, {
+        "item" : "25100100405",
+        "count" : "799"
+      }, {
+        "item" : "10100100042",
+        "count" : "691"
+      }, {
+        "item" : "14100100084",
+        "count" : "688"
+      }, {
+        "item" : "24012905665",
+        "count" : "669"
+      }, {
+        "item" : "18042309621",
+        "count" : "634"
+      }, {
+        "item" : "12050813554",
+        "count" : "582"
+      }, {
+        "item" : "12051514046",
+        "count" : "575"
+      }, {
+        "item" : "12012506998",
+        "count" : "558"
+      }, {
+        "item" : "11101401060",
+        "count" : "522"
+      } ],
+      "not_null" : "1095355",
+      "smallest" : "01012032600",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502185,
+    "name" : "ACTG_LN_DSCR",
+    "dataTypeName" : "text",
+    "fieldName" : "actg_ln_dscr",
+    "position" : 31,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782084,
+    "width" : 244,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "Zoo Animals, All Types",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Mileage reimbursements",
+        "count" : "121536"
+      }, {
+        "item" : "Civil Engineering",
+        "count" : "40928"
+      }, {
+        "item" : "Copy Machine (Including Cost-Per-Copy Type Leases)",
+        "count" : "34193"
+      }, {
+        "item" : "Software Maintenance/Support",
+        "count" : "31413"
+      }, {
+        "item" : "Family and Social Services",
+        "count" : "30004"
+      }, {
+        "item" : "Educational travel",
+        "count" : "26530"
+      }, {
+        "item" : "Interest payment D/S funds",
+        "count" : "24586"
+      }, {
+        "item" : "TEMPORARY SERVICES FOR THE EMPLOYMENT OF COMPUTER PROGRAMMER",
+        "count" : "24581"
+      }, {
+        "item" : "Telephone Services, Long Distance and Local (Inclu",
+        "count" : "22420"
+      }, {
+        "item" : "Grounds Maintenance: Mowing, Edging, Plant (Not Trees)",
+        "count" : "21171"
+      }, {
+        "item" : "Rental-real estate-office",
+        "count" : "19011"
+      }, {
+        "item" : "Grants to others/subrecipients",
+        "count" : "18810"
+      }, {
+        "item" : "Interest-general",
+        "count" : "17279"
+      }, {
+        "item" : "Gas/heating fuels",
+        "count" : "17275"
+      }, {
+        "item" : "Services-other",
+        "count" : "17048"
+      }, {
+        "item" : "Advertising/publication",
+        "count" : "16864"
+      }, {
+        "item" : "SECURITY GUARDS",
+        "count" : "15818"
+      }, {
+        "item" : "Impact Tools, Air Powered (Not Road Building)",
+        "count" : "15470"
+      }, {
+        "item" : "Engineering Consulting",
+        "count" : "14861"
+      }, {
+        "item" : "Shoes, Safety Toe",
+        "count" : "14786"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "0.4% Lidocaine D5W 250ml  Hospira (Abbott Labs) # 793132 1g",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502186,
+    "name" : "AMOUNT",
+    "dataTypeName" : "number",
+    "fieldName" : "amount",
+    "position" : 32,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782085,
+    "width" : 172,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "99999999.99",
+      "null" : "0",
+      "top" : [ {
+        "item" : "100",
+        "count" : "17506"
+      }, {
+        "item" : "50",
+        "count" : "12660"
+      }, {
+        "item" : "150",
+        "count" : "9395"
+      }, {
+        "item" : "200",
+        "count" : "8349"
+      }, {
+        "item" : "75",
+        "count" : "8226"
+      }, {
+        "item" : "300",
+        "count" : "6310"
+      }, {
+        "item" : "600",
+        "count" : "5886"
+      }, {
+        "item" : "20",
+        "count" : "5190"
+      }, {
+        "item" : "30",
+        "count" : "5025"
+      }, {
+        "item" : "400",
+        "count" : "5001"
+      }, {
+        "item" : "250",
+        "count" : "4830"
+      }, {
+        "item" : "500",
+        "count" : "4660"
+      }, {
+        "item" : "25",
+        "count" : "4153"
+      }, {
+        "item" : "10",
+        "count" : "3885"
+      }, {
+        "item" : "40",
+        "count" : "3858"
+      }, {
+        "item" : "3000",
+        "count" : "3562"
+      }, {
+        "item" : "2000",
+        "count" : "3542"
+      }, {
+        "item" : "60",
+        "count" : "3453"
+      }, {
+        "item" : "70",
+        "count" : "3428"
+      }, {
+        "item" : "85",
+        "count" : "3397"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "-681055.43",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  }, {
+    "id" : 170502187,
+    "name" : "CAL_YEAR",
+    "dataTypeName" : "text",
+    "fieldName" : "cal_year",
+    "position" : 33,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1782086,
+    "width" : 196,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "2026",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2009",
+        "count" : "146664"
+      }, {
+        "item" : "2010",
+        "count" : "140462"
+      }, {
+        "item" : "2014",
+        "count" : "134180"
+      }, {
+        "item" : "2011",
+        "count" : "133692"
+      }, {
+        "item" : "2012",
+        "count" : "129584"
+      }, {
+        "item" : "2013",
+        "count" : "126409"
+      }, {
+        "item" : "2015",
+        "count" : "123088"
+      }, {
+        "item" : "2024",
+        "count" : "121141"
+      }, {
+        "item" : "2016",
+        "count" : "117030"
+      }, {
+        "item" : "2025",
+        "count" : "116750"
+      }, {
+        "item" : "2017",
+        "count" : "110142"
+      }, {
+        "item" : "2023",
+        "count" : "107630"
+      }, {
+        "item" : "2019",
+        "count" : "105557"
+      }, {
+        "item" : "2018",
+        "count" : "105238"
+      }, {
+        "item" : "2020",
+        "count" : "94441"
+      }, {
+        "item" : "2021",
+        "count" : "93577"
+      }, {
+        "item" : "2022",
+        "count" : "93425"
+      }, {
+        "item" : "2026",
+        "count" : "76010"
+      }, {
+        "item" : "2008",
+        "count" : "41546"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "2008",
+      "count" : "2116566",
+      "cardinality" : "2116566"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170502188,
+    "name" : "CAL_MONTH",
+    "dataTypeName" : "number",
+    "fieldName" : "cal_month",
+    "position" : 34,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1782087,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "2116566",
+      "largest" : "12",
+      "null" : "0",
+      "top" : [ {
+        "item" : "10",
+        "count" : "208724"
+      }, {
+        "item" : "3",
+        "count" : "196600"
+      }, {
+        "item" : "9",
+        "count" : "181664"
+      }, {
+        "item" : "7",
+        "count" : "179516"
+      }, {
+        "item" : "5",
+        "count" : "176310"
+      }, {
+        "item" : "4",
+        "count" : "175603"
+      }, {
+        "item" : "8",
+        "count" : "174657"
+      }, {
+        "item" : "1",
+        "count" : "174119"
+      }, {
+        "item" : "6",
+        "count" : "173223"
+      }, {
+        "item" : "12",
+        "count" : "160515"
+      }, {
+        "item" : "2",
+        "count" : "158252"
+      }, {
+        "item" : "11",
+        "count" : "157383"
+      } ],
+      "not_null" : "1475068",
+      "smallest" : "1",
+      "count" : "2116566",
+      "sum" : "0",
+      "cardinality" : "2116566"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "metadata" : {
+    "custom_fields" : {
+      "Ownership" : {
+        "Department name" : "Austin Financial Services"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "Weekly"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "rowLabel" : "Row",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "3dx6-8pdw",
+    "createdAt" : 1674572008,
+    "displayName" : "Austin Financial Services Owners",
+    "screenName" : "Austin Financial Services Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "tam2-m7q9",
+      "createdAt" : 1475597743,
+      "displayName" : "carole.reynolds",
+      "profileImageUrlLarge" : "/api/users/tam2-m7q9/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/tam2-m7q9/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/tam2-m7q9/profile_images/TINY",
+      "screenName" : "carole.reynolds",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "pcvw-whwy",
+      "createdAt" : 1655325275,
+      "disabledAt" : 1674498364,
+      "displayName" : "justin.nguyen@austintexas.gov",
+      "screenName" : "justin.nguyen@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "f4ku-85py",
+      "createdAt" : 1701725384,
+      "displayName" : "Kimberly.Moore@austintexas.gov",
+      "screenName" : "Kimberly.Moore@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "jdd4-9bij",
+      "createdAt" : 1396293347,
+      "disabledAt" : 1674498357,
+      "displayName" : "Mark.Caraway@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/jdd4-9bij/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/jdd4-9bij/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/jdd4-9bij/profile_images/TINY",
+      "screenName" : "Mark.Caraway@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "7t54-6inm",
+      "createdAt" : 1770300946,
+      "displayName" : "stella.seeger@austintexas.gov",
+      "screenName" : "stella.seeger@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "ratings" : {
+    "rating" : 100
+  },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "3dx6-8pdw",
+    "createdAt" : 1674572008,
+    "displayName" : "Austin Financial Services Owners",
+    "screenName" : "Austin Financial Services Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "tam2-m7q9",
+      "createdAt" : 1475597743,
+      "displayName" : "carole.reynolds",
+      "profileImageUrlLarge" : "/api/users/tam2-m7q9/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/tam2-m7q9/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/tam2-m7q9/profile_images/TINY",
+      "screenName" : "carole.reynolds",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "pcvw-whwy",
+      "createdAt" : 1655325275,
+      "disabledAt" : 1674498364,
+      "displayName" : "justin.nguyen@austintexas.gov",
+      "screenName" : "justin.nguyen@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "f4ku-85py",
+      "createdAt" : 1701725384,
+      "displayName" : "Kimberly.Moore@austintexas.gov",
+      "screenName" : "Kimberly.Moore@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "jdd4-9bij",
+      "createdAt" : 1396293347,
+      "disabledAt" : 1674498357,
+      "displayName" : "Mark.Caraway@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/jdd4-9bij/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/jdd4-9bij/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/jdd4-9bij/profile_images/TINY",
+      "screenName" : "Mark.Caraway@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "7t54-6inm",
+      "createdAt" : 1770300946,
+      "displayName" : "stella.seeger@austintexas.gov",
+      "screenName" : "stella.seeger@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "checkbook", "checks", "city of austin", "echeckbook", "expenditures", "expenses", "finance", "financial", "payment", "payments", "transparency" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

@@ -1,0 +1,553 @@
+{
+  "artifact": "data/raw/g4yx-aw9r/91932df7aed362245954a1b25819d64d8660cdf64fd0a575ac66fd1343381f82.csv",
+  "created_at": "2026-08-18T18:01:39.015554+00:00",
+  "dataset_id": "g4yx-aw9r",
+  "duplicate_counts_for_candidate_keys": {
+    "transaction_id": 0
+  },
+  "expected_minimum_rows": 100000,
+  "fields": {
+    "amount_guaranteed": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "collateral": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "cor_flag": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9126996232516282,
+      "nulls": 119675,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "date_due": {
+      "distinct": 27,
+      "invalid_date_count": 0,
+      "maximum": "08/05/2026",
+      "minimum": "10/31/2022",
+      "null_rate": 0.0017312121535669072,
+      "nulls": 227,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "date_filed": {
+      "distinct": 259,
+      "invalid_date_count": 0,
+      "maximum": "08/05/2026",
+      "minimum": "01/03/2023",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "election_date": {
+      "distinct": null,
+      "invalid_date_count": 0,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "election_type": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.6875505254648343,
+      "nulls": 90153,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "entity": {
+      "distinct": 2,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "INDIVIDUAL",
+          122854
+        ],
+        [
+          "ENTITY",
+          8268
+        ]
+      ]
+    },
+    "expense_description": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9204710117295343,
+      "nulls": 120694,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "filer_name": {
+      "distinct": 99,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.003805616143743994,
+      "nulls": 499,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "form": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor_address_2": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor_city": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor_employer": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor_name": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "guarantor_occupation": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "interest_rate": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "lender_institution": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9992907368710057,
+      "nulls": 131029,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "link_to_report": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "maturity_date": {
+      "distinct": 10,
+      "invalid_date_count": 0,
+      "maximum": "11/15/2026",
+      "minimum": "11/08/2022",
+      "null_rate": 0.9998932292063879,
+      "nulls": 131108,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "office_held": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7696496392672473,
+      "nulls": 100918,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "office_sought": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7118866399231251,
+      "nulls": 93344,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "out_of_state_pac": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "out_of_state_pac_id": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "outside_travel": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9998932292063879,
+      "nulls": 131108,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "personal_funds_deposited": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9992907368710057,
+      "nulls": 131029,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "political_obligation": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.958054331080978,
+      "nulls": 125622,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "reimbursement_intended": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9235063528622199,
+      "nulls": 121092,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "report_id": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "report_type": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.6085706441329449,
+      "nulls": 79797,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "returned_to_filer": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "schedule_reported": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction_amount": {
+      "distinct": 3858,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction_date": {
+      "distinct": 1483,
+      "invalid_date_count": 0,
+      "maximum": "07/25/2026",
+      "minimum": "01/16/2022",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "transaction_description": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction_id": {
+      "distinct": 131122,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction_type": {
+      "distinct": 5,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "Contribution",
+          120834
+        ],
+        [
+          "Expenditure",
+          10030
+        ],
+        [
+          "Credit",
+          150
+        ],
+        [
+          "Loan",
+          93
+        ],
+        [
+          "Pledge",
+          15
+        ]
+      ]
+    },
+    "transactor_address_2": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0003508183218681838,
+      "nulls": 46,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_city": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 2.287945577401199e-05,
+      "nulls": 3,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_employer": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.09843504522505758,
+      "nulls": 12907,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_name": {
+      "distinct": 20144,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_occupation": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.09822150363783347,
+      "nulls": 12879,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_state": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transactor_zip_code": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 131122,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    }
+  },
+  "meets_expected_minimum": true,
+  "missing_configured_fields": [],
+  "null_definition": "empty or whitespace-only CSV value",
+  "profile_version": 1,
+  "row_count": 131122,
+  "source_slug": "campaign-transactions"
+}

@@ -1,0 +1,35 @@
+{
+  "artifact": "data/raw/3ebq-e9iz/8a1b247bc0f512aeec62e2560a45263fe4e3722bbb463c6c75234452a86715e3.csv",
+  "dataset_id": "3ebq-e9iz",
+  "manifest_version": 1,
+  "operation": "acquire-csv",
+  "receipt": {
+    "bytes": 97044482,
+    "requested_url": "https://data.austintexas.gov/api/views/3ebq-e9iz/rows.csv?accessType=DOWNLOAD",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, must-revalidate, max-age=21600",
+      "connection": "close",
+      "content-disposition": "attachment; filename=Purchase_Order_Quantity_Price_detail_for_Commodity_Goods_procurements.csv",
+      "content-type": "text/csv; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:46:38 GMT",
+      "etag": "W/\"Zm94dHJvdC42NTI2XzFfNjA1TUgyLVlyalFPckpETlhVYUZHemxPQ1ViNlVv---gzipQW5u4POvP8LkIoK7iG_YjQ2LeSQ--gzip--gzip\"",
+      "last-modified": "Mon, 17 Aug 2026 12:00:25 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "505c5358e4d6a1c743cd749f74b14909",
+      "x-soda2-data-out-of-date": "false",
+      "x-soda2-secondary-last-modified": "Mon, 17 Aug 2026 12:00:25 GMT",
+      "x-soda2-truth-last-modified": "Mon, 17 Aug 2026 12:00:25 GMT"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/3ebq-e9iz/rows.csv?accessType=DOWNLOAD",
+    "retrieved_at": "2026-08-18T17:46:38.017337+00:00",
+    "sha256": "8a1b247bc0f512aeec62e2560a45263fe4e3722bbb463c6c75234452a86715e3",
+    "status": 200
+  },
+  "source_slug": "purchase-orders",
+  "title": "Purchase Order Quantity and Price"
+}

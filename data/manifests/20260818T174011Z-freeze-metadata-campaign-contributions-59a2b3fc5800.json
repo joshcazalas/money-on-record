@@ -1,0 +1,34 @@
+{
+  "artifact": "data/metadata/3kfv-biw6/59a2b3fc58004e70b974b53bf92f24373aeda32aca7d9826a106d37d2afd3569.json",
+  "dataset_id": "3kfv-biw6",
+  "details": {
+    "columns": 18,
+    "publication_date": 1477926584,
+    "rows_updated_at": 1787038990,
+    "view_last_modified": 1787038875
+  },
+  "manifest_version": 1,
+  "operation": "freeze-metadata",
+  "receipt": {
+    "bytes": 39769,
+    "requested_url": "https://data.austintexas.gov/api/views/3kfv-biw6",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "connection": "close",
+      "content-type": "application/json; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:40:11 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "747238b90a5599656f6aab574ab4a49c"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/3kfv-biw6",
+    "retrieved_at": "2026-08-18T17:40:11.725942+00:00",
+    "sha256": "59a2b3fc58004e70b974b53bf92f24373aeda32aca7d9826a106d37d2afd3569",
+    "status": 200
+  },
+  "source_slug": "campaign-contributions",
+  "title": "Campaign Finance - Contributions"
+}

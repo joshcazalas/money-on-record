@@ -1,0 +1,270 @@
+{
+  "artifact": "data/raw/3kfv-biw6/365d9e3f5c32aa627849ceae36c58a50bb22e539e31158bcfcd97e1ffec3d01f.csv",
+  "created_at": "2026-08-18T18:01:40.512494+00:00",
+  "dataset_id": "3kfv-biw6",
+  "duplicate_counts_for_candidate_keys": {
+    "transaction_id": 0
+  },
+  "expected_minimum_rows": 100000,
+  "fields": {
+    "city_state_zip": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contribution_amount": {
+      "distinct": 713,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contribution_date": {
+      "distinct": 1430,
+      "invalid_date_count": 0,
+      "maximum": "07/24/2026",
+      "minimum": "01/16/2022",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "contribution_type": {
+      "distinct": 10,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "Monetary Political Contribution",
+          119980
+        ],
+        [
+          "Contribution",
+          333
+        ],
+        [
+          "Non-Monetary (In-Kind) Political Contribution",
+          247
+        ],
+        [
+          "Non-Monetary Support From Corporation Or Labor Organization",
+          105
+        ],
+        [
+          "Monetary Support From Corporation Or Labor Organization",
+          92
+        ],
+        [
+          "Monetary Contribution From Corporation Or Labor Organization",
+          72
+        ],
+        [
+          "Pledged Contribution",
+          13
+        ],
+        [
+          "Non-Monetary (In-Kind) Contribution From Corporation Or Labor Organization",
+          3
+        ],
+        [
+          "Pledged Contribution From Corporation Or Labor Organization",
+          2
+        ],
+        [
+          "Political Expenditures From Political Contribution",
+          2
+        ]
+      ]
+    },
+    "contribution_year": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "correction": {
+      "distinct": 1,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9197676439192711,
+      "nulls": 111153,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "X",
+          9696
+        ]
+      ]
+    },
+    "date_reported": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "donor": {
+      "distinct": 18489,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "donor_address": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 120849,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "donor_reported_employer": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.02179579475212869,
+      "nulls": 2634,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "donor_reported_occupation": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.021564100654535824,
+      "nulls": 2606,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "donor_type": {
+      "distinct": 2,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "INDIVIDUAL",
+          120140
+        ],
+        [
+          "ENTITY",
+          709
+        ]
+      ]
+    },
+    "in_kind_description": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9979147531216642,
+      "nulls": 120597,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "out_of_state_pac": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.9999172521080025,
+      "nulls": 120839,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "recipient": {
+      "distinct": 87,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0014894620559541246,
+      "nulls": 180,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "report_filed": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "transaction_id": {
+      "distinct": 120849,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "view_report": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    }
+  },
+  "meets_expected_minimum": true,
+  "missing_configured_fields": [],
+  "null_definition": "empty or whitespace-only CSV value",
+  "profile_version": 1,
+  "row_count": 120849,
+  "source_slug": "campaign-contributions"
+}

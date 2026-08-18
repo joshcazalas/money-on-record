@@ -1,0 +1,35 @@
+{
+  "artifact": "data/raw/b2pc-2s8n/ddb8b21861f62dd9440c93e65d01596106f6d1847ad62bc389ceb8cc1d5f0836.csv",
+  "dataset_id": "b2pc-2s8n",
+  "manifest_version": 1,
+  "operation": "acquire-csv",
+  "receipt": {
+    "bytes": 506230,
+    "requested_url": "https://data.austintexas.gov/api/views/b2pc-2s8n/rows.csv?accessType=DOWNLOAD",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, must-revalidate, max-age=21600",
+      "connection": "close",
+      "content-disposition": "attachment; filename=Campaign_Finance_-_Report_Detail.csv",
+      "content-type": "text/csv; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:42:07 GMT",
+      "etag": "W/\"Zm94dHJvdC40Mjk1MV84XzIzMTZ5MDlsSGt6bVBHNG9xTVc0WVh5WXlJeGhoWnM---gzirZiKBLJBFIM9JxjBWqK1BXxHfgfA--gzip--gzip\"",
+      "last-modified": "Tue, 18 Aug 2026 08:01:12 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "34bd29995448bfc6a787e3d73bdb353e",
+      "x-soda2-data-out-of-date": "false",
+      "x-soda2-secondary-last-modified": "Tue, 18 Aug 2026 08:01:12 GMT",
+      "x-soda2-truth-last-modified": "Tue, 18 Aug 2026 08:01:12 GMT"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/b2pc-2s8n/rows.csv?accessType=DOWNLOAD",
+    "retrieved_at": "2026-08-18T17:42:07.063860+00:00",
+    "sha256": "ddb8b21861f62dd9440c93e65d01596106f6d1847ad62bc389ceb8cc1d5f0836",
+    "status": 200
+  },
+  "source_slug": "campaign-reports",
+  "title": "Campaign Finance - Report Detail"
+}

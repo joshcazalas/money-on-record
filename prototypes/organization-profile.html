@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Austin Board of REALTORS — Money on Record prototype</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #14231d;
+        --muted: #617067;
+        --paper: #f7f4ec;
+        --panel: #fffdf8;
+        --line: #d7ddd8;
+        --green: #166044;
+        --green-soft: #deeee4;
+        --amber: #885a05;
+        --amber-soft: #fff0c7;
+        --blue: #315b78;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 80% -10%, #dcece1 0, transparent 32rem),
+          var(--paper);
+        font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      a { color: var(--green); text-underline-offset: 0.18em; }
+      a:hover { color: #0c3f2b; }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgb(255 253 248 / 88%);
+      }
+
+      .bar, main, footer { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+
+      .bar {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand { font: 700 1.2rem Georgia, serif; letter-spacing: -0.01em; }
+      .brand span { color: var(--green); }
+      .tagline { color: var(--muted); font-size: 0.87rem; }
+
+      main { padding-block: 54px 72px; }
+
+      .status {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 7px 11px;
+        border: 1px solid #e5bd61;
+        border-radius: 999px;
+        color: var(--amber);
+        background: var(--amber-soft);
+        font-weight: 750;
+        font-size: 0.78rem;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 850px;
+        margin: 18px 0 10px;
+        font: clamp(2.35rem, 7vw, 5rem)/0.99 Georgia, "Times New Roman", serif;
+        letter-spacing: -0.045em;
+      }
+
+      .lede { max-width: 760px; margin: 0; color: var(--muted); font-size: 1.08rem; }
+
+      .warning {
+        max-width: 900px;
+        margin: 30px 0 0;
+        padding: 18px 20px;
+        border-left: 5px solid #d59a21;
+        background: #fff8e6;
+      }
+
+      .warning strong { display: block; margin-bottom: 4px; }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 38px;
+      }
+
+      .card, .section {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel);
+        box-shadow: 0 10px 28px rgb(27 48 38 / 5%);
+      }
+
+      .card { padding: 26px; }
+      .eyebrow { color: var(--blue); font-weight: 750; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
+      .number { margin: 8px 0 1px; font: 700 clamp(2rem, 5vw, 3.25rem)/1 Georgia, serif; letter-spacing: -0.04em; }
+      .subnumber { margin: 9px 0 18px; color: var(--muted); }
+      .drill { font-weight: 700; }
+
+      .section { margin-top: 18px; padding: 28px; }
+      h2 { margin: 0 0 8px; font: 700 1.5rem Georgia, serif; }
+      h3 { margin-bottom: 4px; font-size: 1rem; }
+
+      .identity-grid, .source-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .fact { padding-top: 14px; border-top: 1px solid var(--line); }
+      .fact dt { color: var(--muted); font-size: 0.8rem; }
+      .fact dd { margin: 3px 0 0; font-weight: 680; }
+      code { overflow-wrap: anywhere; color: #33473d; font-size: 0.76rem; }
+
+      .method {
+        margin-top: 26px;
+        padding: 18px 20px;
+        border-radius: 12px;
+        background: var(--green-soft);
+      }
+
+      footer { padding-block: 25px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.86rem; }
+
+      @media (max-width: 720px) {
+        .tagline { display: none; }
+        main { padding-top: 36px; }
+        .metrics, .identity-grid, .source-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="bar">
+        <div class="brand">Money <span>on Record</span></div>
+        <div class="tagline">Campaign money and public spending, on record.</div>
+      </div>
+    </header>
+
+    <main>
+      <span class="status">Local research prototype · unverified match</span>
+      <h1>Austin Board of REALTORS</h1>
+      <p class="lede">
+        A source-auditable view of records that may refer to the same organization across
+        Austin campaign-finance disclosures and City payment data.
+      </p>
+
+      <div class="warning">
+        <strong>This identity link has not been verified.</strong>
+        The two sources have the same strict normalized name, but name agreement alone is not
+        proof that the records describe the same legal organization. This page is not published.
+      </div>
+
+      <section class="metrics" aria-label="Record totals">
+        <article class="card">
+          <div class="eyebrow">Campaign contributions disclosed</div>
+          <div class="number">$240,133.82</div>
+          <p class="subnumber">53 rows explicitly classified as <strong>ENTITY</strong></p>
+          <a class="drill" href="https://data.austintexas.gov/resource/3kfv-biw6.json?%24where=donor%20%3D%20%27Austin%20Board%20of%20REALTORS%27%20AND%20donor_type%20%3D%20%27ENTITY%27&amp;%24limit=50000">Inspect all 53 official contribution rows →</a>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">City payment lines</div>
+          <div class="number">$106,072.10</div>
+          <p class="subnumber">208 eCheckbook rows under vendor code <strong>AUS6036990</strong></p>
+          <a class="drill" href="https://data.austintexas.gov/resource/8c6z-qnmj.json?%24where=lgl_nm%20%3D%20%27AUSTIN%20BOARD%20OF%20REALTORS%27%20AND%20vend_cust_cd%20%3D%20%27AUS6036990%27&amp;%24limit=50000">Inspect all 208 official payment rows →</a>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2>Why these records are grouped</h2>
+        <p>
+          The organization names become identical after conservative typography-only
+          normalization. No person matching, address matching, fuzzy similarity, or placeholder
+          vendor code was used.
+        </p>
+        <dl class="identity-grid">
+          <div class="fact">
+            <dt>Evidence tier</dt>
+            <dd>A · strict normalized name</dd>
+          </div>
+          <div class="fact">
+            <dt>Campaign name</dt>
+            <dd>Austin Board of REALTORS</dd>
+          </div>
+          <div class="fact">
+            <dt>Payment name</dt>
+            <dd>AUSTIN BOARD OF REALTORS</dd>
+          </div>
+        </dl>
+        <div class="method">
+          <strong>What this does not show:</strong> The juxtaposition does not establish a quid pro
+          quo, influence, wrongdoing, or even a verified shared identity. It makes two public
+          record sets easier to inspect together while preserving their source context.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Source and calculation trail</h2>
+        <p>Totals were calculated from complete City bulk-export snapshots frozen on August 18, 2026.</p>
+        <div class="source-grid">
+          <div>
+            <h3>Campaign source</h3>
+            <a href="https://data.austintexas.gov/d/3kfv-biw6">Campaign Finance – Contributions</a>
+            <p><code>SHA-256 365d9e3f5c32aa627849ceae36c58a50bb22e539e31158bcfcd97e1ffec3d01f</code></p>
+          </div>
+          <div>
+            <h3>Payment source</h3>
+            <a href="https://data.austintexas.gov/d/8c6z-qnmj">Austin Finance Online eCheckbook</a>
+            <p><code>SHA-256 a4b9ec9541bb2a36fd433bedc61d83636a23f739c112326743c959e99f0dc23a</code></p>
+          </div>
+          <div>
+            <h3>Calculation</h3>
+            <p>Count rows and sum the named amount field after applying the linked exact source filters.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Money on Record L0 prototype · Candidate ID <code>4110c6277982a156</code> · Not for publication
+    </footer>
+  </body>
+</html>

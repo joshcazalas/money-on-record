@@ -1,0 +1,2021 @@
+{
+  "id" : "84ih-p28j",
+  "name" : "Contracts",
+  "assetType" : "dataset",
+  "attribution" : "City of Austin, Texas - data.austintexas.gov",
+  "attributionLink" : "https://financeonline.austintexas.gov/afo/contract_catalog/",
+  "averageRating" : 0,
+  "category" : "Budget and Finance",
+  "createdAt" : 1324072716,
+  "description" : "Information about City's authorized spending limit, contract lifetime (called inception-to-date) ordering and spending.  Contracts are visible only while active.  For the purposes of this data set, a contract is a long-term (multi-year) contract for goods and services, and contracts for construction activity. Within the City, these are referred to as Master Agreements and Purchase Contracts.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 6773,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "iconUrl" : "5DAA050C-44DE-469C-97C5-61E378599360",
+  "indexUpdatedAt" : 1569439348,
+  "licenseId" : "PUBLIC_DOMAIN",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 9064304,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1412796306,
+  "publicationGroup" : 261367,
+  "publicationStage" : "published",
+  "rowIdentifierColumnId" : 170303450,
+  "rowsUpdatedAt" : 1786967947,
+  "rowsUpdatedBy" : "pcvw-whwy",
+  "tableId" : 1773627,
+  "totalTimesRated" : 0,
+  "viewCount" : 13616,
+  "viewLastModified" : 1772466502,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1412796306,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 674917,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1412796306,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "failureCount" : 0,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "t5rb-t58r",
+      "displayName" : "Chris"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 170303413,
+    "name" : "DOC_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "doc_cd",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800110,
+    "width" : 172,
+    "cachedContents" : {
+      "largest" : "MA",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MA",
+        "count" : "523"
+      }, {
+        "item" : "CT",
+        "count" : "102"
+      } ],
+      "smallest" : "CT",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303416,
+    "name" : "DOC_DEPT_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "doc_dept_cd",
+    "position" : 2,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800111,
+    "width" : 232,
+    "cachedContents" : {
+      "largest" : "9300",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "6100",
+        "count" : "435"
+      }, {
+        "item" : "2200",
+        "count" : "32"
+      }, {
+        "item" : "7800",
+        "count" : "22"
+      }, {
+        "item" : "5800",
+        "count" : "19"
+      }, {
+        "item" : "5000",
+        "count" : "16"
+      }, {
+        "item" : "2400",
+        "count" : "11"
+      }, {
+        "item" : "5500",
+        "count" : "8"
+      }, {
+        "item" : "1500",
+        "count" : "8"
+      }, {
+        "item" : "6200",
+        "count" : "7"
+      }, {
+        "item" : "8100",
+        "count" : "7"
+      }, {
+        "item" : "9000",
+        "count" : "6"
+      }, {
+        "item" : "6300",
+        "count" : "6"
+      }, {
+        "item" : "8200",
+        "count" : "5"
+      }, {
+        "item" : "7400",
+        "count" : "5"
+      }, {
+        "item" : "8600",
+        "count" : "4"
+      }, {
+        "item" : "8700",
+        "count" : "4"
+      }, {
+        "item" : "9100",
+        "count" : "4"
+      }, {
+        "item" : "9200",
+        "count" : "4"
+      }, {
+        "item" : "4400",
+        "count" : "4"
+      }, {
+        "item" : "7200",
+        "count" : "4"
+      } ],
+      "smallest" : "1100",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170303419,
+    "name" : "DOC_ID",
+    "dataTypeName" : "text",
+    "fieldName" : "doc_id",
+    "position" : 3,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800112,
+    "width" : 172,
+    "cachedContents" : {
+      "largest" : "SA230000013",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "PA110000062",
+        "count" : "19"
+      }, {
+        "item" : "PA190000022",
+        "count" : "19"
+      }, {
+        "item" : "PA110000043",
+        "count" : "15"
+      }, {
+        "item" : "PA110000004",
+        "count" : "14"
+      }, {
+        "item" : "PA230000075",
+        "count" : "14"
+      }, {
+        "item" : "PA160000003",
+        "count" : "13"
+      }, {
+        "item" : "PA170000034",
+        "count" : "12"
+      }, {
+        "item" : "PA220000067",
+        "count" : "12"
+      }, {
+        "item" : "PA200000014",
+        "count" : "11"
+      }, {
+        "item" : "PA190000067",
+        "count" : "11"
+      }, {
+        "item" : "PA180000027",
+        "count" : "11"
+      }, {
+        "item" : "PA160000042",
+        "count" : "11"
+      }, {
+        "item" : "PA100000043",
+        "count" : "10"
+      }, {
+        "item" : "PA150000005",
+        "count" : "9"
+      }, {
+        "item" : "PA150000002",
+        "count" : "9"
+      }, {
+        "item" : "PA230000026",
+        "count" : "9"
+      }, {
+        "item" : "NA230000149",
+        "count" : "9"
+      }, {
+        "item" : "CA200000021",
+        "count" : "8"
+      }, {
+        "item" : "PA220000102",
+        "count" : "7"
+      }, {
+        "item" : "PA210000039",
+        "count" : "7"
+      } ],
+      "smallest" : "08071602240",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303424,
+    "name" : "DOC_VERS_NO",
+    "dataTypeName" : "number",
+    "fieldName" : "doc_vers_no",
+    "position" : 4,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800113,
+    "width" : 232,
+    "cachedContents" : {
+      "largest" : "109",
+      "non_null" : "625",
+      "average" : "11.61208267090620",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "155"
+      }, {
+        "item" : "2",
+        "count" : "91"
+      }, {
+        "item" : "3",
+        "count" : "54"
+      }, {
+        "item" : "12",
+        "count" : "34"
+      }, {
+        "item" : "5",
+        "count" : "28"
+      }, {
+        "item" : "7",
+        "count" : "27"
+      }, {
+        "item" : "4",
+        "count" : "25"
+      }, {
+        "item" : "53",
+        "count" : "19"
+      }, {
+        "item" : "41",
+        "count" : "15"
+      }, {
+        "item" : "8",
+        "count" : "15"
+      }, {
+        "item" : "9",
+        "count" : "14"
+      }, {
+        "item" : "46",
+        "count" : "14"
+      }, {
+        "item" : "43",
+        "count" : "13"
+      }, {
+        "item" : "23",
+        "count" : "12"
+      }, {
+        "item" : "31",
+        "count" : "12"
+      }, {
+        "item" : "109",
+        "count" : "11"
+      }, {
+        "item" : "6",
+        "count" : "11"
+      }, {
+        "item" : "11",
+        "count" : "11"
+      }, {
+        "item" : "18",
+        "count" : "11"
+      }, {
+        "item" : "49",
+        "count" : "10"
+      } ],
+      "smallest" : "1",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "7304",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303426,
+    "name" : "DOC_DSCR",
+    "dataTypeName" : "text",
+    "fieldName" : "doc_dscr",
+    "position" : 5,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800114,
+    "width" : 196,
+    "cachedContents" : {
+      "largest" : "ZILKER WATER AND WASTEWATER PIPELINE RENEWAL",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2018 SURVEYING SERVICES ROTATION LIST",
+        "count" : "19"
+      }, {
+        "item" : "2011 SMALL SCALE CIVIL ENGINEERING ROTATION LIST",
+        "count" : "19"
+      }, {
+        "item" : "SMALL DIAMETER WATER AND WASTEWATER PIPELINE ENGINEERING",
+        "count" : "15"
+      }, {
+        "item" : "WATER AND WASTEWATER PIPELINE ENGINEERING ROTATION LIST",
+        "count" : "14"
+      }, {
+        "item" : "2023 TRANSPORTATION ENGINEERING SERVICES ROTATION LIST",
+        "count" : "14"
+      }, {
+        "item" : "2015 FLOOD HAZARD MITIGATION ROTATION LIST",
+        "count" : "13"
+      }, {
+        "item" : "2017 LARGE DIAMETER WTR & WASTEWATER PIPELINE ENGINEERING RL",
+        "count" : "12"
+      }, {
+        "item" : "2022 LARGE DIAMETER W&WW PIPELINE ENG SERVICES ROTATION LIST",
+        "count" : "12"
+      }, {
+        "item" : "2016 LARGE W&WW FACILITIES ENGINEERING SERVICES RL",
+        "count" : "11"
+      }, {
+        "item" : "WATERSHED PROTECTION LOCAL FLOOD RISK REDUCTION RL",
+        "count" : "11"
+      }, {
+        "item" : "2019 SMALL DIAMETER W & WW PIPELINE ENGINEERING RL",
+        "count" : "11"
+      }, {
+        "item" : "2018 CORRIDOR PROGRAM ENGINEERING SERVICES ROTATION LIST",
+        "count" : "11"
+      }, {
+        "item" : "ENVIRONMENTAL SERVICES ROTATION LIST 2010-2012 FOR P.W.",
+        "count" : "10"
+      }, {
+        "item" : "EXECUTIVE RECRUITMENT",
+        "count" : "9"
+      }, {
+        "item" : "2014 ENVIRONMENTAL SERVICES ROTATION LIST",
+        "count" : "9"
+      }, {
+        "item" : "2015 GENERAL ARCHITECTURAL SERVICES ROTATION LIST",
+        "count" : "9"
+      }, {
+        "item" : "2022 BUILDING COMMISSION (CX) SERVICES ROTATION LIST",
+        "count" : "9"
+      }, {
+        "item" : "2020 JOB ORDER CONTRACTING FOR CITY FACILITY IMPROVEMENTS",
+        "count" : "8"
+      }, {
+        "item" : "2022 AUSTIN WATER SCADA SERVICES ROTATION LIST",
+        "count" : "7"
+      }, {
+        "item" : "2021 ROOFING & WATERPROOFING CONSULTANT SERVICES RL",
+        "count" : "7"
+      } ],
+      "smallest" : "2011 SMALL SCALE CIVIL ENGINEERING ROTATION LIST",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303428,
+    "name" : "CONTRACT_SYNOPSIS",
+    "dataTypeName" : "text",
+    "fieldName" : "contract_synopsis",
+    "position" : 6,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800115,
+    "width" : 304,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "625",
+      "not_null" : "0",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303429,
+    "name" : "CONTRACT_CONTACT_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "contract_contact_nm",
+    "position" : 7,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800116,
+    "width" : 328,
+    "cachedContents" : {
+      "largest" : "Contract and Land Management Department",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Capital Contracting Office",
+        "count" : "251"
+      }, {
+        "item" : "Central Purchasing Office Receptionist",
+        "count" : "190"
+      }, {
+        "item" : "Contract and Land Management Department",
+        "count" : "184"
+      } ],
+      "smallest" : "Capital Contracting Office",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303430,
+    "name" : "CONTRACT_CONTACT_VOICE_PH_NO",
+    "dataTypeName" : "text",
+    "fieldName" : "contract_contact_voice_ph_no",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800117,
+    "width" : 436,
+    "cachedContents" : {
+      "largest" : "unknown",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "unknown",
+        "count" : "435"
+      }, {
+        "item" : "(512) 974-2500",
+        "count" : "182"
+      }, {
+        "item" : "5129742500",
+        "count" : "8"
+      } ],
+      "smallest" : "5129742500",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303431,
+    "name" : "CONTRACT_CONTACT_EMAIL_AD",
+    "dataTypeName" : "text",
+    "fieldName" : "contract_contact_email_ad",
+    "position" : 9,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800118,
+    "width" : 400,
+    "cachedContents" : {
+      "largest" : "unknown",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "unknown",
+        "count" : "435"
+      }, {
+        "item" : "purchinfo@austintexas.gov",
+        "count" : "190"
+      } ],
+      "smallest" : "purchinfo@austintexas.gov",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303432,
+    "name" : "MA_PRCH_LMT_AM",
+    "dataTypeName" : "number",
+    "fieldName" : "ma_prch_lmt_am",
+    "position" : 10,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800119,
+    "width" : 268,
+    "cachedContents" : {
+      "largest" : "120580044",
+      "non_null" : "625",
+      "average" : "5086194.649570747",
+      "null" : "0",
+      "top" : [ {
+        "item" : "5000000",
+        "count" : "27"
+      }, {
+        "item" : "6400000",
+        "count" : "20"
+      }, {
+        "item" : "15000000",
+        "count" : "20"
+      }, {
+        "item" : "6300000",
+        "count" : "19"
+      }, {
+        "item" : "24000000",
+        "count" : "19"
+      }, {
+        "item" : "10000000",
+        "count" : "19"
+      }, {
+        "item" : "30000000",
+        "count" : "15"
+      }, {
+        "item" : "4800000",
+        "count" : "15"
+      }, {
+        "item" : "7500000",
+        "count" : "14"
+      }, {
+        "item" : "20000000",
+        "count" : "12"
+      }, {
+        "item" : "9999999.9",
+        "count" : "12"
+      }, {
+        "item" : "115000000",
+        "count" : "11"
+      }, {
+        "item" : "8400000",
+        "count" : "11"
+      }, {
+        "item" : "45030000",
+        "count" : "11"
+      }, {
+        "item" : "1000000",
+        "count" : "10"
+      }, {
+        "item" : "4000000",
+        "count" : "10"
+      }, {
+        "item" : "7200000",
+        "count" : "10"
+      }, {
+        "item" : "48000000",
+        "count" : "8"
+      }, {
+        "item" : "1400000",
+        "count" : "7"
+      }, {
+        "item" : "9000000",
+        "count" : "6"
+      } ],
+      "smallest" : "0",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "3199216434.58",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303433,
+    "name" : "MA_ITD_ORD_AM",
+    "dataTypeName" : "number",
+    "fieldName" : "ma_itd_ord_am",
+    "position" : 11,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800120,
+    "width" : 256,
+    "cachedContents" : {
+      "largest" : "120580044",
+      "non_null" : "625",
+      "average" : "3512933.377519873",
+      "null" : "0",
+      "top" : [ {
+        "item" : "0",
+        "count" : "36"
+      }, {
+        "item" : "3883002.09",
+        "count" : "19"
+      }, {
+        "item" : "5986267.8",
+        "count" : "19"
+      }, {
+        "item" : "4694846.66",
+        "count" : "15"
+      }, {
+        "item" : "6873880.86",
+        "count" : "14"
+      }, {
+        "item" : "1206944.74",
+        "count" : "14"
+      }, {
+        "item" : "14194345.25",
+        "count" : "13"
+      }, {
+        "item" : "5999352.57",
+        "count" : "12"
+      }, {
+        "item" : "9419051.52",
+        "count" : "12"
+      }, {
+        "item" : "24367439.49",
+        "count" : "11"
+      }, {
+        "item" : "111460417.18",
+        "count" : "11"
+      }, {
+        "item" : "19013522.17",
+        "count" : "11"
+      }, {
+        "item" : "6298940.49",
+        "count" : "11"
+      }, {
+        "item" : "6864582.9",
+        "count" : "10"
+      }, {
+        "item" : "732664.38",
+        "count" : "9"
+      }, {
+        "item" : "3150902.7",
+        "count" : "9"
+      }, {
+        "item" : "4381512.65",
+        "count" : "9"
+      }, {
+        "item" : "56500",
+        "count" : "9"
+      }, {
+        "item" : "16178004.8",
+        "count" : "8"
+      }, {
+        "item" : "447909.15",
+        "count" : "7"
+      } ],
+      "smallest" : "0",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "2209635094.46",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303434,
+    "name" : "MA_DO_RFED_AM",
+    "dataTypeName" : "number",
+    "fieldName" : "ma_do_rfed_am",
+    "position" : 12,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800121,
+    "width" : 256,
+    "cachedContents" : {
+      "largest" : "96093332.19",
+      "non_null" : "625",
+      "average" : "2654709.321669316",
+      "null" : "0",
+      "top" : [ {
+        "item" : "0",
+        "count" : "90"
+      }, {
+        "item" : "5573886.17",
+        "count" : "19"
+      }, {
+        "item" : "3029866.8",
+        "count" : "19"
+      }, {
+        "item" : "4666834.5",
+        "count" : "15"
+      }, {
+        "item" : "6690764.03",
+        "count" : "14"
+      }, {
+        "item" : "47770.4",
+        "count" : "14"
+      }, {
+        "item" : "12612801.64",
+        "count" : "13"
+      }, {
+        "item" : "954325.13",
+        "count" : "12"
+      }, {
+        "item" : "8516085.68",
+        "count" : "12"
+      }, {
+        "item" : "96093332.19",
+        "count" : "11"
+      }, {
+        "item" : "17675501.45",
+        "count" : "11"
+      }, {
+        "item" : "11976507.02",
+        "count" : "11"
+      }, {
+        "item" : "4386045.43",
+        "count" : "11"
+      }, {
+        "item" : "6515552.53",
+        "count" : "10"
+      }, {
+        "item" : "2985359.34",
+        "count" : "9"
+      }, {
+        "item" : "68139.69",
+        "count" : "9"
+      }, {
+        "item" : "31068",
+        "count" : "9"
+      }, {
+        "item" : "4159736.6",
+        "count" : "9"
+      }, {
+        "item" : "9830471.76",
+        "count" : "8"
+      }, {
+        "item" : "197858.56",
+        "count" : "7"
+      } ],
+      "smallest" : "0",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "1669812163.33",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303435,
+    "name" : "EFBGN_DT",
+    "dataTypeName" : "date",
+    "fieldName" : "efbgn_dt",
+    "position" : 13,
+    "renderTypeName" : "date",
+    "tableColumnId" : 1800122,
+    "width" : 196,
+    "cachedContents" : {
+      "largest" : "2024-01-01T00:00:00.000Z",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2019-01-09T00:00:00.000Z",
+        "count" : "19"
+      }, {
+        "item" : "2011-06-23T00:00:00.000Z",
+        "count" : "19"
+      }, {
+        "item" : "2011-04-21T00:00:00.000Z",
+        "count" : "15"
+      }, {
+        "item" : "2019-09-23T00:00:00.000Z",
+        "count" : "15"
+      }, {
+        "item" : "2023-05-01T00:00:00.000Z",
+        "count" : "14"
+      }, {
+        "item" : "2010-11-18T00:00:00.000Z",
+        "count" : "14"
+      }, {
+        "item" : "2015-08-13T00:00:00.000Z",
+        "count" : "13"
+      }, {
+        "item" : "2022-08-08T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "2017-03-17T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "2023-07-21T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "2016-05-18T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "2019-11-14T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "2018-04-27T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "2010-03-11T00:00:00.000Z",
+        "count" : "10"
+      }, {
+        "item" : "2015-01-29T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2014-08-28T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2023-02-16T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2022-08-16T00:00:00.000Z",
+        "count" : "8"
+      }, {
+        "item" : "2021-01-05T00:00:00.000Z",
+        "count" : "8"
+      }, {
+        "item" : "2021-02-12T00:00:00.000Z",
+        "count" : "7"
+      } ],
+      "smallest" : "2008-11-24T00:00:00.000Z",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 170303436,
+    "name" : "EFEND_DT",
+    "dataTypeName" : "date",
+    "fieldName" : "efend_dt",
+    "position" : 14,
+    "renderTypeName" : "date",
+    "tableColumnId" : 1800123,
+    "width" : 196,
+    "cachedContents" : {
+      "non_null" : "523",
+      "largest" : "2029-09-18T00:00:00.000Z",
+      "null" : "102",
+      "top" : [ {
+        "item" : "2024-12-31T00:00:00.000Z",
+        "count" : "68"
+      }, {
+        "item" : "2023-12-31T00:00:00.000Z",
+        "count" : "65"
+      }, {
+        "item" : "2025-12-31T00:00:00.000Z",
+        "count" : "41"
+      }, {
+        "item" : "2024-01-09T00:00:00.000Z",
+        "count" : "20"
+      }, {
+        "item" : "2026-04-30T00:00:00.000Z",
+        "count" : "14"
+      }, {
+        "item" : "2025-04-26T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "2025-07-20T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2024-01-28T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2026-09-30T00:00:00.000Z",
+        "count" : "9"
+      }, {
+        "item" : "2024-01-04T00:00:00.000Z",
+        "count" : "8"
+      }, {
+        "item" : "2027-02-28T00:00:00.000Z",
+        "count" : "6"
+      }, {
+        "item" : "2028-08-03T00:00:00.000Z",
+        "count" : "6"
+      }, {
+        "item" : "2024-03-28T00:00:00.000Z",
+        "count" : "6"
+      }, {
+        "item" : "2028-02-20T00:00:00.000Z",
+        "count" : "6"
+      }, {
+        "item" : "2025-10-22T00:00:00.000Z",
+        "count" : "5"
+      }, {
+        "item" : "2026-12-31T00:00:00.000Z",
+        "count" : "5"
+      }, {
+        "item" : "2024-06-17T00:00:00.000Z",
+        "count" : "5"
+      }, {
+        "item" : "2024-09-09T00:00:00.000Z",
+        "count" : "4"
+      }, {
+        "item" : "2025-06-10T00:00:00.000Z",
+        "count" : "4"
+      }, {
+        "item" : "2024-09-22T00:00:00.000Z",
+        "count" : "4"
+      } ],
+      "not_null" : "329",
+      "smallest" : "2019-03-31T00:00:00.000Z",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 170303437,
+    "name" : "GNRC_PO_RPT_1",
+    "dataTypeName" : "number",
+    "fieldName" : "gnrc_po_rpt_1",
+    "position" : 15,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800124,
+    "width" : 256,
+    "cachedContents" : {
+      "largest" : "80",
+      "non_null" : "625",
+      "average" : "19.60254372019078",
+      "null" : "0",
+      "top" : [ {
+        "item" : "10",
+        "count" : "444"
+      }, {
+        "item" : "55",
+        "count" : "157"
+      }, {
+        "item" : "15",
+        "count" : "22"
+      }, {
+        "item" : "60",
+        "count" : "1"
+      }, {
+        "item" : "80",
+        "count" : "1"
+      } ],
+      "smallest" : "10",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "12330",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303438,
+    "name" : "RPT_DSCR",
+    "dataTypeName" : "text",
+    "fieldName" : "rpt_dscr",
+    "position" : 16,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800125,
+    "width" : 196,
+    "cachedContents" : {
+      "largest" : "Sole Source > $5000",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Competitive Acquisition",
+        "count" : "444"
+      }, {
+        "item" : "Pers / Prof / Plan Svcs (252)",
+        "count" : "157"
+      }, {
+        "item" : "Alt Proc Method (252)",
+        "count" : "22"
+      }, {
+        "item" : "Cooperative Purchase",
+        "count" : "1"
+      }, {
+        "item" : "Sole Source > $5000",
+        "count" : "1"
+      } ],
+      "smallest" : "Alt Proc Method (252)",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303439,
+    "name" : "BRD_AWD_DT",
+    "dataTypeName" : "date",
+    "fieldName" : "brd_awd_dt",
+    "position" : 17,
+    "renderTypeName" : "date",
+    "tableColumnId" : 1800126,
+    "width" : 220,
+    "cachedContents" : {
+      "largest" : "0023-11-30T00:00:00.000Z",
+      "non_null" : "563",
+      "null" : "62",
+      "top" : [ {
+        "item" : "0023-07-20T00:00:00.000Z",
+        "count" : "28"
+      }, {
+        "item" : "0018-11-15T00:00:00.000Z",
+        "count" : "19"
+      }, {
+        "item" : "0011-06-23T00:00:00.000Z",
+        "count" : "19"
+      }, {
+        "item" : "0022-11-15T00:00:00.000Z",
+        "count" : "17"
+      }, {
+        "item" : "0023-02-23T00:00:00.000Z",
+        "count" : "17"
+      }, {
+        "item" : "0019-09-19T00:00:00.000Z",
+        "count" : "15"
+      }, {
+        "item" : "0011-04-21T00:00:00.000Z",
+        "count" : "15"
+      }, {
+        "item" : "0010-11-18T00:00:00.000Z",
+        "count" : "14"
+      }, {
+        "item" : "0015-08-13T00:00:00.000Z",
+        "count" : "13"
+      }, {
+        "item" : "0022-05-19T00:00:00.000Z",
+        "count" : "13"
+      }, {
+        "item" : "0016-12-15T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "0018-03-22T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "0019-06-19T00:00:00.000Z",
+        "count" : "12"
+      }, {
+        "item" : "0016-02-04T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "0020-03-26T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "0022-06-09T00:00:00.000Z",
+        "count" : "11"
+      }, {
+        "item" : "0011-06-09T00:00:00.000Z",
+        "count" : "10"
+      }, {
+        "item" : "0020-07-29T00:00:00.000Z",
+        "count" : "10"
+      }, {
+        "item" : "0022-09-01T00:00:00.000Z",
+        "count" : "10"
+      }, {
+        "item" : "0023-09-21T00:00:00.000Z",
+        "count" : "10"
+      } ],
+      "smallest" : "0010-11-18T00:00:00.000Z",
+      "not_null" : "377",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 170303440,
+    "name" : "BRD_AWD_NO",
+    "dataTypeName" : "text",
+    "fieldName" : "brd_awd_no",
+    "position" : 18,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800127,
+    "width" : 220,
+    "cachedContents" : {
+      "non_null" : "624",
+      "largest" : "N/A",
+      "null" : "1",
+      "top" : [ {
+        "item" : "ADMIN",
+        "count" : "52"
+      }, {
+        "item" : "13",
+        "count" : "36"
+      }, {
+        "item" : "10",
+        "count" : "29"
+      }, {
+        "item" : "17",
+        "count" : "29"
+      }, {
+        "item" : "9",
+        "count" : "27"
+      }, {
+        "item" : "3",
+        "count" : "25"
+      }, {
+        "item" : "4",
+        "count" : "25"
+      }, {
+        "item" : "1",
+        "count" : "24"
+      }, {
+        "item" : "22",
+        "count" : "22"
+      }, {
+        "item" : "11",
+        "count" : "22"
+      }, {
+        "item" : "16",
+        "count" : "20"
+      }, {
+        "item" : "004",
+        "count" : "19"
+      }, {
+        "item" : "5",
+        "count" : "18"
+      }, {
+        "item" : "6",
+        "count" : "18"
+      }, {
+        "item" : "12",
+        "count" : "15"
+      }, {
+        "item" : "36",
+        "count" : "15"
+      }, {
+        "item" : "2",
+        "count" : "14"
+      }, {
+        "item" : "14",
+        "count" : "13"
+      }, {
+        "item" : "15",
+        "count" : "12"
+      }, {
+        "item" : "7",
+        "count" : "12"
+      } ],
+      "not_null" : "422",
+      "smallest" : "004",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303441,
+    "name" : "CAT_DSCR",
+    "dataTypeName" : "text",
+    "fieldName" : "cat_dscr",
+    "position" : 19,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800128,
+    "width" : 196,
+    "cachedContents" : {
+      "largest" : "Sole and Single Source",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Sole and Single Source",
+        "count" : "158"
+      }, {
+        "item" : "Professional Services",
+        "count" : "152"
+      }, {
+        "item" : "Non-Professional Services",
+        "count" : "122"
+      }, {
+        "item" : "Construction",
+        "count" : "107"
+      }, {
+        "item" : "Commodities (Goods)",
+        "count" : "63"
+      }, {
+        "item" : "Other Contracting",
+        "count" : "22"
+      }, {
+        "item" : "Cooperatives and Interlocals",
+        "count" : "1"
+      } ],
+      "smallest" : "Commodities (Goods)",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303442,
+    "name" : "DOC_VEND_LN_NO",
+    "dataTypeName" : "number",
+    "fieldName" : "doc_vend_ln_no",
+    "position" : 20,
+    "renderTypeName" : "number",
+    "tableColumnId" : 1800129,
+    "width" : 268,
+    "cachedContents" : {
+      "largest" : "19",
+      "non_null" : "625",
+      "average" : "2.952305246422893",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "341"
+      }, {
+        "item" : "2",
+        "count" : "56"
+      }, {
+        "item" : "3",
+        "count" : "39"
+      }, {
+        "item" : "4",
+        "count" : "28"
+      }, {
+        "item" : "5",
+        "count" : "28"
+      }, {
+        "item" : "6",
+        "count" : "21"
+      }, {
+        "item" : "7",
+        "count" : "21"
+      }, {
+        "item" : "8",
+        "count" : "18"
+      }, {
+        "item" : "9",
+        "count" : "16"
+      }, {
+        "item" : "10",
+        "count" : "13"
+      }, {
+        "item" : "11",
+        "count" : "12"
+      }, {
+        "item" : "12",
+        "count" : "8"
+      }, {
+        "item" : "13",
+        "count" : "7"
+      }, {
+        "item" : "14",
+        "count" : "5"
+      }, {
+        "item" : "15",
+        "count" : "3"
+      }, {
+        "item" : "16",
+        "count" : "3"
+      }, {
+        "item" : "17",
+        "count" : "2"
+      }, {
+        "item" : "18",
+        "count" : "2"
+      }, {
+        "item" : "19",
+        "count" : "2"
+      } ],
+      "smallest" : "1",
+      "not_null" : "422",
+      "count" : "625",
+      "sum" : "1857",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303443,
+    "name" : "VEND_CUST_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "vend_cust_cd",
+    "position" : 21,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800130,
+    "width" : 244,
+    "cachedContents" : {
+      "largest" : "ZAM8305129",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "EAR8307803",
+        "count" : "13"
+      }, {
+        "item" : "SAN8316404",
+        "count" : "10"
+      }, {
+        "item" : "HDR8318192",
+        "count" : "10"
+      }, {
+        "item" : "HAL7038625",
+        "count" : "9"
+      }, {
+        "item" : "FAC8317993",
+        "count" : "9"
+      }, {
+        "item" : "CHI7027035",
+        "count" : "8"
+      }, {
+        "item" : "MAT8308109",
+        "count" : "8"
+      }, {
+        "item" : "PAP8302018",
+        "count" : "7"
+      }, {
+        "item" : "WES5125100",
+        "count" : "7"
+      }, {
+        "item" : "BRO8318275",
+        "count" : "7"
+      }, {
+        "item" : "KFR8309453",
+        "count" : "7"
+      }, {
+        "item" : "FRE1930500",
+        "count" : "7"
+      }, {
+        "item" : "V00000914694",
+        "count" : "7"
+      }, {
+        "item" : "LOC2921000",
+        "count" : "7"
+      }, {
+        "item" : "CAM0933250",
+        "count" : "7"
+      }, {
+        "item" : "V00000956852",
+        "count" : "7"
+      }, {
+        "item" : "DEN8303211",
+        "count" : "6"
+      }, {
+        "item" : "DOU7019035",
+        "count" : "6"
+      }, {
+        "item" : "BIN7163385",
+        "count" : "6"
+      }, {
+        "item" : "MAR3044500",
+        "count" : "6"
+      } ],
+      "smallest" : "ALL7111300",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303444,
+    "name" : "LGL_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "lgl_nm",
+    "position" : 22,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800131,
+    "width" : 172,
+    "cachedContents" : {
+      "largest" : "ZRG PARTNERS, LLC",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "AECOM TECHNICAL SERVICES INC",
+        "count" : "13"
+      }, {
+        "item" : "SANTA CLARA CONSTRUCTION LTD",
+        "count" : "10"
+      }, {
+        "item" : "HDR ENGINEERING INC",
+        "count" : "10"
+      }, {
+        "item" : "FACILITIES REHABILITATION INC",
+        "count" : "9"
+      }, {
+        "item" : "HALFF ASSOCIATES INC",
+        "count" : "9"
+      }, {
+        "item" : "CP&Y INC",
+        "count" : "8"
+      }, {
+        "item" : "FREESE AND NICHOLS INC",
+        "count" : "7"
+      }, {
+        "item" : "PGC GENERAL CONTRACTORS, LLC",
+        "count" : "7"
+      }, {
+        "item" : "BGE, INC",
+        "count" : "7"
+      }, {
+        "item" : "K FRIESE & ASSOC INC",
+        "count" : "7"
+      }, {
+        "item" : "CDM SMITH INC",
+        "count" : "7"
+      }, {
+        "item" : "H.W. LOCHNER, INC.",
+        "count" : "7"
+      }, {
+        "item" : "LOCKWOOD ANDREWS & NEWNAM INC",
+        "count" : "7"
+      }, {
+        "item" : "WESTON SOLUTIONS INC",
+        "count" : "7"
+      }, {
+        "item" : "DOUCET & ASSOCIATES INC",
+        "count" : "6"
+      }, {
+        "item" : "DENUCCI CONSTRUCTORS L L C",
+        "count" : "6"
+      }, {
+        "item" : "BINKLEY & BARFIELD INC",
+        "count" : "6"
+      }, {
+        "item" : "MATOUS CONSTRUCTION II, LTD",
+        "count" : "6"
+      }, {
+        "item" : "MWM DESIGNGROUP INC",
+        "count" : "6"
+      }, {
+        "item" : "AUSTIN UNDERGROUND INC",
+        "count" : "6"
+      } ],
+      "smallest" : "1 PRIORITY ENVIRONMENTAL SERVICES, LLC",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303445,
+    "name" : "ALIAS_NM",
+    "dataTypeName" : "text",
+    "fieldName" : "alias_nm",
+    "position" : 23,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800132,
+    "width" : 196,
+    "cachedContents" : {
+      "largest" : "ZWA",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "N/A",
+        "count" : "365"
+      }, {
+        "item" : "HALFF",
+        "count" : "9"
+      }, {
+        "item" : "WESTON SOLUTIONS, INC.",
+        "count" : "7"
+      }, {
+        "item" : "FREESE AND NICHOLS",
+        "count" : "7"
+      }, {
+        "item" : "PAPE-DAWSON ENGINEERS",
+        "count" : "7"
+      }, {
+        "item" : "BROWN & GAY ENGINEERS INC",
+        "count" : "7"
+      }, {
+        "item" : "PEABODY GENERAL CONTRACTORS",
+        "count" : "7"
+      }, {
+        "item" : "K FRIESE & ASSOCIATES, LLC",
+        "count" : "7"
+      }, {
+        "item" : "MATOUS CONSTRUCTION, LTD OR MATOUS CONSTRUCTION",
+        "count" : "6"
+      }, {
+        "item" : "JACOBS ENGINEERING GROUP",
+        "count" : "6"
+      }, {
+        "item" : "MWM DESIGNGROUP OR MARTINEZ, WRIGHT AND MENDEZ INC",
+        "count" : "6"
+      }, {
+        "item" : "STV INFRASTRUCTURE",
+        "count" : "5"
+      }, {
+        "item" : "SMITH CONTRACTING CO INC",
+        "count" : "5"
+      }, {
+        "item" : "THE BARR CO AIA",
+        "count" : "3"
+      }, {
+        "item" : "MASTEC NORTH AMERICA INC",
+        "count" : "3"
+      }, {
+        "item" : "KING ENGINEERING ASSOCIATES, INC.",
+        "count" : "3"
+      }, {
+        "item" : "DAVCAR ENGINEERING SERVICES",
+        "count" : "3"
+      }, {
+        "item" : "CHEMTRADE CHEMICALS US LLC",
+        "count" : "2"
+      }, {
+        "item" : "TEESI ENGINEERING",
+        "count" : "2"
+      }, {
+        "item" : "THE LAWRENCE GROUP",
+        "count" : "2"
+      } ],
+      "smallest" : "911 TARGET AND MEDICAL CONCEPTS PLLC/911 TACTICAL MEDICINE",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303446,
+    "name" : "SO_DOC_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "so_doc_cd",
+    "position" : 24,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800133,
+    "width" : 208,
+    "cachedContents" : {
+      "largest" : "RFQS",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "RFQS",
+        "count" : "326"
+      }, {
+        "item" : "IFB",
+        "count" : "239"
+      }, {
+        "item" : "RFP",
+        "count" : "49"
+      }, {
+        "item" : "CSP",
+        "count" : "11"
+      } ],
+      "smallest" : "CSP",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303447,
+    "name" : "SO_DOC_DEPT_CD",
+    "dataTypeName" : "text",
+    "fieldName" : "so_doc_dept_cd",
+    "position" : 25,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800134,
+    "width" : 268,
+    "cachedContents" : {
+      "largest" : "9300",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "6100",
+        "count" : "435"
+      }, {
+        "item" : "2200",
+        "count" : "32"
+      }, {
+        "item" : "7800",
+        "count" : "22"
+      }, {
+        "item" : "5800",
+        "count" : "19"
+      }, {
+        "item" : "2400",
+        "count" : "11"
+      }, {
+        "item" : "5000",
+        "count" : "9"
+      }, {
+        "item" : "7500",
+        "count" : "8"
+      }, {
+        "item" : "1500",
+        "count" : "8"
+      }, {
+        "item" : "5500",
+        "count" : "8"
+      }, {
+        "item" : "6200",
+        "count" : "8"
+      }, {
+        "item" : "8100",
+        "count" : "7"
+      }, {
+        "item" : "9000",
+        "count" : "6"
+      }, {
+        "item" : "6300",
+        "count" : "6"
+      }, {
+        "item" : "7400",
+        "count" : "5"
+      }, {
+        "item" : "8200",
+        "count" : "5"
+      }, {
+        "item" : "8600",
+        "count" : "4"
+      }, {
+        "item" : "8700",
+        "count" : "4"
+      }, {
+        "item" : "9100",
+        "count" : "4"
+      }, {
+        "item" : "9200",
+        "count" : "4"
+      }, {
+        "item" : "4400",
+        "count" : "4"
+      } ],
+      "smallest" : "1100",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "precisionStyle" : "standard",
+      "noCommas" : "false",
+      "align" : "right"
+    }
+  }, {
+    "id" : 170303448,
+    "name" : "SO_DOC_ID",
+    "dataTypeName" : "text",
+    "fieldName" : "so_doc_id",
+    "position" : 26,
+    "renderTypeName" : "text",
+    "tableColumnId" : 1800135,
+    "width" : 208,
+    "cachedContents" : {
+      "largest" : "WJT1026",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "CLMP239",
+        "count" : "19"
+      }, {
+        "item" : "CLMP080",
+        "count" : "19"
+      }, {
+        "item" : "CLMP058A",
+        "count" : "15"
+      }, {
+        "item" : "CLMP042",
+        "count" : "14"
+      }, {
+        "item" : "CLMP338",
+        "count" : "14"
+      }, {
+        "item" : "CLMP174",
+        "count" : "13"
+      }, {
+        "item" : "CLMP201",
+        "count" : "12"
+      }, {
+        "item" : "CLMP331",
+        "count" : "12"
+      }, {
+        "item" : "CLMP186",
+        "count" : "11"
+      }, {
+        "item" : "CLMP240",
+        "count" : "11"
+      }, {
+        "item" : "CLMP259",
+        "count" : "11"
+      }, {
+        "item" : "CLMP263",
+        "count" : "11"
+      }, {
+        "item" : "CLMP030",
+        "count" : "10"
+      }, {
+        "item" : "ALD4006",
+        "count" : "9"
+      }, {
+        "item" : "CLMP158",
+        "count" : "9"
+      }, {
+        "item" : "CLMP337",
+        "count" : "9"
+      }, {
+        "item" : "CLMP150",
+        "count" : "9"
+      }, {
+        "item" : "CLMB333",
+        "count" : "8"
+      }, {
+        "item" : "CLMP329",
+        "count" : "7"
+      }, {
+        "item" : "CLMP307",
+        "count" : "7"
+      } ],
+      "smallest" : "AAM1000",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  }, {
+    "id" : 170303449,
+    "name" : "TODAY",
+    "dataTypeName" : "date",
+    "fieldName" : "today",
+    "position" : 27,
+    "renderTypeName" : "date",
+    "tableColumnId" : 1800136,
+    "width" : 160,
+    "cachedContents" : {
+      "largest" : "2026-08-17T00:00:00.000Z",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2026-08-17T00:00:00.000Z",
+        "count" : "625"
+      } ],
+      "smallest" : "2026-08-17T00:00:00.000Z",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 170303450,
+    "name" : "ROW_KEY",
+    "dataTypeName" : "text",
+    "description" : "Unique Key",
+    "fieldName" : "row_key",
+    "position" : 28,
+    "renderTypeName" : "text",
+    "tableColumnId" : 11753893,
+    "width" : 100,
+    "cachedContents" : {
+      "largest" : "MA9300NS2200001162V00000975836",
+      "non_null" : "625",
+      "null" : "0",
+      "top" : [ {
+        "item" : "CT2200230804006041SHI7011100",
+        "count" : "1"
+      }, {
+        "item" : "CT4400220511005682V00000921257",
+        "count" : "1"
+      }, {
+        "item" : "CT61000807160224016WES5125100",
+        "count" : "1"
+      }, {
+        "item" : "CT6100090519014456HUR2455500",
+        "count" : "1"
+      }, {
+        "item" : "CT6100090605015134CHM7087490",
+        "count" : "1"
+      }, {
+        "item" : "CT61001604050051615MAT8308109",
+        "count" : "1"
+      }, {
+        "item" : "CT61001608040082514TMO8320608",
+        "count" : "1"
+      }, {
+        "item" : "CT61001701300024415VS0000037240",
+        "count" : "1"
+      }, {
+        "item" : "CT61001705260055914BAR7111710",
+        "count" : "1"
+      }, {
+        "item" : "CT61001805110042712VC0000103145",
+        "count" : "1"
+      }, {
+        "item" : "CT6100190718006266SAN8316404",
+        "count" : "1"
+      }, {
+        "item" : "CT6100190822007575VC0000103145",
+        "count" : "1"
+      }, {
+        "item" : "CT6100190924008948VS0000037240",
+        "count" : "1"
+      }, {
+        "item" : "CT6100191101000743BLA8301292",
+        "count" : "1"
+      }, {
+        "item" : "CT6100200131003148FAC8317993",
+        "count" : "1"
+      }, {
+        "item" : "CT6100200214003587MAT8308109",
+        "count" : "1"
+      }, {
+        "item" : "CT61002003090045814SMI8307578",
+        "count" : "1"
+      }, {
+        "item" : "CT6100200420005877VS0000022307",
+        "count" : "1"
+      }, {
+        "item" : "CT61002004270060612TMO8320608",
+        "count" : "1"
+      }, {
+        "item" : "CT2200220915008971V00000980434",
+        "count" : "1"
+      } ],
+      "smallest" : "CT2200220915008971V00000980434",
+      "not_null" : "422",
+      "count" : "625",
+      "cardinality" : "625"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Public Domain"
+  },
+  "metadata" : {
+    "thumbnail" : {
+      "page" : {
+        "filename" : "page.png-629.335.5.4.png",
+        "selection" : {
+          "y1" : 4,
+          "width" : 629,
+          "y2" : 339,
+          "x1" : 5,
+          "x2" : 634,
+          "height" : 335
+        },
+        "created" : true
+      }
+    },
+    "rdfSubject" : "0",
+    "custom_fields" : {
+      "Ownership" : {
+        "Program Name" : "contract_catalog.sh",
+        "Department name" : "Austin Financial Services"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "Weekly"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "filterCondition" : {
+      "metadata" : {
+        "advanced" : true,
+        "unifiedVersion" : 2
+      },
+      "children" : [ {
+        "metadata" : {
+          "tableColumnId" : {
+            "261367" : 1800128
+          },
+          "operator" : "CONTAINS",
+          "customValues" : [ [ "builder" ] ]
+        },
+        "type" : "operator",
+        "value" : "OR"
+      } ],
+      "type" : "operator",
+      "value" : "AND"
+    },
+    "rowIdentifier" : 170303450,
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ],
+    "renderTypeConfig" : {
+      "visible" : {
+        "table" : true
+      }
+    }
+  },
+  "owner" : {
+    "id" : "3dx6-8pdw",
+    "createdAt" : 1674572008,
+    "displayName" : "Austin Financial Services Owners",
+    "screenName" : "Austin Financial Services Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "tam2-m7q9",
+      "createdAt" : 1475597743,
+      "displayName" : "carole.reynolds",
+      "profileImageUrlLarge" : "/api/users/tam2-m7q9/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/tam2-m7q9/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/tam2-m7q9/profile_images/TINY",
+      "screenName" : "carole.reynolds",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "pcvw-whwy",
+      "createdAt" : 1655325275,
+      "disabledAt" : 1674498364,
+      "displayName" : "justin.nguyen@austintexas.gov",
+      "screenName" : "justin.nguyen@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "f4ku-85py",
+      "createdAt" : 1701725384,
+      "displayName" : "Kimberly.Moore@austintexas.gov",
+      "screenName" : "Kimberly.Moore@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "jdd4-9bij",
+      "createdAt" : 1396293347,
+      "disabledAt" : 1674498357,
+      "displayName" : "Mark.Caraway@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/jdd4-9bij/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/jdd4-9bij/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/jdd4-9bij/profile_images/TINY",
+      "screenName" : "Mark.Caraway@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "7t54-6inm",
+      "createdAt" : 1770300946,
+      "displayName" : "stella.seeger@austintexas.gov",
+      "screenName" : "stella.seeger@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "3dx6-8pdw",
+    "createdAt" : 1674572008,
+    "displayName" : "Austin Financial Services Owners",
+    "screenName" : "Austin Financial Services Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "tam2-m7q9",
+      "createdAt" : 1475597743,
+      "displayName" : "carole.reynolds",
+      "profileImageUrlLarge" : "/api/users/tam2-m7q9/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/tam2-m7q9/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/tam2-m7q9/profile_images/TINY",
+      "screenName" : "carole.reynolds",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "pcvw-whwy",
+      "createdAt" : 1655325275,
+      "disabledAt" : 1674498364,
+      "displayName" : "justin.nguyen@austintexas.gov",
+      "screenName" : "justin.nguyen@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "f4ku-85py",
+      "createdAt" : 1701725384,
+      "displayName" : "Kimberly.Moore@austintexas.gov",
+      "screenName" : "Kimberly.Moore@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "jdd4-9bij",
+      "createdAt" : 1396293347,
+      "disabledAt" : 1674498357,
+      "displayName" : "Mark.Caraway@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/jdd4-9bij/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/jdd4-9bij/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/jdd4-9bij/profile_images/TINY",
+      "screenName" : "Mark.Caraway@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "7t54-6inm",
+      "createdAt" : 1770300946,
+      "displayName" : "stella.seeger@austintexas.gov",
+      "screenName" : "stella.seeger@austintexas.gov",
+      "teamId" : 1491532,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "austin", "central texas", "city of austin", "commodities contracts", "construction contracts", "contract", "finance", "financial", "financial services", "master agreement", "procurement", "professional services contracts", "purchase", "purchase order", "purchasing office", "rotational", "service agreement", "sole source contracts", "texas", "transparency" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

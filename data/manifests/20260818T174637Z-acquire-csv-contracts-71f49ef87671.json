@@ -1,0 +1,35 @@
+{
+  "artifact": "data/raw/84ih-p28j/71f49ef876712f3310ede28f2396bcce470e722d5094b729ef77dfa576dd7087.csv",
+  "dataset_id": "84ih-p28j",
+  "manifest_version": 1,
+  "operation": "acquire-csv",
+  "receipt": {
+    "bytes": 219120,
+    "requested_url": "https://data.austintexas.gov/api/views/84ih-p28j/rows.csv?accessType=DOWNLOAD",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, must-revalidate, max-age=21600",
+      "connection": "close",
+      "content-disposition": "attachment; filename=Contracts.csv",
+      "content-type": "text/csv; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:46:37 GMT",
+      "etag": "W/\"Zm94dHJvdC42NTI3XzVfODE5VktyWXJQQWtTMTFxb1ZjYjN6eWUtdjF6WTdZ---gziptkauy-6a367y1iaan2IbwBuiiME--gzip--gzip\"",
+      "last-modified": "Mon, 17 Aug 2026 11:59:07 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "dbf4db89b27fc07ca248c1b1bd37b299",
+      "x-soda2-data-out-of-date": "false",
+      "x-soda2-secondary-last-modified": "Mon, 17 Aug 2026 11:59:07 GMT",
+      "x-soda2-truth-last-modified": "Mon, 17 Aug 2026 11:59:07 GMT"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/84ih-p28j/rows.csv?accessType=DOWNLOAD",
+    "retrieved_at": "2026-08-18T17:46:37.170111+00:00",
+    "sha256": "71f49ef876712f3310ede28f2396bcce470e722d5094b729ef77dfa576dd7087",
+    "status": 200
+  },
+  "source_slug": "contracts",
+  "title": "City of Austin Contracts"
+}

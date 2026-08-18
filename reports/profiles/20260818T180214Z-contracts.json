@@ -1,0 +1,331 @@
+{
+  "artifact": "data/raw/84ih-p28j/71f49ef876712f3310ede28f2396bcce470e722d5094b729ef77dfa576dd7087.csv",
+  "created_at": "2026-08-18T18:02:14.165525+00:00",
+  "dataset_id": "84ih-p28j",
+  "duplicate_counts_for_candidate_keys": {
+    "row_key": 0
+  },
+  "expected_minimum_rows": 500,
+  "fields": {
+    "alias_nm": {
+      "distinct": 163,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "brd_awd_dt": {
+      "distinct": 120,
+      "invalid_date_count": 0,
+      "maximum": "12/02/0023",
+      "minimum": "11/20/0010",
+      "null_rate": 0.0992,
+      "nulls": 62,
+      "suspicious_date_count": 563,
+      "suspicious_date_examples": [
+        "06/12/0021",
+        "08/24/0019",
+        "09/23/0023",
+        "11/17/0022",
+        "12/05/0020"
+      ],
+      "top_values": null
+    },
+    "brd_awd_no": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0016,
+      "nulls": 1,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "cat_dscr": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contract_contact_email_ad": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contract_contact_nm": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contract_contact_voice_ph_no": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contract_synopsis": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 625,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_cd": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_dept_cd": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_dscr": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_id": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_vend_ln_no": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "doc_vers_no": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "efbgn_dt": {
+      "distinct": 279,
+      "invalid_date_count": 0,
+      "maximum": "01/01/2024",
+      "minimum": "11/24/2008",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "efend_dt": {
+      "distinct": 192,
+      "invalid_date_count": 0,
+      "maximum": "09/18/2029",
+      "minimum": "03/31/2019",
+      "null_rate": 0.1632,
+      "nulls": 102,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "gnrc_po_rpt_1": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "lgl_nm": {
+      "distinct": 366,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "ma_do_rfed_am": {
+      "distinct": 272,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "ma_itd_ord_am": {
+      "distinct": 313,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "ma_prch_lmt_am": {
+      "distinct": 290,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "row_key": {
+      "distinct": 625,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "rpt_dscr": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "so_doc_cd": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "so_doc_dept_cd": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "so_doc_id": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "today": {
+      "distinct": 1,
+      "invalid_date_count": 0,
+      "maximum": "08/17/2026",
+      "minimum": "08/17/2026",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "vend_cust_cd": {
+      "distinct": 365,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    }
+  },
+  "meets_expected_minimum": true,
+  "missing_configured_fields": [],
+  "null_definition": "empty or whitespace-only CSV value",
+  "profile_version": 1,
+  "row_count": 625,
+  "source_slug": "contracts"
+}

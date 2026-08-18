@@ -1,0 +1,1443 @@
+{
+  "id" : "3kfv-biw6",
+  "name" : "Campaign Finance - Contributions",
+  "assetType" : "dataset",
+  "attribution" : "City of Austin, Texas - data.austintexas.gov",
+  "averageRating" : 0,
+  "category" : "City Government",
+  "createdAt" : 1471460399,
+  "description" : "This dataset lists all contributions and pledges received by candidates, officeholders and political committees on data files submitted per City Code Chapter 2-2-26.\n\nFor a complete listing of each column heading, please see the <a target=\"_blank\" href=\"http://services.austintexas.gov/edims/document.cfm?id=262464\" aria-label=\"View the field listing in a new window\">Contributions Dataset – Field List</a>.\n\nNote: Texas Election Code § 254.0401 requires the City Clerk to publish campaign finance reports online and was amended in 2023 to allow the Clerk to remove the street address of the contributors listed in the report, as long as the city, state, and ZIP code remain visible in the report, and the entire address is available on the original report maintained by the City Clerk in her office.  Due to this change in the law, the City Clerk redacts the street addresses from the online datasets containing the information in campaign finance forms filed with the City Clerk’s office. Original, unredacted reports are maintained at the City Clerk’s office and are available upon request.\n\n* This dataset may not receive new data daily. \"Data Last Updated\" reflects the date of when new data was published.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 15826,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "indexUpdatedAt" : 1555592027,
+  "licenseId" : "PUBLIC_DOMAIN",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 24786341,
+  "provenance" : "official",
+  "publicationAppendEnabled" : true,
+  "publicationDate" : 1477926584,
+  "publicationGroup" : 12579749,
+  "publicationStage" : "published",
+  "rowIdentifierColumnId" : 275296374,
+  "rowsUpdatedAt" : 1787038990,
+  "rowsUpdatedBy" : "n58v-d7z9",
+  "tableId" : 13877053,
+  "totalTimesRated" : 0,
+  "viewCount" : 9090,
+  "viewLastModified" : 1787038875,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1477926584,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 676072,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1477926584,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "failureCount" : 0,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "xwt9-6iq9",
+      "displayName" : "City of Austin - Elections"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 275296357,
+    "name" : "Donor",
+    "dataTypeName" : "text",
+    "fieldName" : "donor",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914397,
+    "width" : 160,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "Zwiener, Erin",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Thomas, Sean",
+        "count" : "172"
+      }, {
+        "item" : "Cantu, Marcos",
+        "count" : "152"
+      }, {
+        "item" : "Lowery, John",
+        "count" : "148"
+      }, {
+        "item" : "Nicks, Robert",
+        "count" : "141"
+      }, {
+        "item" : "RECA",
+        "count" : "127"
+      }, {
+        "item" : "Hagstrom, James",
+        "count" : "97"
+      }, {
+        "item" : "Matson, Brian",
+        "count" : "96"
+      }, {
+        "item" : "Hoff, Scott",
+        "count" : "96"
+      }, {
+        "item" : "Smith, Richard",
+        "count" : "96"
+      }, {
+        "item" : "Sheehan, Garrett",
+        "count" : "94"
+      }, {
+        "item" : "Healey, Patrick",
+        "count" : "91"
+      }, {
+        "item" : "Cooper, Michael",
+        "count" : "91"
+      }, {
+        "item" : "Miller, John",
+        "count" : "90"
+      }, {
+        "item" : "Merritt, Cyrus",
+        "count" : "89"
+      }, {
+        "item" : "Murphy, John",
+        "count" : "89"
+      }, {
+        "item" : "Hadler, Karl",
+        "count" : "89"
+      }, {
+        "item" : "Windsor, Stephen",
+        "count" : "88"
+      }, {
+        "item" : "Sullivan, David",
+        "count" : "88"
+      }, {
+        "item" : "Jones, John",
+        "count" : "88"
+      }, {
+        "item" : "McCray, Robert",
+        "count" : "87"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "Aalbers, Benjamin",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296358,
+    "name" : "Recipient",
+    "dataTypeName" : "text",
+    "fieldName" : "recipient",
+    "position" : 2,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914407,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "120669",
+      "largest" : "Xie, Selena",
+      "null" : "180",
+      "top" : [ {
+        "item" : "Austin Fire Fighters PAC",
+        "count" : "80096"
+      }, {
+        "item" : "Watson, Kirk P.",
+        "count" : "6669"
+      }, {
+        "item" : "Save Austin Now PAC",
+        "count" : "5360"
+      }, {
+        "item" : "Siegel, Mike",
+        "count" : "4209"
+      }, {
+        "item" : "Qadri, Zohaib",
+        "count" : "2493"
+      }, {
+        "item" : "Llanes-Pulido, Carmen D.",
+        "count" : "1614"
+      }, {
+        "item" : "Kelly, Mackenzie",
+        "count" : "1600"
+      }, {
+        "item" : "Ganguly, Ashika",
+        "count" : "1505"
+      }, {
+        "item" : "Austin Police Association PAC",
+        "count" : "1109"
+      }, {
+        "item" : "Fuentes, Vanessa",
+        "count" : "1013"
+      }, {
+        "item" : "Duchen, Marc",
+        "count" : "977"
+      }, {
+        "item" : "Bledsoe, Gary",
+        "count" : "956"
+      }, {
+        "item" : "Carollo Engineers Inc. PAC",
+        "count" : "933"
+      }, {
+        "item" : "Laine, Krista M.",
+        "count" : "892"
+      }, {
+        "item" : "Tovo, Kathryne Beth",
+        "count" : "851"
+      }, {
+        "item" : "Powell, Adam C.",
+        "count" : "801"
+      }, {
+        "item" : "Xie, Selena",
+        "count" : "793"
+      }, {
+        "item" : "Alter, Ryan",
+        "count" : "740"
+      }, {
+        "item" : "Greco, Douglas",
+        "count" : "697"
+      }, {
+        "item" : "Goodwin, Amber K.",
+        "count" : "583"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "2040 PAC, inc.",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296359,
+    "name" : "Contribution_Amount",
+    "dataTypeName" : "number",
+    "fieldName" : "contribution_amount",
+    "position" : 3,
+    "renderTypeName" : "number",
+    "tableColumnId" : 37914403,
+    "width" : 212,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "average" : "617.5457819323814",
+      "largest" : "250000.00",
+      "null" : "0",
+      "top" : [ {
+        "item" : "12.40",
+        "count" : "29606"
+      }, {
+        "item" : "9.90",
+        "count" : "16142"
+      }, {
+        "item" : "4.90",
+        "count" : "9585"
+      }, {
+        "item" : "2.40",
+        "count" : "8946"
+      }, {
+        "item" : "450.00",
+        "count" : "8694"
+      }, {
+        "item" : "100.00",
+        "count" : "6373"
+      }, {
+        "item" : "50.00",
+        "count" : "4982"
+      }, {
+        "item" : "25.00",
+        "count" : "4355"
+      }, {
+        "item" : "7.40",
+        "count" : "2559"
+      }, {
+        "item" : "10.00",
+        "count" : "2509"
+      }, {
+        "item" : "250.00",
+        "count" : "2267"
+      }, {
+        "item" : "14.90",
+        "count" : "1680"
+      }, {
+        "item" : "5.00",
+        "count" : "1671"
+      }, {
+        "item" : "200.00",
+        "count" : "1478"
+      }, {
+        "item" : "20.00",
+        "count" : "1383"
+      }, {
+        "item" : "3.40",
+        "count" : "1028"
+      }, {
+        "item" : "19.90",
+        "count" : "949"
+      }, {
+        "item" : "1.90",
+        "count" : "937"
+      }, {
+        "item" : "6.15",
+        "count" : "740"
+      }, {
+        "item" : "0.90",
+        "count" : "709"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "0",
+      "count" : "120849",
+      "sum" : "12584965.49",
+      "cardinality" : "120849"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "currencyStyle" : "USD",
+      "precision" : "2"
+    }
+  }, {
+    "id" : 275296360,
+    "name" : "Contribution_Date",
+    "dataTypeName" : "calendar_date",
+    "fieldName" : "contribution_date",
+    "position" : 4,
+    "rdfProperties" : "",
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 37914401,
+    "width" : 214,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "2026-07-24T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2024-11-08T00:00:00.000",
+        "count" : "1513"
+      }, {
+        "item" : "2024-10-11T00:00:00.000",
+        "count" : "1505"
+      }, {
+        "item" : "2024-10-25T00:00:00.000",
+        "count" : "1120"
+      }, {
+        "item" : "2024-06-21T00:00:00.000",
+        "count" : "1080"
+      }, {
+        "item" : "2024-06-07T00:00:00.000",
+        "count" : "1053"
+      }, {
+        "item" : "2024-09-27T00:00:00.000",
+        "count" : "1038"
+      }, {
+        "item" : "2024-04-26T00:00:00.000",
+        "count" : "1020"
+      }, {
+        "item" : "2024-05-24T00:00:00.000",
+        "count" : "1016"
+      }, {
+        "item" : "2025-05-23T00:00:00.000",
+        "count" : "992"
+      }, {
+        "item" : "2023-12-22T00:00:00.000",
+        "count" : "990"
+      }, {
+        "item" : "2024-04-12T00:00:00.000",
+        "count" : "988"
+      }, {
+        "item" : "2023-12-08T00:00:00.000",
+        "count" : "986"
+      }, {
+        "item" : "2024-08-02T00:00:00.000",
+        "count" : "986"
+      }, {
+        "item" : "2026-04-24T00:00:00.000",
+        "count" : "983"
+      }, {
+        "item" : "2024-11-22T00:00:00.000",
+        "count" : "981"
+      }, {
+        "item" : "2025-04-25T00:00:00.000",
+        "count" : "980"
+      }, {
+        "item" : "2026-05-22T00:00:00.000",
+        "count" : "971"
+      }, {
+        "item" : "2024-09-13T00:00:00.000",
+        "count" : "968"
+      }, {
+        "item" : "2025-10-24T00:00:00.000",
+        "count" : "967"
+      }, {
+        "item" : "2024-02-16T00:00:00.000",
+        "count" : "963"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "2022-01-16T00:00:00.000",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : {
+      "view" : "date",
+      "rdf" : "",
+      "align" : "left"
+    }
+  }, {
+    "id" : 275296361,
+    "name" : "Donor_Type",
+    "dataTypeName" : "text",
+    "fieldName" : "donor_type",
+    "position" : 5,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914398,
+    "width" : 151,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "INDIVIDUAL",
+      "null" : "0",
+      "top" : [ {
+        "item" : "INDIVIDUAL",
+        "count" : "120140"
+      }, {
+        "item" : "ENTITY",
+        "count" : "709"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "ENTITY",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296362,
+    "name" : "Donor_Address",
+    "dataTypeName" : "text",
+    "fieldName" : "donor_address",
+    "position" : 6,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914399,
+    "width" : 256,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "120849",
+      "not_null" : "20354",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296363,
+    "name" : "City_State_Zip",
+    "dataTypeName" : "text",
+    "fieldName" : "city_state_zip",
+    "position" : 7,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914400,
+    "width" : 204,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "Ypsilanti, MI, 48197",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Austin, TX, 78721",
+        "count" : "77338"
+      }, {
+        "item" : "Austin, TX, 78746",
+        "count" : "5139"
+      }, {
+        "item" : "Austin, TX, 78703",
+        "count" : "3095"
+      }, {
+        "item" : "Austin, TX, 78701",
+        "count" : "2867"
+      }, {
+        "item" : "Austin, TX, 78731",
+        "count" : "2716"
+      }, {
+        "item" : "Austin, TX, 78704",
+        "count" : "2167"
+      }, {
+        "item" : "Austin, TX, 78759",
+        "count" : "1453"
+      }, {
+        "item" : "Austin, TX, 78757",
+        "count" : "1424"
+      }, {
+        "item" : "Austin, TX, 78723",
+        "count" : "1265"
+      }, {
+        "item" : "Austin, TX, 78702",
+        "count" : "1053"
+      }, {
+        "item" : "Austin, TX, 78750",
+        "count" : "988"
+      }, {
+        "item" : "Austin, TX, 78745",
+        "count" : "901"
+      }, {
+        "item" : "Austin, TX, 78756",
+        "count" : "779"
+      }, {
+        "item" : "Austin, TX, 78751",
+        "count" : "778"
+      }, {
+        "item" : "Austin, TX, 78735",
+        "count" : "698"
+      }, {
+        "item" : "Austin, TX, 78749",
+        "count" : "637"
+      }, {
+        "item" : "Austin, TX, 78705",
+        "count" : "549"
+      }, {
+        "item" : "Austin, TX, 78758",
+        "count" : "544"
+      }, {
+        "item" : "Austin, TX, 78727",
+        "count" : "489"
+      }, {
+        "item" : "Austin, TX, 78748",
+        "count" : "449"
+      } ],
+      "not_null" : "20374",
+      "smallest" : "Abilene, TX, 79602",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296364,
+    "name" : "Contribution_Year",
+    "dataTypeName" : "text",
+    "fieldName" : "contribution_year",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914402,
+    "width" : 127,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "2026",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2024",
+        "count" : "46417"
+      }, {
+        "item" : "2023",
+        "count" : "27394"
+      }, {
+        "item" : "2025",
+        "count" : "27193"
+      }, {
+        "item" : "2026",
+        "count" : "17341"
+      }, {
+        "item" : "2022",
+        "count" : "2504"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "2022",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296365,
+    "name" : "Donor_Reported_Occupation",
+    "dataTypeName" : "text",
+    "fieldName" : "donor_reported_occupation",
+    "position" : 9,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914404,
+    "width" : 245,
+    "cachedContents" : {
+      "non_null" : "118243",
+      "largest" : "ZOLL Medical",
+      "null" : "2606",
+      "top" : [ {
+        "item" : "Firefighter",
+        "count" : "77114"
+      }, {
+        "item" : "Retired",
+        "count" : "4692"
+      }, {
+        "item" : "Retired Firefighter",
+        "count" : "2990"
+      }, {
+        "item" : "Not Employed",
+        "count" : "2460"
+      }, {
+        "item" : "retired",
+        "count" : "2100"
+      }, {
+        "item" : "Attorney",
+        "count" : "1914"
+      }, {
+        "item" : "Austin Police Officer",
+        "count" : "1097"
+      }, {
+        "item" : "Consultant",
+        "count" : "1013"
+      }, {
+        "item" : "Engineer",
+        "count" : "612"
+      }, {
+        "item" : "Real Estate",
+        "count" : "533"
+      }, {
+        "item" : "Vice President",
+        "count" : "476"
+      }, {
+        "item" : "Owner",
+        "count" : "423"
+      }, {
+        "item" : "CEO",
+        "count" : "390"
+      }, {
+        "item" : "Lawyer",
+        "count" : "384"
+      }, {
+        "item" : "Teacher",
+        "count" : "355"
+      }, {
+        "item" : "Professor",
+        "count" : "338"
+      }, {
+        "item" : "Manager",
+        "count" : "322"
+      }, {
+        "item" : "Senior Vice President",
+        "count" : "305"
+      }, {
+        "item" : "Director",
+        "count" : "272"
+      }, {
+        "item" : "Physician",
+        "count" : "242"
+      } ],
+      "not_null" : "14991",
+      "smallest" : ".",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296366,
+    "name" : "Donor_Reported_Employer",
+    "dataTypeName" : "text",
+    "fieldName" : "donor_reported_employer",
+    "position" : 10,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914405,
+    "width" : 376,
+    "cachedContents" : {
+      "non_null" : "118215",
+      "largest" : "Zytek roofing",
+      "null" : "2634",
+      "top" : [ {
+        "item" : "City of Austin",
+        "count" : "77633"
+      }, {
+        "item" : "Retired",
+        "count" : "7639"
+      }, {
+        "item" : "Not Employed",
+        "count" : "2475"
+      }, {
+        "item" : "Self",
+        "count" : "2209"
+      }, {
+        "item" : "retired",
+        "count" : "2072"
+      }, {
+        "item" : "Austin Police Department",
+        "count" : "1097"
+      }, {
+        "item" : "Carollo Engineers Inc.",
+        "count" : "923"
+      }, {
+        "item" : "Self Employed",
+        "count" : "906"
+      }, {
+        "item" : "self",
+        "count" : "363"
+      }, {
+        "item" : "None",
+        "count" : "317"
+      }, {
+        "item" : "none",
+        "count" : "298"
+      }, {
+        "item" : "Endeavor Real Estate Group",
+        "count" : "249"
+      }, {
+        "item" : "N/A",
+        "count" : "230"
+      }, {
+        "item" : "Not employed",
+        "count" : "217"
+      }, {
+        "item" : "UT Austin",
+        "count" : "187"
+      }, {
+        "item" : "Self employed",
+        "count" : "170"
+      }, {
+        "item" : "Self-employed",
+        "count" : "166"
+      }, {
+        "item" : "NA",
+        "count" : "161"
+      }, {
+        "item" : "Travis County",
+        "count" : "144"
+      }, {
+        "item" : "Unemployed",
+        "count" : "143"
+      } ],
+      "not_null" : "14989",
+      "smallest" : "128 Collective Foundation",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296367,
+    "name" : "Contribution_Type",
+    "dataTypeName" : "text",
+    "fieldName" : "contribution_type",
+    "position" : 11,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914406,
+    "width" : 304,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "Political Expenditures From Political Contribution",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Monetary Political Contribution",
+        "count" : "119980"
+      }, {
+        "item" : "Contribution",
+        "count" : "333"
+      }, {
+        "item" : "Non-Monetary (In-Kind) Political Contribution",
+        "count" : "247"
+      }, {
+        "item" : "Non-Monetary Support From Corporation Or Labor Organization",
+        "count" : "105"
+      }, {
+        "item" : "Monetary Support From Corporation Or Labor Organization",
+        "count" : "92"
+      }, {
+        "item" : "Monetary Contribution From Corporation Or Labor Organization",
+        "count" : "72"
+      }, {
+        "item" : "Pledged Contribution",
+        "count" : "13"
+      }, {
+        "item" : "Non-Monetary (In-Kind) Contribution From Corporation Or Labor Organization",
+        "count" : "3"
+      }, {
+        "item" : "Pledged Contribution From Corporation Or Labor Organization",
+        "count" : "2"
+      }, {
+        "item" : "Political Expenditures From Political Contribution",
+        "count" : "2"
+      } ],
+      "not_null" : "19775",
+      "smallest" : "Contribution",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296368,
+    "name" : "Date_Reported",
+    "dataTypeName" : "calendar_date",
+    "fieldName" : "date_reported",
+    "position" : 12,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 37914408,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "2026-08-05T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2024-07-15T00:00:00.000",
+        "count" : "5969"
+      }, {
+        "item" : "2024-10-07T00:00:00.000",
+        "count" : "4123"
+      }, {
+        "item" : "2024-12-02T00:00:00.000",
+        "count" : "3128"
+      }, {
+        "item" : "2024-10-30T00:00:00.000",
+        "count" : "2879"
+      }, {
+        "item" : "2025-10-27T00:00:00.000",
+        "count" : "2876"
+      }, {
+        "item" : "2024-05-29T00:00:00.000",
+        "count" : "2816"
+      }, {
+        "item" : "2025-04-28T00:00:00.000",
+        "count" : "2785"
+      }, {
+        "item" : "2026-07-15T00:00:00.000",
+        "count" : "2777"
+      }, {
+        "item" : "2023-11-30T00:00:00.000",
+        "count" : "2773"
+      }, {
+        "item" : "2023-06-28T00:00:00.000",
+        "count" : "2762"
+      }, {
+        "item" : "2026-04-28T00:00:00.000",
+        "count" : "2733"
+      }, {
+        "item" : "2024-01-16T00:00:00.000",
+        "count" : "2334"
+      }, {
+        "item" : "2024-07-29T00:00:00.000",
+        "count" : "1966"
+      }, {
+        "item" : "2024-03-28T00:00:00.000",
+        "count" : "1925"
+      }, {
+        "item" : "2024-02-29T00:00:00.000",
+        "count" : "1914"
+      }, {
+        "item" : "2025-05-29T00:00:00.000",
+        "count" : "1908"
+      }, {
+        "item" : "2025-06-26T00:00:00.000",
+        "count" : "1895"
+      }, {
+        "item" : "2024-06-27T00:00:00.000",
+        "count" : "1893"
+      }, {
+        "item" : "2025-03-26T00:00:00.000",
+        "count" : "1885"
+      }, {
+        "item" : "2025-01-27T00:00:00.000",
+        "count" : "1883"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "2023-01-03T00:00:00.000",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 275296369,
+    "name" : "Report_Filed",
+    "dataTypeName" : "text",
+    "fieldName" : "report_filed",
+    "position" : 13,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914409,
+    "width" : 244,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "SPAC: Specific-Purpose Committee Campaign Finance Report",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MPAC: Monthly Filing General-Purpose Committee Campaign Finance Report",
+        "count" : "81841"
+      }, {
+        "item" : "COH: Candidate /Officeholder Campaign Finance Report",
+        "count" : "22052"
+      }, {
+        "item" : "CORCOH: Correction Affidavit For Candidate/Officeholder",
+        "count" : "9012"
+      }, {
+        "item" : "GPAC: General-Purpose Committee Campaign Finance Report",
+        "count" : "6537"
+      }, {
+        "item" : "CORPAC: Correction Affidavit For Political Committee",
+        "count" : "665"
+      }, {
+        "item" : "COHATX7: Pre-Election Report Candidates and Office Holders: Form ATX.7COH",
+        "count" : "240"
+      }, {
+        "item" : "SPAC: Specific-Purpose Committee Campaign Finance Report",
+        "count" : "180"
+      }, {
+        "item" : "COHFR: Candidate/Officeholder Designation Of Final Report",
+        "count" : "127"
+      }, {
+        "item" : "PACDR: Political Committee Affidavit Of Dissolution",
+        "count" : "102"
+      }, {
+        "item" : "ATX1: Report of Direct Campaign Expenditures: Schedule ATX.1",
+        "count" : "59"
+      }, {
+        "item" : "CORATX1: Correction Affidavit For Report of Direct Campaign Expenditures",
+        "count" : "19"
+      }, {
+        "item" : "PACATX7: Pre-Election Report Political Committees: Form ATX.7PAC",
+        "count" : "14"
+      }, {
+        "item" : "ATX8: Report of Covered Transfers Supporting Direct Campaign Expenditures: Schedule ATX.8",
+        "count" : "1"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "ATX1: Report of Direct Campaign Expenditures: Schedule ATX.1",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296370,
+    "name" : "In_Kind_Description",
+    "dataTypeName" : "text",
+    "fieldName" : "in_kind_description",
+    "position" : 14,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914410,
+    "width" : 328,
+    "cachedContents" : {
+      "non_null" : "252",
+      "largest" : "website support",
+      "null" : "120597",
+      "top" : [ {
+        "item" : "food & beverages for event",
+        "count" : "45"
+      }, {
+        "item" : "food & drinks for event",
+        "count" : "18"
+      }, {
+        "item" : "Corporate Administrative Support",
+        "count" : "9"
+      }, {
+        "item" : "Food/beverage expense for campaign event",
+        "count" : "6"
+      }, {
+        "item" : "Food",
+        "count" : "6"
+      }, {
+        "item" : "In-kind donation: food",
+        "count" : "5"
+      }, {
+        "item" : "food & drink for event",
+        "count" : "4"
+      }, {
+        "item" : "Use of venue for campaign event",
+        "count" : "4"
+      }, {
+        "item" : "Poll greeting supplies",
+        "count" : "4"
+      }, {
+        "item" : "Fundraiser Food",
+        "count" : "4"
+      }, {
+        "item" : "event expenses",
+        "count" : "4"
+      }, {
+        "item" : "Photography",
+        "count" : "4"
+      }, {
+        "item" : "Food for Event",
+        "count" : "3"
+      }, {
+        "item" : "Supplies for Poll Greeting",
+        "count" : "3"
+      }, {
+        "item" : "Band for Event",
+        "count" : "3"
+      }, {
+        "item" : "Food & Drink for Fundraiser",
+        "count" : "3"
+      }, {
+        "item" : "Food and beverages for event.",
+        "count" : "3"
+      }, {
+        "item" : "Event Photography",
+        "count" : "3"
+      }, {
+        "item" : "Supplies for event",
+        "count" : "3"
+      }, {
+        "item" : "Food for event",
+        "count" : "2"
+      } ],
+      "not_null" : "543",
+      "smallest" : "45 t-shirts",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296371,
+    "name" : "Out_of_State_PAC",
+    "dataTypeName" : "text",
+    "fieldName" : "out_of_state_pac",
+    "position" : 15,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914411,
+    "width" : 193,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "C00686832",
+      "null" : "120839",
+      "top" : [ {
+        "item" : "C00002089",
+        "count" : "4"
+      }, {
+        "item" : "C00004861",
+        "count" : "2"
+      }, {
+        "item" : "C00461418",
+        "count" : "2"
+      }, {
+        "item" : "C00540443",
+        "count" : "1"
+      }, {
+        "item" : "C00686832",
+        "count" : "1"
+      } ],
+      "not_null" : "34",
+      "smallest" : "C00002089",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296372,
+    "name" : "Correction",
+    "dataTypeName" : "text",
+    "fieldName" : "correction",
+    "position" : 16,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914412,
+    "width" : 153,
+    "cachedContents" : {
+      "non_null" : "9696",
+      "largest" : "X",
+      "null" : "111153",
+      "top" : [ {
+        "item" : "X",
+        "count" : "9696"
+      } ],
+      "not_null" : "183",
+      "smallest" : "X",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : { }
+  }, {
+    "id" : 275296373,
+    "name" : "View_Report",
+    "dataTypeName" : "url",
+    "fieldName" : "view_report",
+    "position" : 17,
+    "renderTypeName" : "url",
+    "tableColumnId" : 37914413,
+    "width" : 178,
+    "cachedContents" : {
+      "largest" : {
+        "description" : "View Report",
+        "url" : "http://www.austintexas.gov/edims/document.cfm?id=317383"
+      },
+      "non_null" : 20379,
+      "null" : 0,
+      "top" : [ {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=258180"
+        },
+        "count" : 20
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=264527"
+        },
+        "count" : 19
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=264534"
+        },
+        "count" : 18
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=267529"
+        },
+        "count" : 17
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=291287"
+        },
+        "count" : 16
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=302128"
+        },
+        "count" : 15
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=302152"
+        },
+        "count" : 14
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=302140"
+        },
+        "count" : 13
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=307418"
+        },
+        "count" : 12
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=307416"
+        },
+        "count" : 11
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=307429"
+        },
+        "count" : 10
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=307412"
+        },
+        "count" : 9
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309528"
+        },
+        "count" : 8
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309523"
+        },
+        "count" : 7
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309516"
+        },
+        "count" : 6
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309465"
+        },
+        "count" : 5
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309529"
+        },
+        "count" : 4
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=307422"
+        },
+        "count" : 3
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=309458"
+        },
+        "count" : 2
+      }, {
+        "item" : {
+          "description" : "View Report",
+          "url" : "http://www.austintexas.gov/edims/document.cfm?id=311300"
+        },
+        "count" : 1
+      } ],
+      "smallest" : {
+        "description" : "View Report",
+        "url" : "http://www.austintexas.gov/edims/document.cfm?id=218738"
+      }
+    },
+    "format" : { },
+    "subColumnTypes" : [ "url", "description" ]
+  }, {
+    "id" : 275296374,
+    "name" : "TRANSACTION_ID",
+    "dataTypeName" : "text",
+    "fieldName" : "transaction_id",
+    "position" : 18,
+    "renderTypeName" : "text",
+    "tableColumnId" : 37914396,
+    "width" : 180,
+    "cachedContents" : {
+      "non_null" : "120849",
+      "largest" : "R20260626100722373-A01852",
+      "null" : "0",
+      "top" : [ {
+        "item" : "R20220101100714913-A00002",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00003",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00004",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00005",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00006",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00007",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00008",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00009",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00010",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00011",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00012",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00013",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00014",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00015",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00016",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00017",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00018",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00019",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00020",
+        "count" : "1"
+      }, {
+        "item" : "R20220101100714913-A00001",
+        "count" : "1"
+      } ],
+      "not_null" : "20672",
+      "smallest" : "R20220101100714913-A00001",
+      "count" : "120849",
+      "cardinality" : "120849"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Public Domain"
+  },
+  "metadata" : {
+    "rdfSubject" : "donor",
+    "custom_fields" : {
+      "Ownership" : {
+        "Department name" : "Austin City Clerk's Office"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "Daily"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "rowIdentifier" : 275296374,
+    "rowLabel" : "Contribution",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ],
+    "renderTypeConfig" : {
+      "visible" : {
+        "table" : true
+      }
+    }
+  },
+  "owner" : {
+    "id" : "g5jz-k5ye",
+    "createdAt" : 1677783984,
+    "displayName" : "Austin City Clerk's Office Owners",
+    "screenName" : "Austin City Clerk's Office Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "mh57-jiiu",
+      "createdAt" : 1677714429,
+      "displayName" : "Adriana.Vazquez@austintexas.gov",
+      "screenName" : "Adriana.Vazquez@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "gfc2-mutd",
+      "createdAt" : 1569004659,
+      "displayName" : "Bethany Smith",
+      "screenName" : "Bethany Smith",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "8vyj-enc6",
+      "createdAt" : 1724953795,
+      "displayName" : "Christi.Vitela@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/8vyj-enc6/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/8vyj-enc6/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/8vyj-enc6/profile_images/TINY",
+      "screenName" : "Christi.Vitela@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "n58v-d7z9",
+      "createdAt" : 1362155996,
+      "disabledAt" : 1674498362,
+      "displayName" : "Danhao.Lu@austintexas.gov",
+      "screenName" : "Danhao.Lu@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "xwt9-6iq9",
+      "createdAt" : 1550011472,
+      "disabledAt" : 1674498378,
+      "displayName" : "City of Austin - Elections",
+      "screenName" : "City of Austin - Elections",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "y68m-gvpr",
+      "createdAt" : 1549999655,
+      "disabledAt" : 1674498379,
+      "displayName" : "City of Austin - Lobbyists",
+      "screenName" : "City of Austin - Lobbyists",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "g5jz-k5ye",
+    "createdAt" : 1677783984,
+    "displayName" : "Austin City Clerk's Office Owners",
+    "screenName" : "Austin City Clerk's Office Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "mh57-jiiu",
+      "createdAt" : 1677714429,
+      "displayName" : "Adriana.Vazquez@austintexas.gov",
+      "screenName" : "Adriana.Vazquez@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "gfc2-mutd",
+      "createdAt" : 1569004659,
+      "displayName" : "Bethany Smith",
+      "screenName" : "Bethany Smith",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "8vyj-enc6",
+      "createdAt" : 1724953795,
+      "displayName" : "Christi.Vitela@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/8vyj-enc6/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/8vyj-enc6/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/8vyj-enc6/profile_images/TINY",
+      "screenName" : "Christi.Vitela@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "n58v-d7z9",
+      "createdAt" : 1362155996,
+      "disabledAt" : 1674498362,
+      "displayName" : "Danhao.Lu@austintexas.gov",
+      "screenName" : "Danhao.Lu@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "xwt9-6iq9",
+      "createdAt" : 1550011472,
+      "disabledAt" : 1674498378,
+      "displayName" : "City of Austin - Elections",
+      "screenName" : "City of Austin - Elections",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "y68m-gvpr",
+      "createdAt" : 1549999655,
+      "disabledAt" : 1674498379,
+      "displayName" : "City of Austin - Lobbyists",
+      "screenName" : "City of Austin - Lobbyists",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "campaign finance", "city clerk", "contributions", "election", "financial" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

@@ -1,0 +1,34 @@
+{
+  "artifact": "data/metadata/8c6z-qnmj/7cf1a625f6352700f30d690684222ec2883d6b05ed5703a2e2e2b979320d34d2.json",
+  "dataset_id": "8c6z-qnmj",
+  "details": {
+    "columns": 34,
+    "publication_date": 1412879936,
+    "rows_updated_at": 1786968844,
+    "view_last_modified": 1773943018
+  },
+  "manifest_version": 1,
+  "operation": "freeze-metadata",
+  "receipt": {
+    "bytes": 64195,
+    "requested_url": "https://data.austintexas.gov/api/views/8c6z-qnmj",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "connection": "close",
+      "content-type": "application/json; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:40:11 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "81e7b2fbfc001809f9977aa6d8d04e8b"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/8c6z-qnmj",
+    "retrieved_at": "2026-08-18T17:40:12.005672+00:00",
+    "sha256": "7cf1a625f6352700f30d690684222ec2883d6b05ed5703a2e2e2b979320d34d2",
+    "status": 200
+  },
+  "source_slug": "echeckbook",
+  "title": "Austin Finance Online eCheckbook"
+}

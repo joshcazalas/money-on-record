@@ -1,0 +1,299 @@
+version: 1
+portal: https://data.austintexas.gov
+publisher: City of Austin
+sources:
+  campaign-reports:
+    dataset_id: b2pc-2s8n
+    title: Campaign Finance - Report Detail
+    role: canonical
+    metadata_url: https://data.austintexas.gov/api/views/b2pc-2s8n
+    bulk_csv_url: https://data.austintexas.gov/api/views/b2pc-2s8n/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 1000
+    identity_fields: [filer_name]
+    categorical_fields: [form_type, report_type]
+    date_fields: [date_filed, date_due, period_from, period_to, election_date]
+    amount_fields:
+      - unitemized_contrib_total
+      - contrib_total
+      - unitemized_expend_total
+      - expend_total
+      - contrib_balance
+      - outstand_loan
+      - unitemized_inkind_total
+      - unitemized_pledge_total
+      - unitemized_loan_total
+      - unitemized_unpaid_total
+      - unitemized_cred_card_total
+    uniqueness_fields: [report_id]
+    public_fields:
+      - report_id
+      - filer_name
+      - form_type
+      - report_type
+      - report_type2
+      - link_to_report
+      - date_filed
+      - date_due
+      - period_from
+      - period_to
+      - election_date
+      - election_type
+      - office_held
+      - office_sought
+      - unitemized_contrib_total
+      - contrib_total
+      - unitemized_expend_total
+      - expend_total
+      - contrib_balance
+      - outstand_loan
+      - unitemized_inkind_total
+      - unitemized_pledge_total
+      - unitemized_loan_total
+      - unitemized_unpaid_total
+      - unitemized_cred_card_total
+    restricted_fields:
+      - filer_address_2
+      - filer_city
+      - treasurer_name
+      - treasurer_address_2
+      - treasurer_city_state_zip
+      - filer_phone
+      - treasurer_state
+      - treasurer_zip_code
+      - treasurer_phone
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation]
+
+  campaign-transactions:
+    dataset_id: g4yx-aw9r
+    title: Campaign Finance - Transaction Detail
+    role: canonical
+    metadata_url: https://data.austintexas.gov/api/views/g4yx-aw9r
+    bulk_csv_url: https://data.austintexas.gov/api/views/g4yx-aw9r/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 100000
+    identity_fields: [filer_name, transactor_name]
+    categorical_fields: [transaction_type, entity]
+    date_fields: [date_filed, date_due, election_date, transaction_date, maturity_date]
+    amount_fields: [transaction_amount, amount_guaranteed]
+    candidate_amount_field: transaction_amount
+    uniqueness_fields: [transaction_id]
+    public_fields:
+      - transaction_id
+      - report_id
+      - filer_name
+      - transactor_name
+      - entity
+      - transaction_type
+      - transaction_amount
+      - date_filed
+      - form
+      - transaction
+      - date_due
+      - report_type
+      - election_date
+      - election_type
+      - office_held
+      - office_sought
+      - link_to_report
+      - cor_flag
+      - schedule_reported
+      - transaction_date
+      - transaction_description
+      - expense_description
+      - lender_institution
+      - interest_rate
+      - maturity_date
+      - collateral
+      - personal_funds_deposited
+      - amount_guaranteed
+      - outside_travel
+      - political_obligation
+      - reimbursement_intended
+      - returned_to_filer
+      - out_of_state_pac
+      - out_of_state_pac_id
+    restricted_fields:
+      - transactor_address_2
+      - transactor_city
+      - transactor_state
+      - transactor_zip_code
+      - transactor_employer
+      - transactor_occupation
+      - guarantor_name
+      - guarantor_address_2
+      - guarantor_city
+      - guarantor_employer
+      - guarantor_occupation
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation]
+
+  campaign-contributions:
+    dataset_id: 3kfv-biw6
+    title: Campaign Finance - Contributions
+    role: official_projection
+    metadata_url: https://data.austintexas.gov/api/views/3kfv-biw6
+    bulk_csv_url: https://data.austintexas.gov/api/views/3kfv-biw6/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 100000
+    identity_fields: [donor, recipient]
+    categorical_fields: [donor_type, contribution_type, correction]
+    date_fields: [contribution_date]
+    amount_fields: [contribution_amount]
+    candidate_amount_field: contribution_amount
+    uniqueness_fields: [transaction_id]
+    organization_name_field: donor
+    organization_type_field: donor_type
+    organization_type_values: [ENTITY]
+    public_fields:
+      - transaction_id
+      - donor
+      - donor_type
+      - recipient
+      - contribution_date
+      - contribution_amount
+      - contribution_year
+      - contribution_type
+      - date_reported
+      - report_filed
+      - in_kind_description
+      - out_of_state_pac
+      - correction
+      - view_report
+    restricted_fields:
+      - donor_address
+      - city_state_zip
+      - donor_reported_occupation
+      - donor_reported_employer
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation]
+
+  echeckbook:
+    dataset_id: 8c6z-qnmj
+    title: Austin Finance Online eCheckbook
+    role: canonical
+    metadata_url: https://data.austintexas.gov/api/views/8c6z-qnmj
+    bulk_csv_url: https://data.austintexas.gov/api/views/8c6z-qnmj/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 2000000
+    identity_fields: [lgl_nm, vend_cust_cd]
+    categorical_fields: [vend_cust_ind, cvl_chk_sta_dv]
+    date_fields: [chk_eft_iss_dt]
+    amount_fields: [amount]
+    candidate_amount_field: amount
+    organization_name_field: lgl_nm
+    organization_code_field: vend_cust_cd
+    invalid_code_prefixes: [MIS]
+    public_fields:
+      - fy_dc
+      - per_cd
+      - dept_cd
+      - dept_nm
+      - fund_cd
+      - fund_nm
+      - div_cd
+      - div_nm
+      - gp_cd
+      - gp_nm
+      - ocat_cd
+      - ocat_nm
+      - obj_cd
+      - obj_nm
+      - lgl_nm
+      - vend_cust_cd
+      - vend_cust_ind
+      - rfed_doc_cd
+      - rfed_doc_dept_cd
+      - rfed_doc_id
+      - comm_cd
+      - comm_dscr
+      - chk_eft_iss_dt
+      - cvl_chk_sta_dv
+      - rfed_vend_ln_no
+      - rfed_comm_ln_no
+      - rfed_actg_ln_no
+      - rf_doc_cd
+      - rf_doc_dept_cd
+      - rf_doc_id
+      - actg_ln_dscr
+      - amount
+      - cal_year
+      - cal_month
+    restricted_fields: []
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation]
+
+  contracts:
+    dataset_id: 84ih-p28j
+    title: City of Austin Contracts
+    role: current_only
+    metadata_url: https://data.austintexas.gov/api/views/84ih-p28j
+    bulk_csv_url: https://data.austintexas.gov/api/views/84ih-p28j/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 500
+    identity_fields: [lgl_nm, alias_nm, vend_cust_cd]
+    categorical_fields: []
+    date_fields: [efbgn_dt, efend_dt, brd_awd_dt, today]
+    amount_fields: [ma_prch_lmt_am, ma_itd_ord_am, ma_do_rfed_am]
+    candidate_amount_field:
+    uniqueness_fields: [row_key]
+    organization_name_field: lgl_nm
+    organization_code_field: vend_cust_cd
+    invalid_code_prefixes: [MIS]
+    public_fields:
+      - doc_cd
+      - doc_dept_cd
+      - doc_id
+      - doc_vers_no
+      - doc_dscr
+      - contract_synopsis
+      - ma_prch_lmt_am
+      - ma_itd_ord_am
+      - ma_do_rfed_am
+      - efbgn_dt
+      - efend_dt
+      - gnrc_po_rpt_1
+      - rpt_dscr
+      - brd_awd_dt
+      - brd_awd_no
+      - cat_dscr
+      - doc_vend_ln_no
+      - vend_cust_cd
+      - lgl_nm
+      - alias_nm
+      - so_doc_cd
+      - so_doc_dept_cd
+      - so_doc_id
+      - today
+      - row_key
+    restricted_fields:
+      - contract_contact_nm
+      - contract_contact_voice_ph_no
+      - contract_contact_email_ad
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation]
+
+  purchase-orders:
+    dataset_id: 3ebq-e9iz
+    title: Purchase Order Quantity and Price
+    role: canonical
+    metadata_url: https://data.austintexas.gov/api/views/3ebq-e9iz
+    bulk_csv_url: https://data.austintexas.gov/api/views/3ebq-e9iz/rows.csv?accessType=DOWNLOAD
+    expected_minimum_rows: 300000
+    identity_fields: [lgl_nm, vendor_code]
+    categorical_fields: []
+    date_fields: [award_date, data_build_date]
+    amount_fields: [itm_tot_am, unit_price]
+    candidate_amount_field: itm_tot_am
+    organization_name_field: lgl_nm
+    organization_code_field: vendor_code
+    invalid_code_prefixes: [MIS]
+    public_fields:
+      - commodity
+      - commodity_description
+      - extended_description
+      - quantity
+      - unit_of_measure
+      - unit_of_meas_desc
+      - unit_price
+      - itm_tot_am
+      - master_agreement
+      - contract_name
+      - purchase_order
+      - award_date
+      - vendor_code
+      - lgl_nm
+      - data_build_date
+    restricted_fields: [ad_ln_1, ad_ln_2, city, st, zip, ctry]
+    restricted_field_patterns: [address, email, phone, telephone, contact, city, zip, employer, occupation, ad_ln]

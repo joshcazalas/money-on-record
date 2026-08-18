@@ -1,0 +1,35 @@
+{
+  "artifact": "data/raw/8c6z-qnmj/a4b9ec9541bb2a36fd433bedc61d83636a23f739c112326743c959e99f0dc23a.csv",
+  "dataset_id": "8c6z-qnmj",
+  "manifest_version": 1,
+  "operation": "acquire-csv",
+  "receipt": {
+    "bytes": 711462085,
+    "requested_url": "https://data.austintexas.gov/api/views/8c6z-qnmj/rows.csv?accessType=DOWNLOAD",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, must-revalidate, max-age=21600",
+      "connection": "close",
+      "content-disposition": "attachment; filename=Austin_Finance_Online_eCheckbook.csv",
+      "content-type": "text/csv; charset=utf-8",
+      "date": "Tue, 18 Aug 2026 17:42:48 GMT",
+      "etag": "W/\"Zm94dHJvdC42NTI1XzVfODQzQ0w1MHFONVdVdnlDUmZpY1FfU0pYQ0ROWmpn---gzipwWyamHZK58i85b2fM8UX-Aq0Z4g--gzip--gzip\"",
+      "last-modified": "Mon, 17 Aug 2026 12:14:00 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "b1d6bc1c096d051db7e519731db44a5d",
+      "x-soda2-data-out-of-date": "false",
+      "x-soda2-secondary-last-modified": "Mon, 17 Aug 2026 12:14:00 GMT",
+      "x-soda2-truth-last-modified": "Mon, 17 Aug 2026 12:14:00 GMT"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/8c6z-qnmj/rows.csv?accessType=DOWNLOAD",
+    "retrieved_at": "2026-08-18T17:42:48.570033+00:00",
+    "sha256": "a4b9ec9541bb2a36fd433bedc61d83636a23f739c112326743c959e99f0dc23a",
+    "status": 200
+  },
+  "source_slug": "echeckbook",
+  "title": "Austin Finance Online eCheckbook"
+}

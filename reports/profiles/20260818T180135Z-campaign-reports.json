@@ -1,0 +1,558 @@
+{
+  "artifact": "data/raw/b2pc-2s8n/ddb8b21861f62dd9440c93e65d01596106f6d1847ad62bc389ceb8cc1d5f0836.csv",
+  "created_at": "2026-08-18T18:01:35.107038+00:00",
+  "dataset_id": "b2pc-2s8n",
+  "duplicate_counts_for_candidate_keys": {
+    "report_id": 300
+  },
+  "expected_minimum_rows": 1000,
+  "fields": {
+    "contrib_balance": {
+      "distinct": 524,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.06721915285451197,
+      "nulls": 73,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "contrib_total": {
+      "distinct": 406,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.2863720073664825,
+      "nulls": 311,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "date_due": {
+      "distinct": 28,
+      "invalid_date_count": 0,
+      "maximum": "08/05/2026",
+      "minimum": "10/31/2022",
+      "null_rate": 0.0432780847145488,
+      "nulls": 47,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "date_filed": {
+      "distinct": 284,
+      "invalid_date_count": 0,
+      "maximum": "08/05/2026",
+      "minimum": "01/03/2023",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "election_date": {
+      "distinct": 28,
+      "invalid_date_count": 0,
+      "maximum": "11/06/2104",
+      "minimum": "11/08/2016",
+      "null_rate": 0.6372007366482505,
+      "nulls": 692,
+      "suspicious_date_count": 1,
+      "suspicious_date_examples": [
+        "11/06/2104"
+      ],
+      "top_values": null
+    },
+    "election_type": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.6307550644567219,
+      "nulls": 685,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "expend_total": {
+      "distinct": 397,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.30847145488029465,
+      "nulls": 335,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "filer_address_2": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "filer_city": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "filer_name": {
+      "distinct": 108,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.16022099447513813,
+      "nulls": 174,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "filer_phone": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "form_type": {
+      "distinct": 13,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "MPAC - Monthly Filing General-Purpose Committee Campaign Finance Report",
+          421
+        ],
+        [
+          "COH - Candidate /Officeholder Campaign Finance Report",
+          254
+        ],
+        [
+          "GPAC - General-Purpose Committee Campaign Finance Report",
+          151
+        ],
+        [
+          "SPAC - Specific-Purpose Committee Campaign Finance Report",
+          84
+        ],
+        [
+          "CORCOH - Correction Affidavit For Candidate/Officeholder",
+          49
+        ],
+        [
+          "ATX1 - Report of Direct Campaign Expenditures: Schedule ATX.1",
+          41
+        ],
+        [
+          "COHFR - Candidate/Officeholder Designation Of Final Report",
+          23
+        ],
+        [
+          "PACATX7 - Pre-Election Report Political Committees: Form ATX.7PAC",
+          22
+        ],
+        [
+          "CORPAC - Correction Affidavit For Political Committee",
+          22
+        ],
+        [
+          "PACDR - Political Committee Affidavit Of Dissolution",
+          9
+        ],
+        [
+          "COHATX7 - Pre-Election Report Candidates and Office Holders: Form ATX.7COH",
+          5
+        ],
+        [
+          "ATX8 - Report of Covered Transfers Supporting Direct Campaign Expenditures: Schedule ATX.8",
+          3
+        ],
+        [
+          "CORATX1 - Correction Affidavit For Report of Direct Campaign Expenditures",
+          2
+        ]
+      ]
+    },
+    "link_to_report": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "name_as_reported": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "office_held": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.785451197053407,
+      "nulls": 853,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "office_sought": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7209944751381215,
+      "nulls": 783,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "outstand_loan": {
+      "distinct": 66,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.06721915285451197,
+      "nulls": 73,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "period_from": {
+      "distinct": 135,
+      "invalid_date_count": 0,
+      "maximum": "07/01/2026",
+      "minimum": "01/01/2022",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "period_to": {
+      "distinct": 136,
+      "invalid_date_count": 0,
+      "maximum": "07/25/2026",
+      "minimum": "06/30/2022",
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": 0,
+      "suspicious_date_examples": [],
+      "top_values": null
+    },
+    "report_id": {
+      "distinct": 786,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0,
+      "nulls": 0,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "report_type": {
+      "distinct": 27,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.3876611418047882,
+      "nulls": 421,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": [
+        [
+          "January 15th semiannual",
+          198
+        ],
+        [
+          "July 15th semiannual",
+          194
+        ],
+        [
+          "8th day before election",
+          71
+        ],
+        [
+          "30th day before election",
+          61
+        ],
+        [
+          "Report of Direct Campaign Expenditures - Schedule ATX.1",
+          43
+        ],
+        [
+          "Pre-Election Report Political Committees - Form ATX.7PAC",
+          22
+        ],
+        [
+          "Runoff",
+          14
+        ],
+        [
+          "10th day after campaign treasurer termination",
+          8
+        ],
+        [
+          "Terminate treasurer appointment (Final Report) - January 15th semiannual",
+          6
+        ],
+        [
+          "CF Monthly Report - August",
+          6
+        ],
+        [
+          "Pre-Election Report Candidates and Office Holders - Form ATX.7COH",
+          5
+        ],
+        [
+          "CF Monthly Report - April",
+          5
+        ],
+        [
+          "Terminate treasurer appointment (Final Report) - July 15th semiannual",
+          4
+        ],
+        [
+          "CF Monthly Report - November",
+          4
+        ],
+        [
+          "CF Monthly Report - June",
+          3
+        ],
+        [
+          "CF Monthly Report - October",
+          3
+        ],
+        [
+          "Report of Covered Transfers Supporting Direct Campaign Expenditures - Schedule ATX.8",
+          3
+        ],
+        [
+          "CF Monthly Report - February",
+          2
+        ],
+        [
+          "CF Monthly Report - December",
+          2
+        ],
+        [
+          "CF Monthly Report - May",
+          2
+        ],
+        [
+          "30th day before election - Dissolution",
+          2
+        ],
+        [
+          "CF Monthly Report - March",
+          2
+        ],
+        [
+          "Dissolution - January 15th semiannual",
+          1
+        ],
+        [
+          "8th day before election - Terminate treasurer appointment (Final Report)",
+          1
+        ],
+        [
+          "Dissolution - July 15th semiannual",
+          1
+        ]
+      ]
+    },
+    "report_type2": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 1086,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_address_2": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.008287292817679558,
+      "nulls": 9,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_city_state_zip": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0009208103130755065,
+      "nulls": 1,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_name": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0009208103130755065,
+      "nulls": 1,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_phone": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.0009208103130755065,
+      "nulls": 1,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_state": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 1086,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "treasurer_zip_code": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 1086,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_contrib_total": {
+      "distinct": 26,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.6823204419889503,
+      "nulls": 741,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_cred_card_total": {
+      "distinct": 2,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7311233885819521,
+      "nulls": 794,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_expend_total": {
+      "distinct": 48,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.6629834254143646,
+      "nulls": 720,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_inkind_total": {
+      "distinct": null,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 1.0,
+      "nulls": 1086,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_loan_total": {
+      "distinct": 3,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7255985267034991,
+      "nulls": 788,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_pledge_total": {
+      "distinct": 1,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7320441988950276,
+      "nulls": 795,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    },
+    "unitemized_unpaid_total": {
+      "distinct": 1,
+      "invalid_date_count": null,
+      "maximum": null,
+      "minimum": null,
+      "null_rate": 0.7302025782688766,
+      "nulls": 793,
+      "suspicious_date_count": null,
+      "suspicious_date_examples": null,
+      "top_values": null
+    }
+  },
+  "meets_expected_minimum": true,
+  "missing_configured_fields": [],
+  "null_definition": "empty or whitespace-only CSV value",
+  "profile_version": 1,
+  "row_count": 1086,
+  "source_slug": "campaign-reports"
+}

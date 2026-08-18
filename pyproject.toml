@@ -1,0 +1,38 @@
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "money-on-record-l0"
+version = "0.1.0"
+description = "Source-safety and data-density experiments for Money on Record"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+  "PyYAML>=6.0.2,<7",
+]
+
+[project.scripts]
+mor-l0 = "money_on_record_l0.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=9.0.3,<10",
+  "ruff>=0.12,<1",
+  "ty>=0.0.1,<1",
+]
+
+[tool.uv]
+required-version = ">=0.12.3,<0.13"
+preview-features = ["audit-command", "sbom-export"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

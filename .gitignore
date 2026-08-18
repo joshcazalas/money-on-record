@@ -1,0 +1,38 @@
+.venv/
+.direnv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ty_cache/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local secrets and overrides.
+.env
+.env.*
+!.env.example
+
+# Terraform working data is local. Provider selections are intentionally
+# versioned in .terraform.lock.hcl once an infrastructure root exists.
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Downloaded source material and generated analysis stay local. Only explicitly
+# redacted fixtures belong in version control.
+data/raw/
+data/.staging/
+data/profiles/
+data/derived/
+!data/.gitkeep

@@ -23,6 +23,11 @@ dist/
 *.tfstate
 *.tfstate.*
 *.tfplan
+**/backend.hcl
+**/terraform.tfvars
+**/terraform.tfvars.json
+**/*.auto.tfvars
+**/*.auto.tfvars.json
 crash.log
 override.tf
 override.tf.json
@@ -36,3 +41,8 @@ data/.staging/
 data/profiles/
 data/derived/
 !data/.gitkeep
+
+# Architecture research and decision records are local working notes. GitHub
+# issues carry shared implementation context.
+docs/decisions/
+docs/research/

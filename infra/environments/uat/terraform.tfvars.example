@@ -1,0 +1,6 @@
+aws_account_id = "123456789012"
+aws_region     = "us-east-1"
+
+# Add aliases only after the matching us-east-1 ACM certificate exists.
+domain_aliases      = []
+acm_certificate_arn = null

@@ -33,27 +33,33 @@ must run from a maintainer-owned branch.
 
 ## Terraform layout and checks
 
-Do not add placeholder resources merely to establish a directory structure.
-When the hosting architecture is selected, use this shape:
+The static-site infrastructure uses one component root and one reusable module:
 
 ```text
 infra/
-  bootstrap/            # state bucket and deployment identity
-  modules/app/          # project-owned composition
-  environments/uat/     # independent backend key and role
-  environments/prod/    # independent backend key and role
+  components/static-site/  # centralized backend and workspace configuration
+  modules/static_site/      # private S3 and CloudFront composition
 ```
 
-Persistent UAT and production should have separate state keys and deployment
-roles, preferably in separate AWS accounts. Terraform CLI workspaces are not a
-security boundary. Reserve workspaces such as `pr-123` for explicitly requested,
-short-lived previews where all names and tags include the PR number and cleanup
-is guaranteed.
+Only the named `uat` and `production` workspaces are valid. They select fixed
+configuration for workload accounts `732006412638` and `134604497564`
+respectively; `default` and unknown workspaces fail closed. Workspaces are not
+the security boundary: the provider's `allowed_account_ids`, exact workload
+role assumption, and separate workload accounts enforce that boundary.
+
+Both workspaces use the centralized deployment-account state bucket. The S3
+backend's `workspace_key_prefix = "money-on-record/static-site"` and
+`key = "terraform.tfstate"` produce these independent objects:
+
+```text
+money-on-record/static-site/uat/terraform.tfstate
+money-on-record/static-site/production/terraform.tfstate
+```
 
 Use the S3 backend's native `use_lockfile = true` locking. Enable encryption,
 public-access blocking, and bucket versioning on the state bucket. DynamoDB
-locking is deprecated and should not be introduced. Commit a
-`.terraform.lock.hcl` in every independently initialized root.
+locking is deprecated and should not be introduced. Commit the component root's
+multi-platform `.terraform.lock.hcl`.
 
 The provider lockfile does not lock remote modules. Adopt a
 `terraform-aws-modules` module only when its abstraction is useful, choose the
@@ -94,10 +100,10 @@ the same principle with isolated Lambda aliases or an explicitly provisioned
 preview stack only when isolation is needed.
 
 Infrastructure changes should produce a sticky production-plan summary on the
-PR and deploy to UAT after merge to `main`. An opt-in full `pr-123` Terraform
-workspace can be added for high-risk infrastructure changes, with a TTL tag and
-a scheduled orphan reaper. This hybrid keeps ordinary previews fast and cheap
-without losing the ability to test infrastructure when it matters.
+PR and deploy to UAT after merge to `main`. The current component intentionally
+rejects preview workspaces; any future preview infrastructure requires a
+separately reviewed state, naming, TTL, and cleanup contract. Ordinary static
+previews remain application artifacts under the persistent UAT distribution.
 
 ## Intentional releases
 

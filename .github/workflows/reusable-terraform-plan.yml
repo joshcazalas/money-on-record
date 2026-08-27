@@ -1,0 +1,32 @@
+name: Reusable Terraform plan
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Named Terraform workspace to plan.
+        required: true
+        type: string
+
+# Bootstrap guard only. Callers must pin this workflow to @main. The complete
+# OIDC and saved-plan implementation is enabled only after AWS trust is bound to
+# this file's immutable job_workflow_ref.
+permissions: {}
+
+jobs:
+  bootstrap-guard:
+    name: Terraform plan bootstrap guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Reject planning until AWS trust is tightened
+        env:
+          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+          if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
+            echo "::error::environment must be uat or production."
+            exit 1
+          fi
+          echo "::error::Terraform planning remains disabled until AWS trust and scoped state access are enabled."
+          exit 1

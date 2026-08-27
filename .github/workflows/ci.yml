@@ -97,21 +97,17 @@ jobs:
       - run: terraform fmt -check -recursive infra
 
   terraform-validate:
-    name: Terraform validate (${{ matrix.environment }})
+    name: Terraform validate
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: [uat, prod]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
           terraform_version: 1.15.8
-      - working-directory: infra/environments/${{ matrix.environment }}
+      - working-directory: infra/components/static-site
         run: terraform init -backend=false -lockfile=readonly
       - name: Verify multi-platform provider lock
-        working-directory: infra/environments/${{ matrix.environment }}
+        working-directory: infra/components/static-site
         run: |
           terraform providers lock \
             -platform=linux_amd64 \
@@ -119,8 +115,20 @@ jobs:
             -platform=darwin_amd64 \
             -platform=darwin_arm64
           git diff --exit-code -- .terraform.lock.hcl
-      - working-directory: infra/environments/${{ matrix.environment }}
+      - working-directory: infra/components/static-site
         run: terraform validate
+
+  terraform-workspace-test:
+    name: Terraform workspace contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.15.8
+      - working-directory: infra/components/static-site
+        run: terraform init -backend=false -lockfile=readonly
+      - run: bash tools/check-terraform-workspaces.sh
 
   terraform-test:
     name: Terraform test

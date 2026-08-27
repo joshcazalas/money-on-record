@@ -78,8 +78,8 @@ run "reject_alias_without_certificate" {
   command = plan
 
   variables {
-    bucket_name    = "money-on-record-prod-123456789012-site"
-    environment    = "prod"
+    bucket_name    = "money-on-record-production-123456789012-site"
+    environment    = "production"
     domain_aliases = ["moneyonrecord.org"]
   }
 
@@ -90,8 +90,8 @@ run "custom_domain" {
   command = plan
 
   variables {
-    bucket_name         = "money-on-record-prod-123456789012-site"
-    environment         = "prod"
+    bucket_name         = "money-on-record-production-123456789012-site"
+    environment         = "production"
     domain_aliases      = ["moneyonrecord.org"]
     acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/example"
   }

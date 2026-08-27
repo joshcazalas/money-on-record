@@ -1,0 +1,32 @@
+name: Reusable Terraform deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Named Terraform workspace to deploy.
+        required: true
+        type: string
+
+# Bootstrap guard only. Callers must pin this workflow to @main. No apply path
+# exists until AWS trust is bound to this file's immutable job_workflow_ref and
+# the reviewed saved-plan deployment contract is implemented.
+permissions: {}
+
+jobs:
+  bootstrap-guard:
+    name: Terraform deploy bootstrap guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Reject deployment until AWS trust is tightened
+        env:
+          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+          if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
+            echo "::error::environment must be uat or production."
+            exit 1
+          fi
+          echo "::error::Terraform deployment remains disabled until AWS trust and scoped state access are enabled."
+          exit 1

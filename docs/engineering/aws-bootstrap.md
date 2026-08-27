@@ -10,14 +10,18 @@ bootstrap uses AWS IAM Identity Center; GitHub uses short-lived OIDC credentials
 
 ## Target account structure
 
-Start with three accounts:
+Use one management account and three member accounts:
 
 ```text
 AWS Organization
 ├── management account       billing, Organizations, Identity Center only
+├── Deployments OU
+│   └── deployment            OIDC hub and centralized application state
 └── Workloads OU
-    ├── money-on-record-uat   UAT and shared low-cost PR previews
-    └── money-on-record-prod  production only
+    ├── NonProduction OU
+    │   └── workloads-uat     UAT and shared low-cost PR previews
+    └── Production OU
+        └── workloads-prod    production only
 ```
 
 The existing account may already be the Organizations management account. Do
@@ -111,31 +115,35 @@ GitHub emits `actor_id`, `repository_id`, and `repository_owner_id` as distinct
 claims. Current AWS IAM can evaluate those claims directly, so no custom subject
 template is required solely to use them.
 
-## Phase 4: one OIDC provider per workload account
+## Phase 4: deployment-account OIDC hub
 
-Create the GitHub Actions OIDC provider separately in UAT and production because
-an IAM OIDC provider must be in the same AWS account as its trusting role:
+Create one GitHub Actions OIDC provider in the deployment account:
 
 ```text
 issuer:   https://token.actions.githubusercontent.com
 audience: sts.amazonaws.com
 ```
 
-Create separate least-privilege roles rather than one administrator deployment
-role:
+Create separate least-privilege hub roles for each environment:
 
-- `MoneyOnRecordPlan` — read-only calls needed to produce a Terraform plan;
-- `MoneyOnRecordDeployUat` — mutation rights only for UAT-owned resources; and
-- `MoneyOnRecordDeployProd` — mutation rights only for production-owned
-  resources.
+- `MoneyOnRecordPlanUat` and `MoneyOnRecordPlanProd` for pull-request plans;
+- `MoneyOnRecordDeployUat` and `MoneyOnRecordDeployProd` for protected
+  environment deployments.
+
+Each hub may access only its centralized state object and assume only its exact
+workload-account execution role. The workload accounts contain no GitHub OIDC
+provider. Their `MoneyOnRecordTerraformPlan` and
+`MoneyOnRecordTerraformDeploy` roles trust only the matching deployment-account
+hub role.
 
 The plan role is not available to forked PRs. Deployment roles are available
 only to jobs using their corresponding protected GitHub Environment.
 
-Every trust policy must use `StringEquals` for the audience, immutable subject,
-repository ID, owner ID, environment, and ref. Production also requires Josh's
-immutable actor ID. The production trust condition will have this shape after
-the real IDs and workflow path are known:
+Every hub trust policy must use `StringEquals` for the audience, immutable
+subject, repository ID, owner ID, and exact reusable `job_workflow_ref`.
+Deployment trust also requires the environment and `main` ref; production
+requires Josh's immutable actor ID. The production deployment hub trust has
+this shape:
 
 ```json
 {
@@ -146,15 +154,19 @@ the real IDs and workflow path are known:
     "token.actions.githubusercontent.com:repository_owner_id": "<OWNER_ID>",
     "token.actions.githubusercontent.com:actor_id": "<JOSH_ACTOR_ID>",
     "token.actions.githubusercontent.com:environment": "production",
-    "token.actions.githubusercontent.com:ref": "refs/heads/main"
+    "token.actions.githubusercontent.com:ref": "refs/heads/main",
+    "token.actions.githubusercontent.com:job_workflow_ref": "joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@refs/heads/main"
   }
 }
 ```
 
-Once deployment is implemented through a reusable workflow, also require its
-exact `job_workflow_ref`. Do not use a wildcard `sub` for this repository or
-owner. The IAM principal is the workload account's exact
-`token.actions.githubusercontent.com` provider ARN, and the only trust action is
+The `job_workflow_ref` must be
+`joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@refs/heads/main`.
+The plan roles similarly require the main-branch
+`reusable-terraform-plan.yml` ref and the immutable pull-request subject. Do not
+use a wildcard `sub` for this repository or owner. The federated principal is
+the deployment account's exact `token.actions.githubusercontent.com` provider
+ARN, and the only web-identity trust action is
 `sts:AssumeRoleWithWebIdentity`.
 
 UAT uses the same owner/repository constraints with `environment:uat` and its
@@ -181,35 +193,42 @@ specify `allowed-account-ids`, use a run-specific role session name, and request
 the exact role for the target environment. No AWS access key is stored in
 GitHub.
 
-The first OIDC smoke test performs only `aws sts get-caller-identity`. Confirm
-the returned account and role before granting the role any workload policy.
-Then test expected denials: wrong environment, wrong ref, wrong actor for
-production, forked PR, and a different repository.
+The first OIDC test chains through each hub to its matching workload role and
+performs only `aws sts get-caller-identity`. Confirm the returned account and
+role before granting state or workload permissions. Also test the opposite
+workload role, wrong environment/ref, and pull-request access to deployment
+roles as expected denials.
 
-## Phase 6: Terraform state bootstrap
+## Phase 6: centralized application state
 
-Each persistent environment owns its state bucket and deployment role. Bootstrap
-the S3 bucket interactively with Identity Center credentials before allowing
-GitHub to deploy. The state bucket must have:
+The AWS foundation creates one application-state bucket in the deployment
+account. Application repositories must not create or manually bootstrap another
+state bucket. The centralized bucket has:
 
 - public access blocked;
 - versioning enabled;
 - server-side encryption enabled;
 - TLS-only bucket policy;
-- least-privilege access for the environment's plan/deploy roles;
+- least-privilege object access for the matching plan/deploy hub roles;
 - lifecycle protection against accidental destroy; and
 - native Terraform locking through `use_lockfile = true`.
 
-The state bucket is a chicken-and-egg resource. Use a dedicated, documented
-bootstrap procedure with temporary local Terraform state, then migrate and
-verify the state in S3. Never commit the temporary state, and never run the
-bootstrap root from GitHub Actions. UAT and production use different buckets or
-at minimum independently permissioned buckets and keys; cross-environment write
-access is forbidden.
+Money on Record uses one `infra/components/static-site` root with named `uat`
+and `production` workspaces. Its backend prefix produces these independently
+permissioned objects:
 
-Commit each root's generated `.terraform.lock.hcl`. Lock providers for supported
-developer and CI platforms. Exact-pin remote modules because provider lockfiles
-do not lock module versions.
+```text
+money-on-record/static-site/uat/terraform.tfstate
+money-on-record/static-site/production/terraform.tfstate
+```
+
+The deployment-account hub identity accesses the backend; the AWS provider then
+assumes the matching workload execution role. Cross-environment state and role
+access is forbidden. Because no application state predates this design, there
+is no migration or temporary local state.
+
+Commit the component root's generated multi-platform `.terraform.lock.hcl`.
+Exact-pin remote modules because provider lockfiles do not lock module versions.
 
 ## Inputs needed before implementation
 

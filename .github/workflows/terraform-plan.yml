@@ -1,0 +1,33 @@
+name: Terraform plans
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: terraform-plan-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  plan-uat:
+    name: Terraform plan (uat)
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      id-token: write
+    uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@main
+    with:
+      environment: uat
+
+  plan-production:
+    name: Terraform plan (production)
+    needs: plan-uat
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      id-token: write
+    uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@main
+    with:
+      environment: production

@@ -73,6 +73,24 @@ def test_reusable_terraform_deploy_remains_fail_closed() -> None:
     assert "terraform apply" not in source
 
 
+def test_pull_request_plans_call_only_the_trusted_main_workflow() -> None:
+    source = (ROOT / ".github" / "workflows" / "terraform-plan.yml").read_text(encoding="utf-8")
+    trusted_call = (
+        "uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@main"
+    )
+
+    assert "pull_request:" in source
+    assert "permissions: {}" in source
+    assert source.count(trusted_call) == 2
+    assert "uses: ./.github/workflows/reusable-terraform-plan.yml" not in source
+    assert source.count("github.event.pull_request.head.repo.full_name == github.repository") == 2
+    assert source.count("contents: read") == 2
+    assert source.count("id-token: write") == 2
+    assert "needs: plan-uat" in source
+    assert source.index("environment: uat") < source.index("environment: production")
+    assert "reusable-terraform-deploy" not in source
+
+
 def test_obsolete_oidc_workflow_can_only_probe_denials() -> None:
     source = (ROOT / ".github" / "workflows" / "aws-oidc-identity-test.yml").read_text(
         encoding="utf-8"

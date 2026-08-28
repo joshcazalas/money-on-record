@@ -82,8 +82,15 @@ uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.ym
 The plan entry point accepts only `uat` or `production`, only from a
 same-repository pull request. It assumes the environment-specific plan hub,
 initializes the committed S3 backend, and runs a read-only plan with state
-locking disabled. It does not save or upload a plan. The deploy entry point
-remains a fail-closed bootstrap; no Terraform apply path exists.
+locking disabled. It does not save or upload a plan.
+
+The deploy entry point is deliberately limited to an intentional manual UAT
+bootstrap from `main`. The caller requires a default-off confirmation checkbox,
+and the privileged job runs inside the `uat` GitHub Environment. It creates a
+fresh locked saved plan, accepts only the reviewed nine-resource create plan or
+a no-op plan, applies that exact runner-local plan, and requires a final
+no-change plan. Production deployment remains disabled. Saved plans are never
+uploaded or retained.
 
 `terraform-plan.yml` calls the trusted `@main` plan entry point for every
 same-repository pull request. UAT runs first; the production plan starts only

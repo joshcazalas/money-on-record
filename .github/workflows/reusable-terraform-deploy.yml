@@ -8,25 +8,413 @@ on:
         required: true
         type: string
 
-# Bootstrap guard only. Callers must pin this workflow to @main. No apply path
-# exists until AWS trust is bound to this file's immutable job_workflow_ref and
-# the reviewed saved-plan deployment contract is implemented.
-permissions: {}
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: terraform-deploy-${{ inputs.environment }}
+  cancel-in-progress: false
 
 jobs:
-  bootstrap-guard:
-    name: Terraform deploy bootstrap guard
+  authorize:
+    name: Authorize Terraform deployment request
+    permissions: {}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Reject deployment until AWS trust is tightened
+      - name: Enforce the bootstrap caller contract
         env:
+          CALLER_EVENT: ${{ github.event_name }}
+          CALLER_OWNER_ID: ${{ github.repository_owner_id }}
+          CALLER_REF: ${{ github.ref }}
+          CALLER_REPOSITORY: ${{ github.repository }}
+          CALLER_REPOSITORY_ID: ${{ github.repository_id }}
+          EXPECTED_OWNER_ID: '73436834'
+          EXPECTED_REPOSITORY: joshcazalas/money-on-record
+          EXPECTED_REPOSITORY_ID: '1338755168'
           REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
         run: |
           set -euo pipefail
-          if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
-            echo "::error::environment must be uat or production."
+          if [[ "$REQUESTED_ENVIRONMENT" != "uat" ]]; then
+            echo "::error::Only the UAT bootstrap deployment is enabled."
             exit 1
           fi
-          echo "::error::Terraform deployment remains disabled until AWS trust and scoped state access are enabled."
-          exit 1
+          if [[ "$CALLER_EVENT" != "workflow_dispatch" ]]; then
+            echo "::error::Terraform deployment requires an intentional manual dispatch."
+            exit 1
+          fi
+          if [[ "$CALLER_REPOSITORY" != "$EXPECTED_REPOSITORY" ]]; then
+            echo "::error::Terraform deployment was requested from an unexpected repository."
+            exit 1
+          fi
+          if [[ "$CALLER_REPOSITORY_ID" != "$EXPECTED_REPOSITORY_ID" ]]; then
+            echo "::error::The immutable repository ID does not match."
+            exit 1
+          fi
+          if [[ "$CALLER_OWNER_ID" != "$EXPECTED_OWNER_ID" ]]; then
+            echo "::error::The immutable repository owner ID does not match."
+            exit 1
+          fi
+          if [[ "$CALLER_REF" != "refs/heads/main" ]]; then
+            echo "::error::Terraform deployment may only execute from refs/heads/main."
+            exit 1
+          fi
+
+  deploy:
+    name: Terraform deploy (${{ inputs.environment }})
+    needs: authorize
+    permissions:
+      contents: read
+      id-token: write
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      DEPLOY_HUB_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+      EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
+      EXPECTED_REGION: us-east-1
+      EXPECTED_STATE_BUCKET: joshcazalas-deployment-tfstate-245459924498
+      EXPECTED_WORKLOAD_ACCOUNT_ID: '732006412638'
+      FORBIDDEN_STATE_KEY: money-on-record/static-site/production/terraform.tfstate
+      FORBIDDEN_WORKLOAD_ROLE_ARN: arn:aws:iam::134604497564:role/MoneyOnRecordTerraformDeploy
+      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+      STATE_KEY: money-on-record/static-site/uat/terraform.tfstate
+      TF_IN_AUTOMATION: 'true'
+      TF_INPUT: '0'
+      TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
+      TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
+    steps:
+      - name: Validate UAT environment configuration
+        env:
+          CONFIGURED_DEPLOYMENT_ACCOUNT_ID: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
+          CONFIGURED_WORKLOAD_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+          expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordDeployUat"
+          expected_workload_role="arn:aws:iam::${EXPECTED_WORKLOAD_ACCOUNT_ID}:role/MoneyOnRecordTerraformDeploy"
+
+          [[ "$REQUESTED_ENVIRONMENT" == "uat" ]] || {
+            echo "::error::Only the UAT bootstrap deployment is enabled."; exit 1;
+          }
+          [[ "$TF_WORKSPACE" == "$REQUESTED_ENVIRONMENT" ]] || {
+            echo "::error::TF_WORKSPACE does not match the requested environment."; exit 1;
+          }
+          [[ "$CONFIGURED_DEPLOYMENT_ACCOUNT_ID" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]] || {
+            echo "::error::AWS_DEPLOYMENT_ACCOUNT_ID does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$CONFIGURED_WORKLOAD_ACCOUNT_ID" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]] || {
+            echo "::error::AWS_ACCOUNT_ID does not match the reviewed UAT account."; exit 1;
+          }
+          [[ "$AWS_REGION" == "$EXPECTED_REGION" ]] || {
+            echo "::error::AWS_REGION does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$STATE_BUCKET" == "$EXPECTED_STATE_BUCKET" ]] || {
+            echo "::error::TF_STATE_BUCKET does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$DEPLOY_HUB_ROLE_ARN" == "$expected_hub_role" ]] || {
+            echo "::error::The UAT deployment hub role does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$TF_VAR_aws_workload_role_arn" == "$expected_workload_role" ]] || {
+            echo "::error::The UAT workload deployment role does not match the reviewed foundation."; exit 1;
+          }
+
+      - name: Check out the authorized main revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Verify checked-out revision
+        run: |
+          set -euo pipefail
+          checked_out_sha="$(git rev-parse HEAD)"
+          if [[ "$checked_out_sha" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out revision does not match the authorized main revision."
+            exit 1
+          fi
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.15.8
+
+      - name: Assume UAT deployment hub role
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.DEPLOY_HUB_ROLE_ARN }}
+          role-session-name: mor-uat-deploy-${{ github.run_id }}
+          role-duration-seconds: 3600
+          allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}
+          retry-max-attempts: 3
+          action-timeout-s: 60
+          unset-current-credentials: true
+
+      - name: Verify UAT deployment-hub isolation
+        run: |
+          set -euo pipefail
+
+          caller_account="$(aws sts get-caller-identity --query Account --output text)"
+          if [[ "$caller_account" != "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]; then
+            echo "::error::The UAT deployment hub resolved to an unexpected AWS account."
+            exit 1
+          fi
+
+          set +e
+          role_denial="$(
+            aws sts assume-role \
+              --role-arn "$FORBIDDEN_WORKLOAD_ROLE_ARN" \
+              --role-session-name "mor-cross-role-deny-${GITHUB_RUN_ID}" \
+              --query AssumedRoleUser.Arn \
+              --output text 2>&1
+          )"
+          role_status=$?
+          state_denial="$(
+            aws s3api head-object \
+              --bucket "$STATE_BUCKET" \
+              --key "$FORBIDDEN_STATE_KEY" 2>&1
+          )"
+          state_status=$?
+          set -e
+
+          if [[ "$role_status" -eq 0 ]]; then
+            echo "::error::The UAT deployment hub unexpectedly assumed the production workload role."
+            exit 1
+          fi
+          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$role_denial"; then
+            echo "::error::The cross-environment role probe failed for an unexpected reason."
+            printf '%s\n' "$role_denial"
+            exit 1
+          fi
+          if [[ "$state_status" -eq 0 ]]; then
+            echo "::error::The UAT deployment hub unexpectedly read production state."
+            exit 1
+          fi
+          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied|\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
+            echo "::error::The cross-environment state probe failed for an unexpected reason."
+            printf '%s\n' "$state_denial"
+            exit 1
+          fi
+
+      - name: Initialize the reviewed remote backend
+        working-directory: infra/components/static-site
+        run: >-
+          terraform init
+          -input=false
+          -lockfile=readonly
+          -no-color
+
+      - name: Verify selected workspace
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          selected_workspace="$(terraform workspace show)"
+          if [[ "$selected_workspace" != "$TF_WORKSPACE" ]]; then
+            echo "::error::Expected workspace $TF_WORKSPACE, got $selected_workspace."
+            exit 1
+          fi
+
+      - name: Validate Terraform configuration
+        working-directory: infra/components/static-site
+        run: terraform validate -no-color
+
+      - name: Create locked saved plan
+        id: plan
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          plan_file="$RUNNER_TEMP/money-on-record-uat.tfplan"
+          plan_log="$RUNNER_TEMP/money-on-record-uat-plan.log"
+
+          set +e
+          terraform plan \
+            -input=false \
+            -lock-timeout=5m \
+            -no-color \
+            -detailed-exitcode \
+            -out="$plan_file" >"$plan_log" 2>&1
+          plan_status=$?
+          set -e
+
+          case "$plan_status" in
+            0)
+              echo "has_changes=false" >>"$GITHUB_OUTPUT"
+              ;;
+            2)
+              echo "has_changes=true" >>"$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::Terraform plan failed with exit code $plan_status."
+              cat "$plan_log"
+              exit "$plan_status"
+              ;;
+          esac
+
+      - name: Enforce bootstrap plan allowlist
+        id: bootstrap
+        working-directory: infra/components/static-site
+        env:
+          PLAN_HAS_CHANGES: ${{ steps.plan.outputs.has_changes }}
+        run: |
+          set -euo pipefail
+          plan_file="$RUNNER_TEMP/money-on-record-uat.tfplan"
+          plan_json="$RUNNER_TEMP/money-on-record-uat-plan.json"
+          terraform show -json "$plan_file" >"$plan_json"
+
+          actual_changes="$(
+            jq -cS '
+              [
+                .resource_changes[]?
+                | select(.mode == "managed")
+                | select(.change.actions != ["no-op"])
+                | {address, actions: .change.actions}
+              ]
+              | sort_by(.address)
+            ' "$plan_json"
+          )"
+          expected_changes="$(
+            jq -ncS '
+              [
+                {address: "terraform_data.workspace_contract", actions: ["create"]},
+                {address: "module.static_site[0].aws_s3_bucket_policy.site", actions: ["create"]},
+                {address: "module.static_site[0].module.cdn.aws_cloudfront_distribution.this[0]", actions: ["create"]},
+                {address: "module.static_site[0].module.cdn.aws_cloudfront_origin_access_control.this[\"site\"]", actions: ["create"]},
+                {address: "module.static_site[0].module.site_bucket.aws_s3_bucket.this[0]", actions: ["create"]},
+                {address: "module.static_site[0].module.site_bucket.aws_s3_bucket_ownership_controls.this[0]", actions: ["create"]},
+                {address: "module.static_site[0].module.site_bucket.aws_s3_bucket_public_access_block.this[0]", actions: ["create"]},
+                {address: "module.static_site[0].module.site_bucket.aws_s3_bucket_server_side_encryption_configuration.this[0]", actions: ["create"]},
+                {address: "module.static_site[0].module.site_bucket.aws_s3_bucket_versioning.this[0]", actions: ["create"]}
+              ]
+              | sort_by(.address)
+            '
+          )"
+
+          if [[ "$actual_changes" == "[]" ]]; then
+            if [[ "$PLAN_HAS_CHANGES" != "false" ]]; then
+              echo "::error::Terraform exit status and the saved plan disagree."
+              exit 1
+            fi
+            echo "mode=no-changes" >>"$GITHUB_OUTPUT"
+            echo "### UAT bootstrap plan: no changes" >>"$GITHUB_STEP_SUMMARY"
+          elif [[ "$actual_changes" == "$expected_changes" ]]; then
+            if [[ "$PLAN_HAS_CHANGES" != "true" ]]; then
+              echo "::error::Terraform exit status and the saved plan disagree."
+              exit 1
+            fi
+            echo "mode=create-nine" >>"$GITHUB_OUTPUT"
+            echo "### UAT bootstrap plan: 9 additions, 0 changes, 0 destroys" >>"$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### UAT bootstrap plan rejected"
+              echo
+              echo "Only the reviewed nine-resource create plan or a no-op plan is allowed."
+              echo
+              echo "| Resource | Actions |"
+              echo "| --- | --- |"
+              jq -r '.[] | "| `\(.address)` | `\(.actions | join(","))` |"' <<<"$actual_changes"
+            } >>"$GITHUB_STEP_SUMMARY"
+            echo "::error::The saved plan does not match the reviewed UAT bootstrap allowlist."
+            exit 1
+          fi
+
+      - name: Apply the exact saved plan
+        if: steps.plan.outputs.has_changes == 'true'
+        working-directory: infra/components/static-site
+        run: >-
+          terraform apply
+          -input=false
+          -auto-approve
+          -no-color
+          "$RUNNER_TEMP/money-on-record-uat.tfplan"
+
+      - name: Verify state and convergence
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          assert_lock_absent() {
+            local lock_probe
+            local lock_status
+
+            set +e
+            lock_probe="$(
+              aws s3api head-object \
+                --bucket "$STATE_BUCKET" \
+                --key "${STATE_KEY}.tflock" 2>&1
+            )"
+            lock_status=$?
+            set -e
+            if [[ "$lock_status" -eq 0 ]]; then
+              echo "::error::The Terraform state lock remained after an operation."
+              exit 1
+            fi
+            if ! grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$lock_probe"; then
+              echo "::error::The Terraform state lock could not be confirmed absent."
+              printf '%s\n' "$lock_probe"
+              exit 1
+            fi
+          }
+
+          aws s3api head-object \
+            --bucket "$STATE_BUCKET" \
+            --key "$STATE_KEY" >/dev/null
+          assert_lock_absent
+
+          post_plan_log="$RUNNER_TEMP/money-on-record-uat-post-apply-plan.log"
+          set +e
+          terraform plan \
+            -input=false \
+            -lock-timeout=5m \
+            -no-color \
+            -detailed-exitcode >"$post_plan_log" 2>&1
+          post_plan_status=$?
+          set -e
+          if [[ "$post_plan_status" -ne 0 ]]; then
+            echo "::error::UAT did not converge after apply; Terraform returned $post_plan_status."
+            cat "$post_plan_log"
+            exit "$post_plan_status"
+          fi
+          assert_lock_absent
+
+      - name: Summarize verified UAT infrastructure
+        working-directory: infra/components/static-site
+        env:
+          BOOTSTRAP_MODE: ${{ steps.bootstrap.outputs.mode }}
+        run: |
+          set -euo pipefail
+          deployed_environment="$(terraform output -raw environment)"
+          workload_account_id="$(terraform output -raw workload_account_id)"
+          bucket_name="$(terraform output -raw artifact_bucket_name)"
+          distribution_id="$(terraform output -raw cloudfront_distribution_id)"
+          site_url="$(terraform output -raw site_url)"
+          state_object_key="$(terraform output -raw state_object_key)"
+
+          [[ "$deployed_environment" == "uat" ]] || {
+            echo "::error::Terraform output reported an unexpected environment."; exit 1;
+          }
+          [[ "$workload_account_id" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]] || {
+            echo "::error::Terraform output reported an unexpected workload account."; exit 1;
+          }
+          [[ "$bucket_name" == "money-on-record-uat-732006412638-site" ]] || {
+            echo "::error::Terraform output reported an unexpected artifact bucket."; exit 1;
+          }
+          [[ "$state_object_key" == "$STATE_KEY" ]] || {
+            echo "::error::Terraform output reported an unexpected state object key."; exit 1;
+          }
+
+          {
+            echo "### Verified UAT Terraform deployment"
+            echo
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Bootstrap mode | \`$BOOTSTRAP_MODE\` |"
+            echo "| Workload account | \`$workload_account_id\` |"
+            echo "| Artifact bucket | \`$bucket_name\` |"
+            echo "| CloudFront distribution | \`$distribution_id\` |"
+            echo "| Site URL | $site_url |"
+            echo "| State object | \`s3://$STATE_BUCKET/$state_object_key\` |"
+            echo "| Post-apply plan | No changes |"
+          } >>"$GITHUB_STEP_SUMMARY"

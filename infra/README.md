@@ -40,8 +40,8 @@ money-on-record/static-site/production/terraform.tfstate
 ```
 
 There are no environment-specific backend files or application-owned state
-buckets. Do not initialize the backend until the foundation enables its scoped
-state policy. Offline development and CI use `terraform init -backend=false`.
+buckets. Offline development and unprivileged CI use
+`terraform init -backend=false`.
 
 Once access is enabled, automation selects a named workspace and supplies only
 the matching execution-role ARN:
@@ -49,17 +49,16 @@ the matching execution-role ARN:
 ```bash
 cd infra/components/static-site
 export TF_VAR_aws_workload_role_arn=arn:aws:iam::732006412638:role/MoneyOnRecordTerraformPlan
-terraform init
-terraform workspace select -or-create uat
 export TF_WORKSPACE=uat
-terraform plan
+terraform init
+terraform plan -lock=false
 ```
 
 Do not commit local variables, plans, state, credentials, or account-discovery
 output. Custom domain aliases remain empty until Cloudflare and ACM are ready;
 the first deployment uses the generated `cloudfront.net` hostname.
 
-## Reusable workflow bootstrap
+## Reusable workflows
 
 The permanent plan and deploy entry points are reserved at:
 
@@ -68,9 +67,9 @@ The permanent plan and deploy entry points are reserved at:
 .github/workflows/reusable-terraform-deploy.yml
 ```
 
-They intentionally fail closed until AWS trust is restricted to their exact
-`job_workflow_ref` claims and scoped state access is enabled. Future privileged
-caller jobs must use the reviewed default-branch copies explicitly:
+AWS trust is restricted to each reusable workflow's exact default-branch
+`job_workflow_ref`. Privileged callers must use the reviewed default-branch
+copies explicitly:
 
 ```yaml
 uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@main
@@ -79,3 +78,12 @@ uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@
 ```yaml
 uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@main
 ```
+
+The plan entry point accepts only `uat` or `production`, only from a
+same-repository pull request. It assumes the environment-specific plan hub,
+initializes the committed S3 backend, and runs a read-only plan with state
+locking disabled. It does not save or upload a plan. The deploy entry point
+remains a fail-closed bootstrap; no Terraform apply path exists.
+
+The legacy `aws-oidc-identity-test.yml` path is deliberately untrusted. It only
+verifies that all plan and deploy hub roles deny its OIDC token.

@@ -85,5 +85,12 @@ initializes the committed S3 backend, and runs a read-only plan with state
 locking disabled. It does not save or upload a plan. The deploy entry point
 remains a fail-closed bootstrap; no Terraform apply path exists.
 
+Before the first deployment, a named workspace has no remote state object and
+the read-only plan identity cannot create one. In that case only, the workflow
+plans against ephemeral empty local state with refresh disabled. The first
+authorized deployment creates the remote workspace state; subsequent pull
+requests automatically plan against that state. An access error is never
+treated as an absent workspace.
+
 The legacy `aws-oidc-identity-test.yml` path is deliberately untrusted. It only
 verifies that all plan and deploy hub roles deny its OIDC token.

@@ -213,7 +213,13 @@ jobs:
 
       - name: Initialize the reviewed backend
         working-directory: infra/components/static-site
-        run: terraform init -input=false -lock=false -lockfile=readonly -no-color
+        run: >-
+          terraform init
+          -backend-config=use_lockfile=false
+          -input=false
+          -lock=false
+          -lockfile=readonly
+          -no-color
 
       - name: Verify selected workspace
         working-directory: infra/components/static-site

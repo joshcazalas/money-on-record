@@ -7,26 +7,253 @@ on:
         description: Named Terraform workspace to plan.
         required: true
         type: string
+    outputs:
+      has_changes:
+        description: Whether Terraform reported proposed changes.
+        value: ${{ jobs.plan.outputs.has_changes }}
 
-# Bootstrap guard only. Callers must pin this workflow to @main. The complete
-# OIDC and saved-plan implementation is enabled only after AWS trust is bound to
-# this file's immutable job_workflow_ref.
-permissions: {}
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  bootstrap-guard:
-    name: Terraform plan bootstrap guard
+  authorize:
+    name: Authorize Terraform plan request
+    permissions: {}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Reject planning until AWS trust is tightened
+      - name: Enforce the caller contract
         env:
+          CALLER_EVENT: ${{ github.event_name }}
+          CALLER_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
           REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+          TARGET_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
           if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
             echo "::error::environment must be uat or production."
             exit 1
           fi
-          echo "::error::Terraform planning remains disabled until AWS trust and scoped state access are enabled."
-          exit 1
+          if [[ "$CALLER_EVENT" != "pull_request" ]]; then
+            echo "::error::Terraform plans may only be requested by a pull request."
+            exit 1
+          fi
+          if [[ "$CALLER_REPOSITORY" != "$TARGET_REPOSITORY" ]]; then
+            echo "::error::Fork pull requests cannot request AWS-backed Terraform plans."
+            exit 1
+          fi
+
+  plan:
+    name: Terraform plan (${{ inputs.environment }})
+    needs: authorize
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      has_changes: ${{ steps.plan.outputs.has_changes }}
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
+      EXPECTED_REGION: us-east-1
+      EXPECTED_STATE_BUCKET: joshcazalas-deployment-tfstate-245459924498
+      EXPECTED_WORKLOAD_ACCOUNT_ID: ${{ inputs.environment == 'uat' && '732006412638' || '134604497564' }}
+      FORBIDDEN_STATE_KEY: ${{ inputs.environment == 'uat' && 'money-on-record/static-site/production/terraform.tfstate' || 'money-on-record/static-site/uat/terraform.tfstate' }}
+      FORBIDDEN_WORKLOAD_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT }}
+      PLAN_HUB_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_PLAN_ROLE_ARN_UAT || vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
+      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+      TF_IN_AUTOMATION: 'true'
+      TF_INPUT: '0'
+      TF_VAR_aws_workload_role_arn: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
+      TF_WORKSPACE: ${{ inputs.environment }}
+    steps:
+      - name: Validate repository configuration
+        env:
+          CONFIGURED_DEPLOYMENT_ACCOUNT_ID: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordPlan${TF_WORKSPACE^}"
+          if [[ "$TF_WORKSPACE" == "production" ]]; then
+            expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordPlanProd"
+          fi
+          expected_workload_role="arn:aws:iam::${EXPECTED_WORKLOAD_ACCOUNT_ID}:role/MoneyOnRecordTerraformPlan"
+
+          [[ "$CONFIGURED_DEPLOYMENT_ACCOUNT_ID" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]] || {
+            echo "::error::AWS_DEPLOYMENT_ACCOUNT_ID does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$AWS_REGION" == "$EXPECTED_REGION" ]] || {
+            echo "::error::AWS_REGION does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$STATE_BUCKET" == "$EXPECTED_STATE_BUCKET" ]] || {
+            echo "::error::TF_STATE_BUCKET does not match the reviewed foundation."; exit 1;
+          }
+          [[ "$PLAN_HUB_ROLE_ARN" == "$expected_hub_role" ]] || {
+            echo "::error::The plan hub role does not match the selected environment."; exit 1;
+          }
+          [[ "$TF_VAR_aws_workload_role_arn" == "$expected_workload_role" ]] || {
+            echo "::error::The workload plan role does not match the selected environment."; exit 1;
+          }
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.15.8
+
+      - name: Assume environment plan hub role
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.PLAN_HUB_ROLE_ARN }}
+          role-session-name: mor-${{ inputs.environment }}-plan-${{ github.run_id }}
+          allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}
+          retry-max-attempts: 3
+          action-timeout-s: 60
+          unset-current-credentials: true
+
+      - name: Verify plan-hub isolation
+        run: |
+          set -euo pipefail
+
+          caller_account="$(aws sts get-caller-identity --query Account --output text)"
+          if [[ "$caller_account" != "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]; then
+            echo "::error::The plan hub resolved to an unexpected AWS account."
+            exit 1
+          fi
+
+          set +e
+          role_denial="$(
+            aws sts assume-role \
+              --role-arn "$FORBIDDEN_WORKLOAD_ROLE_ARN" \
+              --role-session-name "mor-cross-role-deny-${GITHUB_RUN_ID}" \
+              --query AssumedRoleUser.Arn \
+              --output text 2>&1
+          )"
+          role_status=$?
+          state_denial="$(
+            aws s3api head-object \
+              --bucket "$STATE_BUCKET" \
+              --key "$FORBIDDEN_STATE_KEY" 2>&1
+          )"
+          state_status=$?
+          set -e
+
+          if [[ "$role_status" -eq 0 ]]; then
+            echo "::error::The plan hub unexpectedly assumed the other environment's workload role."
+            exit 1
+          fi
+          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$role_denial"; then
+            echo "::error::The cross-environment role probe failed for an unexpected reason."
+            printf '%s\n' "$role_denial"
+            exit 1
+          fi
+          if [[ "$state_status" -eq 0 ]]; then
+            echo "::error::The plan hub unexpectedly read the other environment's state."
+            exit 1
+          fi
+          if grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
+            echo "::error::The cross-environment state probe returned not-found instead of permission-denied."
+            printf '%s\n' "$state_denial"
+            exit 1
+          fi
+          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied' <<<"$state_denial"; then
+            echo "::error::The cross-environment state probe failed for an unexpected reason."
+            printf '%s\n' "$state_denial"
+            exit 1
+          fi
+
+      - name: Verify deployment hubs reject this plan workflow
+        env:
+          PRODUCTION_DEPLOY_ROLE_ARN: arn:aws:iam::245459924498:role/MoneyOnRecordDeployProd
+          UAT_DEPLOY_ROLE_ARN: arn:aws:iam::245459924498:role/MoneyOnRecordDeployUat
+        run: |
+          set -euo pipefail
+          oidc_response="$(
+            curl --fail-with-body --silent --show-error \
+              --header "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com"
+          )"
+          oidc_token="$(jq -er '.value' <<<"$oidc_response")"
+
+          assert_denied() {
+            local role_arn="$1"
+            local label="$2"
+            local denial_output
+            local status
+
+            set +e
+            denial_output="$(
+              aws sts assume-role-with-web-identity \
+                --role-arn "$role_arn" \
+                --role-session-name "mor-${label}-deny-${GITHUB_RUN_ID}" \
+                --web-identity-token "$oidc_token" \
+                --duration-seconds 900 \
+                --query AssumedRoleUser.Arn \
+                --output text 2>&1
+            )"
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              echo "::error::The plan workflow unexpectedly assumed the $label deployment hub."
+              exit 1
+            fi
+            if ! grep -Eiq 'AccessDenied|not authorized.*AssumeRoleWithWebIdentity' <<<"$denial_output"; then
+              echo "::error::The $label deployment-hub probe failed for an unexpected reason."
+              printf '%s\n' "$denial_output"
+              exit 1
+            fi
+          }
+
+          assert_denied "$UAT_DEPLOY_ROLE_ARN" uat
+          assert_denied "$PRODUCTION_DEPLOY_ROLE_ARN" production
+          unset oidc_token oidc_response
+
+      - name: Initialize the reviewed backend
+        working-directory: infra/components/static-site
+        run: terraform init -input=false -lockfile=readonly -no-color
+
+      - name: Verify selected workspace
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          selected_workspace="$(terraform workspace show)"
+          if [[ "$selected_workspace" != "$TF_WORKSPACE" ]]; then
+            echo "::error::Expected workspace $TF_WORKSPACE, got $selected_workspace."
+            exit 1
+          fi
+
+      - name: Validate Terraform configuration
+        working-directory: infra/components/static-site
+        run: terraform validate -no-color
+
+      - name: Terraform plan
+        id: plan
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          set +e
+          terraform plan \
+            -input=false \
+            -lock=false \
+            -no-color \
+            -detailed-exitcode
+          plan_status=$?
+          set -e
+
+          case "$plan_status" in
+            0)
+              echo "has_changes=false" >>"$GITHUB_OUTPUT"
+              echo "### Terraform plan: no changes ($TF_WORKSPACE)" >>"$GITHUB_STEP_SUMMARY"
+              ;;
+            2)
+              echo "has_changes=true" >>"$GITHUB_OUTPUT"
+              echo "### Terraform plan: changes proposed ($TF_WORKSPACE)" >>"$GITHUB_STEP_SUMMARY"
+              ;;
+            *)
+              echo "::error::Terraform plan failed with exit code $plan_status."
+              exit "$plan_status"
+              ;;
+          esac

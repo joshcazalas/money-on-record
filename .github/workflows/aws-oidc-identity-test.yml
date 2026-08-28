@@ -1,4 +1,4 @@
-name: AWS OIDC identity chain
+name: Reject obsolete AWS OIDC workflow
 
 on:
   pull_request:
@@ -10,190 +10,34 @@ permissions:
   id-token: write
 
 concurrency:
-  group: aws-oidc-identity-${{ github.workflow }}-${{ github.ref }}
+  group: aws-oidc-obsolete-path-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  plan-uat:
-    name: UAT plan identity chain
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Assume UAT plan hub role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN_UAT }}
-          role-session-name: mor-uat-plan-hub-${{ github.run_id }}
-          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
-
-      - name: Reject production workload plan role
-        env:
-          FORBIDDEN_ROLE_ARN: ${{ vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
-        run: |
-          set -euo pipefail
-          set +e
-          denial_output="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_ROLE_ARN" \
-              --role-session-name "mor-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          status=$?
-          set -e
-
-          if [[ "$status" -eq 0 ]]; then
-            echo "::error::UAT plan hub unexpectedly assumed the production workload role: $denial_output"
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$denial_output"; then
-            echo "::error::Expected an authorization denial, received a different error."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          echo "UAT plan hub was correctly denied the production workload role."
-
-      - name: Reject production state object read
-        env:
-          STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
-          FORBIDDEN_STATE_KEY: money-on-record/shared/production/terraform.tfstate
-        run: |
-          set -euo pipefail
-          set +e
-          denial_output="$(
-            aws s3api head-object \
-              --bucket "$STATE_BUCKET" \
-              --key "$FORBIDDEN_STATE_KEY" 2>&1
-          )"
-          status=$?
-          set -e
-
-          if [[ "$status" -eq 0 ]]; then
-            echo "::error::UAT plan hub unexpectedly accessed the production state object."
-            exit 1
-          fi
-          if grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$denial_output"; then
-            echo "::error::Production state check returned not-found instead of permission-denied."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied' <<<"$denial_output"; then
-            echo "::error::Expected a 403 authorization denial, received a different error."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          echo "UAT plan hub received the expected 403 for the production state object."
-
-      - name: Assume UAT workload plan role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT }}
-          role-chaining: true
-          role-session-name: mor-uat-plan-workload-${{ github.run_id }}
-          allowed-account-ids: '732006412638'
-          retry-max-attempts: 3
-          action-timeout-s: 60
-
-      - name: Verify UAT workload caller
-        env:
-          EXPECTED_ACCOUNT_ID: '732006412638'
-        run: |
-          set -euo pipefail
-          actual_account_id="$(aws sts get-caller-identity --query Account --output text)"
-          caller_arn="$(aws sts get-caller-identity --query Arn --output text)"
-          if [[ "$actual_account_id" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::Expected account $EXPECTED_ACCOUNT_ID, got $actual_account_id."
-            exit 1
-          fi
-          echo "Validated UAT workload identity: $caller_arn (account $actual_account_id)."
-
-  plan-production:
-    name: Production plan identity chain
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Assume production plan hub role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
-          role-session-name: mor-prod-plan-hub-${{ github.run_id }}
-          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
-
-      - name: Reject UAT workload plan role
-        env:
-          FORBIDDEN_ROLE_ARN: ${{ vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT }}
-        run: |
-          set -euo pipefail
-          set +e
-          denial_output="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_ROLE_ARN" \
-              --role-session-name "mor-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          status=$?
-          set -e
-
-          if [[ "$status" -eq 0 ]]; then
-            echo "::error::Production plan hub unexpectedly assumed the UAT workload role: $denial_output"
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$denial_output"; then
-            echo "::error::Expected an authorization denial, received a different error."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          echo "Production plan hub was correctly denied the UAT workload role."
-
-      - name: Assume production workload plan role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
-          role-chaining: true
-          role-session-name: mor-prod-plan-workload-${{ github.run_id }}
-          allowed-account-ids: '134604497564'
-          retry-max-attempts: 3
-          action-timeout-s: 60
-
-      - name: Verify production workload caller
-        env:
-          EXPECTED_ACCOUNT_ID: '134604497564'
-        run: |
-          set -euo pipefail
-          actual_account_id="$(aws sts get-caller-identity --query Account --output text)"
-          caller_arn="$(aws sts get-caller-identity --query Arn --output text)"
-          if [[ "$actual_account_id" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::Expected account $EXPECTED_ACCOUNT_ID, got $actual_account_id."
-            exit 1
-          fi
-          echo "Validated production workload identity: $caller_arn (account $actual_account_id)."
-
-  pull-request-deploy-denials:
-    name: Pull request cannot assume deployment hubs
-    if: github.event_name == 'pull_request'
+  reject-obsolete-workflow:
+    name: Obsolete workflow cannot assume any hub role
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      UAT_DEPLOY_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordDeployUat
       PRODUCTION_DEPLOY_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordDeployProd
+      PRODUCTION_PLAN_ROLE_ARN: ${{ vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
+      UAT_DEPLOY_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordDeployUat
+      UAT_PLAN_ROLE_ARN: ${{ vars.AWS_PLAN_ROLE_ARN_UAT }}
     steps:
-      - name: Reject deployment hubs without an environment
+      - name: Verify all hub roles reject this workflow path
         run: |
           set -euo pipefail
+          expected_prefix="arn:aws:iam::245459924498:role/MoneyOnRecord"
+          for role_arn in \
+            "$UAT_PLAN_ROLE_ARN" \
+            "$PRODUCTION_PLAN_ROLE_ARN" \
+            "$UAT_DEPLOY_ROLE_ARN" \
+            "$PRODUCTION_DEPLOY_ROLE_ARN"; do
+            if [[ "$role_arn" != "$expected_prefix"* ]]; then
+              echo "::error::A configured hub role does not match the reviewed deployment account."
+              exit 1
+            fi
+          done
 
           oidc_response="$(
             curl --fail-with-body --silent --show-error \
@@ -202,10 +46,9 @@ jobs:
           )"
           oidc_token="$(jq -er '.value' <<<"$oidc_response")"
 
-          assert_web_identity_denied() {
+          assert_denied() {
             local role_arn="$1"
-            local session_name="$2"
-            local label="$3"
+            local label="$2"
             local denial_output
             local status
 
@@ -213,7 +56,7 @@ jobs:
             denial_output="$(
               aws sts assume-role-with-web-identity \
                 --role-arn "$role_arn" \
-                --role-session-name "$session_name" \
+                --role-session-name "mor-obsolete-deny-${GITHUB_RUN_ID}" \
                 --web-identity-token "$oidc_token" \
                 --duration-seconds 900 \
                 --query AssumedRoleUser.Arn \
@@ -223,197 +66,19 @@ jobs:
             set -e
 
             if [[ "$status" -eq 0 ]]; then
-              echo "::error::A pull-request token unexpectedly assumed the $label deployment hub: $denial_output"
+              echo "::error::The obsolete workflow unexpectedly assumed the $label hub role."
               exit 1
             fi
             if ! grep -Eiq 'AccessDenied|not authorized.*AssumeRoleWithWebIdentity' <<<"$denial_output"; then
-              echo "::error::Expected an authorization denial from the $label deployment hub, received a different error."
+              echo "::error::The $label denial probe failed for an unexpected reason."
               printf '%s\n' "$denial_output"
               exit 1
             fi
-            echo "Pull-request token was correctly denied by the $label deployment hub."
+            echo "The $label hub role correctly rejected this workflow path."
           }
 
-          assert_web_identity_denied \
-            "$UAT_DEPLOY_ROLE_ARN" \
-            "mor-deny-uat-deploy-${GITHUB_RUN_ID}" \
-            UAT
-          assert_web_identity_denied \
-            "$PRODUCTION_DEPLOY_ROLE_ARN" \
-            "mor-deny-prod-deploy-${GITHUB_RUN_ID}" \
-            production
-
+          assert_denied "$UAT_PLAN_ROLE_ARN" uat-plan
+          assert_denied "$PRODUCTION_PLAN_ROLE_ARN" production-plan
+          assert_denied "$UAT_DEPLOY_ROLE_ARN" uat-deploy
+          assert_denied "$PRODUCTION_DEPLOY_ROLE_ARN" production-deploy
           unset oidc_token oidc_response
-          echo "Pull-request token was correctly denied by both deployment hubs."
-
-  deploy-uat:
-    name: UAT deployment identity chain
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    environment: uat
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Assume UAT deployment hub role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          role-session-name: mor-uat-deploy-hub-${{ github.run_id }}
-          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
-
-      - name: Reject production workload deployment role
-        env:
-          FORBIDDEN_ROLE_ARN: arn:aws:iam::134604497564:role/MoneyOnRecordTerraformDeploy
-        run: |
-          set -euo pipefail
-          set +e
-          denial_output="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_ROLE_ARN" \
-              --role-session-name "mor-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          status=$?
-          set -e
-
-          if [[ "$status" -eq 0 ]]; then
-            echo "::error::UAT deploy hub unexpectedly assumed the production workload role: $denial_output"
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$denial_output"; then
-            echo "::error::Expected an authorization denial, received a different error."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          echo "UAT deploy hub was correctly denied the production workload role."
-
-      - name: Assume UAT workload deployment role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
-          role-chaining: true
-          role-session-name: mor-uat-deploy-workload-${{ github.run_id }}
-          allowed-account-ids: '732006412638'
-          retry-max-attempts: 3
-          action-timeout-s: 60
-
-      - name: Verify UAT workload caller
-        env:
-          CONFIGURED_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-          EXPECTED_ACCOUNT_ID: '732006412638'
-        run: |
-          set -euo pipefail
-          actual_account_id="$(aws sts get-caller-identity --query Account --output text)"
-          caller_arn="$(aws sts get-caller-identity --query Arn --output text)"
-          if [[ "$CONFIGURED_ACCOUNT_ID" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::UAT environment account variable does not match the expected account."
-            exit 1
-          fi
-          if [[ "$actual_account_id" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::Expected account $EXPECTED_ACCOUNT_ID, got $actual_account_id."
-            exit 1
-          fi
-          echo "Validated UAT deployment identity: $caller_arn (account $actual_account_id)."
-
-  deploy-production:
-    name: Production deployment identity chain
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    environment: production
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Assume production deployment hub role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          role-session-name: mor-prod-deploy-hub-${{ github.run_id }}
-          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
-
-      - name: Reject UAT workload deployment role
-        env:
-          FORBIDDEN_ROLE_ARN: arn:aws:iam::732006412638:role/MoneyOnRecordTerraformDeploy
-        run: |
-          set -euo pipefail
-          set +e
-          denial_output="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_ROLE_ARN" \
-              --role-session-name "mor-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          status=$?
-          set -e
-
-          if [[ "$status" -eq 0 ]]; then
-            echo "::error::Production deploy hub unexpectedly assumed the UAT workload role: $denial_output"
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$denial_output"; then
-            echo "::error::Expected an authorization denial, received a different error."
-            printf '%s\n' "$denial_output"
-            exit 1
-          fi
-          echo "Production deploy hub was correctly denied the UAT workload role."
-
-      - name: Assume production workload deployment role
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
-          role-chaining: true
-          role-session-name: mor-prod-deploy-workload-${{ github.run_id }}
-          allowed-account-ids: '134604497564'
-          retry-max-attempts: 3
-          action-timeout-s: 60
-
-      - name: Verify production workload caller
-        env:
-          CONFIGURED_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-          EXPECTED_ACCOUNT_ID: '134604497564'
-        run: |
-          set -euo pipefail
-          actual_account_id="$(aws sts get-caller-identity --query Account --output text)"
-          caller_arn="$(aws sts get-caller-identity --query Arn --output text)"
-          if [[ "$CONFIGURED_ACCOUNT_ID" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::Production environment account variable does not match the expected account."
-            exit 1
-          fi
-          if [[ "$actual_account_id" != "$EXPECTED_ACCOUNT_ID" ]]; then
-            echo "::error::Expected account $EXPECTED_ACCOUNT_ID, got $actual_account_id."
-            exit 1
-          fi
-          echo "Validated production deployment identity: $caller_arn (account $actual_account_id)."
-
-  non-main-uat-environment-policy:
-    name: Non-main UAT environment policy probe
-    if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
-    environment: uat
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - name: Fail if a non-main UAT deployment job starts
-        run: |
-          echo "::error::The UAT environment branch policy allowed a non-main deployment job."
-          exit 1
-
-  non-main-production-environment-policy:
-    name: Non-main production environment policy probe
-    if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
-    environment: production
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - name: Fail if a non-main production deployment job starts
-        run: |
-          echo "::error::The production environment branch policy allowed a non-main deployment job."
-          exit 1

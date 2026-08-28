@@ -41,15 +41,48 @@ def test_environment_roots_were_replaced_by_one_component() -> None:
     assert not (ROOT / "infra" / "environments").exists()
 
 
-def test_reusable_terraform_workflows_are_fail_closed_bootstraps() -> None:
-    workflows = (
-        ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml",
-        ROOT / ".github" / "workflows" / "reusable-terraform-deploy.yml",
+def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
+    source = (ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml").read_text(
+        encoding="utf-8"
     )
 
-    for workflow in workflows:
-        source = workflow.read_text(encoding="utf-8")
-        assert "workflow_call:" in source
-        assert "permissions: {}" in source
-        assert "exit 1" in source
-        assert "terraform apply" not in source
+    assert "workflow_call:" in source
+    assert "contents: read" in source
+    assert "id-token: write" in source
+    assert "CALLER_REPOSITORY" in source
+    assert "Fork pull requests cannot request AWS-backed Terraform plans" in source
+    assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
+    assert "terraform init -input=false -lockfile=readonly -no-color" in source
+    assert "terraform plan \\" in source
+    assert "-lock=false" in source
+    assert "-detailed-exitcode" in source
+    assert "terraform workspace new" not in source
+    assert "terraform workspace select" not in source
+    assert "terraform apply" not in source
+    assert "upload-artifact" not in source
+
+
+def test_reusable_terraform_deploy_remains_fail_closed() -> None:
+    source = (ROOT / ".github" / "workflows" / "reusable-terraform-deploy.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "workflow_call:" in source
+    assert "permissions: {}" in source
+    assert "exit 1" in source
+    assert "terraform apply" not in source
+
+
+def test_obsolete_oidc_workflow_can_only_probe_denials() -> None:
+    source = (ROOT / ".github" / "workflows" / "aws-oidc-identity-test.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Reject obsolete AWS OIDC workflow" in source
+    assert source.count("assume-role-with-web-identity") == 1
+    assert "UAT_PLAN_ROLE_ARN" in source
+    assert "PRODUCTION_PLAN_ROLE_ARN" in source
+    assert "UAT_DEPLOY_ROLE_ARN" in source
+    assert "PRODUCTION_DEPLOY_ROLE_ARN" in source
+    assert "configure-aws-credentials" not in source
+    assert "terraform" not in source.lower()

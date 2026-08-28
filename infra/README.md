@@ -85,6 +85,11 @@ initializes the committed S3 backend, and runs a read-only plan with state
 locking disabled. It does not save or upload a plan. The deploy entry point
 remains a fail-closed bootstrap; no Terraform apply path exists.
 
+`terraform-plan.yml` calls the trusted `@main` plan entry point for every
+same-repository pull request. UAT runs first; the production plan starts only
+after UAT succeeds. Fork pull requests skip both AWS jobs because their code
+cannot be given the repository's plan identities.
+
 Before the first deployment, a named workspace has no remote state object and
 the read-only plan identity cannot create one. In that case only, the workflow
 plans against ephemeral empty local state with refresh disabled. The first

@@ -52,7 +52,7 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "CALLER_REPOSITORY" in source
     assert "Fork pull requests cannot request AWS-backed Terraform plans" in source
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
-    assert "terraform init -input=false -lockfile=readonly -no-color" in source
+    assert "terraform init -input=false -lock=false -lockfile=readonly -no-color" in source
     assert "terraform plan \\" in source
     assert "-lock=false" in source
     assert "-detailed-exitcode" in source

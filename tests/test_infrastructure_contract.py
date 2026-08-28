@@ -54,9 +54,19 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
     assert "terraform init" in source
     assert "-backend-config=use_lockfile=false" in source
+    assert (
+        "STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate"
+        in source
+    )
+    assert "Detect selected workspace state" in source
+    assert "if: steps.state.outputs.exists == 'true'" in source
+    assert "if: steps.state.outputs.exists == 'false'" in source
+    assert 'mv -- backend.tf "$BACKEND_STASH_PATH"' in source
+    assert "-backend=false" in source
+    assert "plan_args+=(-refresh=false)" in source
     assert "-input=false" in source
     assert "-lockfile=readonly" in source
-    assert "terraform plan \\" in source
+    assert 'terraform plan "${plan_args[@]}"' in source
     assert "-lock=false" in source
     assert "-detailed-exitcode" in source
     assert "S3 therefore returns 404 while the opposite state is" in source

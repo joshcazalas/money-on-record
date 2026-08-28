@@ -64,6 +64,7 @@ jobs:
       FORBIDDEN_WORKLOAD_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT }}
       PLAN_HUB_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_PLAN_ROLE_ARN_UAT || vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
       STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+      STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate
       TF_IN_AUTOMATION: 'true'
       TF_INPUT: '0'
       TF_VAR_aws_workload_role_arn: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
@@ -153,12 +154,12 @@ jobs:
             echo "::error::The plan hub unexpectedly read the other environment's state."
             exit 1
           fi
-          if grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
-            echo "::error::The cross-environment state probe returned not-found instead of permission-denied."
-            printf '%s\n' "$state_denial"
-            exit 1
-          fi
-          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied' <<<"$state_denial"; then
+          # Terraform needs ListBucket on the component prefix to enumerate
+          # workspaces. S3 therefore returns 404 while the opposite state is
+          # absent and 403 once that unauthorized object exists. Either is a
+          # safe non-success response; an accessible object returned above
+          # would have produced status 0 and failed the job.
+          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied|\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
             echo "::error::The cross-environment state probe failed for an unexpected reason."
             printf '%s\n' "$state_denial"
             exit 1
@@ -211,9 +212,57 @@ jobs:
           assert_denied "$PRODUCTION_DEPLOY_ROLE_ARN" production
           unset oidc_token oidc_response
 
-      - name: Initialize the reviewed backend
+      - name: Detect selected workspace state
+        id: state
+        run: |
+          set -euo pipefail
+          set +e
+          state_probe="$(
+            aws s3api head-object \
+              --bucket "$STATE_BUCKET" \
+              --key "$STATE_KEY" 2>&1
+          )"
+          state_status=$?
+          set -e
+
+          if [[ "$state_status" -eq 0 ]]; then
+            echo "exists=true" >>"$GITHUB_OUTPUT"
+          elif grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$state_probe"; then
+            echo "exists=false" >>"$GITHUB_OUTPUT"
+          else
+            echo "::error::The selected workspace state could not be read or confirmed absent."
+            printf '%s\n' "$state_probe"
+            exit 1
+          fi
+
+      - name: Initialize the reviewed remote backend
+        if: steps.state.outputs.exists == 'true'
         working-directory: infra/components/static-site
-        run: terraform init -input=false -lockfile=readonly -no-color
+        run: >-
+          terraform init
+          -backend-config=use_lockfile=false
+          -input=false
+          -lock=false
+          -lockfile=readonly
+          -no-color
+
+      - name: Initialize an ephemeral empty-state backend
+        if: steps.state.outputs.exists == 'false'
+        env:
+          BACKEND_STASH_PATH: ${{ runner.temp }}/money-on-record-static-site-backend.tf
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          if [[ ! -f backend.tf ]]; then
+            echo "::error::The reviewed backend configuration is missing."
+            exit 1
+          fi
+          mv -- backend.tf "$BACKEND_STASH_PATH"
+          terraform init \
+            -backend=false \
+            -input=false \
+            -lockfile=readonly \
+            -no-color
 
       - name: Verify selected workspace
         working-directory: infra/components/static-site
@@ -231,26 +280,36 @@ jobs:
 
       - name: Terraform plan
         id: plan
+        env:
+          STATE_EXISTS: ${{ steps.state.outputs.exists }}
         working-directory: infra/components/static-site
         run: |
           set -euo pipefail
-          set +e
-          terraform plan \
-            -input=false \
-            -lock=false \
-            -no-color \
+          plan_args=(
+            -input=false
+            -lock=false
+            -no-color
             -detailed-exitcode
+          )
+          plan_mode="remote state"
+          if [[ "$STATE_EXISTS" == "false" ]]; then
+            plan_args+=(-refresh=false)
+            plan_mode="ephemeral empty state"
+          fi
+
+          set +e
+          terraform plan "${plan_args[@]}"
           plan_status=$?
           set -e
 
           case "$plan_status" in
             0)
               echo "has_changes=false" >>"$GITHUB_OUTPUT"
-              echo "### Terraform plan: no changes ($TF_WORKSPACE)" >>"$GITHUB_STEP_SUMMARY"
+              echo "### Terraform plan: no changes ($TF_WORKSPACE, $plan_mode)" >>"$GITHUB_STEP_SUMMARY"
               ;;
             2)
               echo "has_changes=true" >>"$GITHUB_OUTPUT"
-              echo "### Terraform plan: changes proposed ($TF_WORKSPACE)" >>"$GITHUB_STEP_SUMMARY"
+              echo "### Terraform plan: changes proposed ($TF_WORKSPACE, $plan_mode)" >>"$GITHUB_STEP_SUMMARY"
               ;;
             *)
               echo "::error::Terraform plan failed with exit code $plan_status."

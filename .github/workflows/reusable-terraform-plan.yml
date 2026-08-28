@@ -153,12 +153,12 @@ jobs:
             echo "::error::The plan hub unexpectedly read the other environment's state."
             exit 1
           fi
-          if grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
-            echo "::error::The cross-environment state probe returned not-found instead of permission-denied."
-            printf '%s\n' "$state_denial"
-            exit 1
-          fi
-          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied' <<<"$state_denial"; then
+          # Terraform needs ListBucket on the component prefix to enumerate
+          # workspaces. S3 therefore returns 404 while the opposite state is
+          # absent and 403 once that unauthorized object exists. Either is a
+          # safe non-success response; an accessible object returned above
+          # would have produced status 0 and failed the job.
+          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied|\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
             echo "::error::The cross-environment state probe failed for an unexpected reason."
             printf '%s\n' "$state_denial"
             exit 1

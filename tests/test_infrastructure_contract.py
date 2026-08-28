@@ -56,6 +56,9 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "terraform plan \\" in source
     assert "-lock=false" in source
     assert "-detailed-exitcode" in source
+    assert "S3 therefore returns 404 while the opposite state is" in source
+    assert 'if [[ "$state_status" -eq 0 ]]' in source
+    assert "AccessDenied|\\(404\\)|Not Found|NoSuchKey" in source
     assert "terraform workspace new" not in source
     assert "terraform workspace select" not in source
     assert "terraform apply" not in source

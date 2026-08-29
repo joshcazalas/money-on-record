@@ -1,6 +1,8 @@
 import re
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENT = ROOT / "infra" / "components" / "static-site"
 
@@ -9,6 +11,22 @@ def _quoted_assignment(source: str, name: str) -> str:
     match = re.search(rf"^\s*{re.escape(name)}\s*=\s*\"([^\"]+)\"\s*$", source, re.MULTILINE)
     assert match is not None, f"missing quoted backend assignment: {name}"
     return match.group(1)
+
+
+def _assert_native_terraform_exit_contract(source: str) -> None:
+    workflow = yaml.safe_load(source)
+    setup_steps = [
+        step
+        for job in workflow["jobs"].values()
+        for step in job["steps"]
+        if step.get("uses", "").startswith("hashicorp/setup-terraform@")
+    ]
+
+    assert len(setup_steps) == 1
+    assert setup_steps[0]["with"]["terraform_wrapper"] is False
+    assert "id" not in setup_steps[0]
+    assert not re.search(r"steps\.[^.}\s]+\.outputs\.(?:exitcode|stdout|stderr)", source)
+    assert "plan_status=$?" in source
 
 
 def test_centralized_backend_derives_exact_workspace_keys() -> None:
@@ -76,6 +94,7 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "terraform workspace select" not in source
     assert "terraform apply" not in source
     assert "upload-artifact" not in source
+    _assert_native_terraform_exit_contract(source)
 
 
 def test_reusable_terraform_deploy_is_uat_only_and_bootstrap_safe() -> None:
@@ -115,6 +134,7 @@ def test_reusable_terraform_deploy_is_uat_only_and_bootstrap_safe() -> None:
     assert "upload-artifact" not in source
     assert "-lock=false" not in source
     assert "use_lockfile=false" not in source
+    _assert_native_terraform_exit_contract(source)
 
     expected_resources = {
         "terraform_data.workspace_contract",

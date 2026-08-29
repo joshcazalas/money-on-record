@@ -58,6 +58,14 @@ def test_environment_roots_were_replaced_by_one_component() -> None:
     assert not (ROOT / "infra" / "environments").exists()
 
 
+def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
+    source = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+
+    assert re.search(r"^  pull_request:$", source, re.MULTILINE)
+    assert re.search(r"^  workflow_dispatch:$", source, re.MULTILINE)
+    assert not re.search(r"^  push:$", source, re.MULTILINE)
+
+
 def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     source = (ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml").read_text(
         encoding="utf-8"

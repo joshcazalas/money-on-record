@@ -100,19 +100,22 @@ the same principle with isolated Lambda aliases or an explicitly provisioned
 preview stack only when isolation is needed.
 
 Infrastructure changes produce one sticky UAT/production plan summary on the
-PR. A same-repository PR with a successful trusted plan deploys the merged
-Terraform configuration to UAT first and production second. Each environment
-uses its exact OIDC deploy chain, creates a fresh locked saved plan, applies it
-only from `main`, and proves post-apply convergence. This changes infrastructure
-configuration only; it does not publish an application artifact or create a
-semantic release. The current component intentionally rejects preview
-workspaces; any future preview infrastructure requires a separately reviewed
-state, naming, TTL, and cleanup contract. Ordinary static previews remain
-application artifacts under the persistent UAT distribution.
+PR. Pull requests never receive deployment credentials and never apply their
+changes. Every push that lands on `main` automatically creates a fresh locked
+plan for that exact revision, applies it only to UAT, and proves post-apply
+convergence. A superseded queued run exits before receiving AWS credentials so
+an older revision cannot roll UAT back after a newer merge. The same UAT path
+remains manually dispatchable for recovery.
+Production is never updated by a merge or arbitrary branch revision; it accepts
+only a published immutable semantic-version release. The current component
+intentionally rejects preview workspaces; any future preview infrastructure
+requires a separately reviewed state, naming, TTL, and cleanup contract.
+Ordinary static previews remain application artifacts under the persistent UAT
+distribution.
 
 ## Intentional releases
 
-Merging a PR does not create a release. The release workflow will be a manual
+Merging a PR does not create a release. The release workflow is a manual
 `workflow_dispatch` with a `deploy_production` boolean defaulting to false.
 
 At release time it should:
@@ -124,14 +127,23 @@ At release time it should:
    next version.
 4. Build immutable deployment artifacts and generate release notes from those
    PRs.
-5. Generate SBOMs, attest the artifacts and SBOMs with GitHub OIDC, create the
-   GitHub release, and submit the supported dependency snapshot.
+5. Generate CycloneDX and SPDX SBOMs, submit the release dependency snapshot,
+   attest the artifacts and both SBOMs with GitHub OIDC, and create the GitHub
+   release with checksums and attestation bundles attached.
 6. If `deploy_production` was selected, invoke the reusable production deploy
    job for that exact release artifact—never rebuild from the branch.
 
-If the checkbox is left clear, a separate manual deploy workflow should accept
-an existing release version. Production can also use a protected GitHub
+If the checkbox is left clear, a separate manual deploy workflow accepts an
+existing release version. Production can also use a protected GitHub
 Environment if a second human confirmation becomes desirable.
+
+Repository release immutability must be enabled before the first release. After
+enabling it in repository settings, set the Actions variable
+`RELEASE_IMMUTABILITY_ENABLED=true`; this fail-safe prevents accidental release
+creation before the irreversible repository setting is active. Both production
+entry points resolve the release to an exact commit, reject drafts and
+prereleases, and reject any release whose GitHub API record is not immutable.
+This keeps a mutable tag or replaced asset from becoming production authority.
 
 ## SBOM and provenance boundary
 
@@ -155,7 +167,7 @@ snapshot for every release, but the graph will also reflect current default-
 branch data. Release attestations and attached SBOMs are the authoritative
 historical record.
 
-The actual release, attestation, preview, and Terraform workflows should be
-implemented as soon as the first deployable application and AWS root module
-exist; before that, they would be untestable ceremony with no valid artifact or
-plan target.
+The Terraform plan, automatic UAT deploy, release, attestation, and
+release-gated production workflows are implemented. Low-cost application
+previews remain deferred until there is a browser artifact to publish beneath
+the persistent UAT distribution.

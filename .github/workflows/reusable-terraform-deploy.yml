@@ -7,6 +7,15 @@ on:
         description: Named Terraform workspace to deploy.
         required: true
         type: string
+      revision:
+        description: Exact commit SHA to deploy.
+        required: true
+        type: string
+      release_tag:
+        description: Immutable semantic-version release required for production.
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -19,24 +28,30 @@ concurrency:
 jobs:
   authorize:
     name: Authorize Terraform deployment request
-    permissions: {}
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    outputs:
+      deploy_allowed: ${{ steps.contract.outputs.deploy_allowed }}
     steps:
       - name: Enforce the deployment caller contract
+        id: contract
         env:
-          CALLER_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          CALLER_ACTOR_ID: ${{ github.actor_id }}
           CALLER_EVENT: ${{ github.event_name }}
-          CALLER_HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
-          CALLER_MERGED: ${{ github.event.pull_request.merged }}
-          CALLER_MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
           CALLER_OWNER_ID: ${{ github.repository_owner_id }}
           CALLER_REF: ${{ github.ref }}
           CALLER_REPOSITORY: ${{ github.repository }}
           CALLER_REPOSITORY_ID: ${{ github.repository_id }}
+          CALLER_SHA: ${{ github.sha }}
+          DEPLOY_REVISION: ${{ inputs.revision }}
+          EXPECTED_ACTOR_ID: '73436834'
           EXPECTED_OWNER_ID: '73436834'
           EXPECTED_REPOSITORY: joshcazalas/money-on-record
           EXPECTED_REPOSITORY_ID: '1338755168'
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
           REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
         run: |
           set -euo pipefail
@@ -44,27 +59,9 @@ jobs:
             echo "::error::environment must be uat or production."
             exit 1
           fi
-          if [[ "$CALLER_EVENT" == "pull_request" ]]; then
-            [[ "$CALLER_MERGED" == "true" ]] || {
-              echo "::error::Automatic Terraform deployment requires a merged pull request."; exit 1;
-            }
-            [[ "$CALLER_BASE_REF" == "main" ]] || {
-              echo "::error::The merged pull request must target main."; exit 1;
-            }
-            [[ "$CALLER_HEAD_REPOSITORY" == "$EXPECTED_REPOSITORY" ]] || {
-              echo "::error::Only a reviewed same-repository pull request can deploy."; exit 1;
-            }
-            [[ "$CALLER_MERGE_SHA" == "$GITHUB_SHA" ]] || {
-              echo "::error::The event revision does not match the merged main revision."; exit 1;
-            }
-          elif [[ "$CALLER_EVENT" == "workflow_dispatch" ]]; then
-            [[ "$REQUESTED_ENVIRONMENT" == "uat" ]] || {
-              echo "::error::Manual recovery is enabled only for UAT."; exit 1;
-            }
-          else
-            echo "::error::Terraform deployment requires a merged PR or recovery dispatch."
-            exit 1
-          fi
+          [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error::revision must be an exact lowercase commit SHA."; exit 1;
+          }
           if [[ "$CALLER_REPOSITORY" != "$EXPECTED_REPOSITORY" ]]; then
             echo "::error::Terraform deployment was requested from an unexpected repository."
             exit 1
@@ -82,9 +79,44 @@ jobs:
             exit 1
           fi
 
+          if [[ "$REQUESTED_ENVIRONMENT" == "uat" ]]; then
+            [[ "$CALLER_EVENT" == "push" || "$CALLER_EVENT" == "workflow_dispatch" ]] || {
+              echo "::error::UAT deployment requires a main push or manual recovery dispatch."; exit 1;
+            }
+            [[ "$DEPLOY_REVISION" == "$CALLER_SHA" ]] || {
+              echo "::error::UAT must deploy the exact main event revision."; exit 1;
+            }
+            [[ -z "$RELEASE_TAG" ]] || {
+              echo "::error::UAT deployment does not accept a release tag."; exit 1;
+            }
+            current_main_revision="$(
+              gh api \
+                -H "X-GitHub-Api-Version: 2026-03-10" \
+                "repos/$GITHUB_REPOSITORY/git/ref/heads/main" \
+                --jq '.object.sha'
+            )"
+            if [[ "$DEPLOY_REVISION" != "$current_main_revision" ]]; then
+              echo "::notice::Skipping a superseded UAT revision; a newer main revision exists."
+              echo "deploy_allowed=false" >>"$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            [[ "$CALLER_EVENT" == "workflow_dispatch" ]] || {
+              echo "::error::Production deployment requires an intentional release dispatch."; exit 1;
+            }
+            [[ "$CALLER_ACTOR_ID" == "$EXPECTED_ACTOR_ID" ]] || {
+              echo "::error::Production deployment requires Josh's immutable actor ID."; exit 1;
+            }
+            [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
+              echo "::error::Production deployment requires an exact semantic-version release tag."; exit 1;
+            }
+          fi
+          echo "deploy_allowed=true" >>"$GITHUB_OUTPUT"
+
   deploy:
     name: Terraform deploy (${{ inputs.environment }})
     needs: authorize
+    if: needs.authorize.outputs.deploy_allowed == 'true'
     permissions:
       contents: read
       id-token: write
@@ -106,6 +138,8 @@ jobs:
       TF_INPUT: '0'
       TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
       TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
+      DEPLOY_REVISION: ${{ inputs.revision }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
       - name: Validate environment configuration
         env:
@@ -145,20 +179,43 @@ jobs:
             echo "::error::The workload deployment role does not match the selected environment."; exit 1;
           }
 
-      - name: Check out the authorized main revision
+      - name: Check out the authorized deployment revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           persist-credentials: false
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.environment == 'production' && inputs.release_tag || inputs.revision }}
 
-      - name: Verify checked-out revision
+      - name: Verify checked-out revision and production release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           checked_out_sha="$(git rev-parse HEAD)"
-          if [[ "$checked_out_sha" != "$GITHUB_SHA" ]]; then
-            echo "::error::The checked-out revision does not match the authorized main revision."
+          if [[ "$checked_out_sha" != "$DEPLOY_REVISION" ]]; then
+            echo "::error::The checked-out revision does not match the authorized deployment revision."
             exit 1
+          fi
+
+          if [[ "$TF_WORKSPACE" == "production" ]]; then
+            release="$(
+              gh api \
+                -H "X-GitHub-Api-Version: 2026-03-10" \
+                "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG"
+            )"
+            jq -e \
+              --arg release_tag "$RELEASE_TAG" \
+              --arg revision "$DEPLOY_REVISION" \
+              '
+                .tag_name == $release_tag
+                and .target_commitish == $revision
+                and .draft == false
+                and .prerelease == false
+                and .immutable == true
+              ' <<<"$release" >/dev/null || {
+                echo "::error::Production requires a published immutable release for the exact revision."
+                exit 1
+              }
           fi
 
       - name: Set up Terraform

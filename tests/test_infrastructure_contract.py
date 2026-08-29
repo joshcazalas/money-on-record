@@ -58,6 +58,19 @@ def test_environment_roots_were_replaced_by_one_component() -> None:
     assert not (ROOT / "infra" / "environments").exists()
 
 
+def test_workspace_state_does_not_persist_the_ephemeral_execution_role() -> None:
+    source = (COMPONENT / "main.tf").read_text(encoding="utf-8")
+    contract = re.search(
+        r'resource "terraform_data" "workspace_contract" \{(?P<body>.*?)\n  lifecycle \{',
+        source,
+        re.DOTALL,
+    )
+
+    assert contract is not None
+    assert "workload_role_arn" not in contract.group("body")
+    assert "contains(local.allowed_workload_role_arns, var.aws_workload_role_arn)" in source
+
+
 def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
     source = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
 
@@ -111,25 +124,33 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     _assert_native_terraform_exit_contract(source)
 
 
-def test_reusable_terraform_deploy_is_environment_bound_and_merge_safe() -> None:
+def test_reusable_terraform_deploy_is_environment_and_release_bound() -> None:
     source = (ROOT / ".github" / "workflows" / "reusable-terraform-deploy.yml").read_text(
         encoding="utf-8"
     )
 
     assert "workflow_call:" in source
-    assert source.count("contents: read") == 2
+    assert source.count("contents: read") == 3
     assert source.count("id-token: write") == 2
     assert "environment: ${{ inputs.environment }}" in source
     assert "environment must be uat or production" in source
-    assert "Automatic Terraform deployment requires a merged pull request" in source
-    assert "Only a reviewed same-repository pull request can deploy" in source
-    assert "The event revision does not match the merged main revision" in source
-    assert "Manual recovery is enabled only for UAT" in source
+    assert "revision must be an exact lowercase commit SHA" in source
+    assert "UAT deployment requires a main push or manual recovery dispatch" in source
+    assert "UAT must deploy the exact main event revision" in source
+    assert "Skipping a superseded UAT revision" in source
+    assert "git/ref/heads/main" in source
+    assert "needs.authorize.outputs.deploy_allowed == 'true'" in source
+    assert "Production deployment requires an intentional release dispatch" in source
+    assert "Production deployment requires Josh's immutable actor ID" in source
+    assert "Production deployment requires an exact semantic-version release tag" in source
+    assert "Production requires a published immutable release for the exact revision" in source
     assert "workflow_dispatch" in source
-    assert "pull_request" in source
+    assert 'CALLER_EVENT" == "push"' in source
+    assert "pull_request" not in source
     assert "refs/heads/main" in source
     assert "EXPECTED_REPOSITORY_ID: '1338755168'" in source
     assert "EXPECTED_OWNER_ID: '73436834'" in source
+    assert "EXPECTED_ACTOR_ID: '73436834'" in source
     assert "732006412638" in source
     assert "134604497564" in source
     assert "MoneyOnRecordDeployUat" in source
@@ -142,6 +163,9 @@ def test_reusable_terraform_deploy_is_environment_bound_and_merge_safe() -> None
     assert "FORBIDDEN_STATE_KEY:" in source
     assert "cancel-in-progress: false" in source
     assert "persist-credentials: false" in source
+    assert "ref: ${{ inputs.environment == 'production'" in source
+    assert ".immutable == true" in source
+    assert "X-GitHub-Api-Version: 2026-03-10" in source
     assert "terraform init" in source
     assert "-lockfile=readonly" in source
     assert "-lock-timeout=5m" in source
@@ -162,7 +186,7 @@ def test_reusable_terraform_deploy_is_environment_bound_and_merge_safe() -> None
     _assert_native_terraform_exit_contract(source)
 
 
-def test_uat_deploy_requires_manual_confirmation_and_trusted_main_workflow() -> None:
+def test_main_push_deploys_uat_and_manual_recovery_remains_available() -> None:
     source = (ROOT / ".github" / "workflows" / "terraform-deploy-uat.yml").read_text(
         encoding="utf-8"
     )
@@ -173,38 +197,74 @@ def test_uat_deploy_requires_manual_confirmation_and_trusted_main_workflow() -> 
     assert "workflow_dispatch:" in source
     assert "confirm_uat_deployment:" in source
     assert "default: false" in source
-    assert "if: inputs.confirm_uat_deployment" in source
+    assert "push:" in source
+    assert "branches: [main]" in source
+    assert "if: github.event_name == 'push' || inputs.confirm_uat_deployment" in source
     assert "permissions: {}" in source
     assert "contents: read" in source
     assert "id-token: write" in source
     assert source.count(trusted_call) == 1
     assert "environment: uat" in source
+    assert "revision: ${{ github.sha }}" in source
     assert "pull_request:" not in source
-    assert "push:" not in source
     assert "schedule:" not in source
     assert "environment: production" not in source
 
 
-def test_merged_pull_requests_apply_uat_then_production() -> None:
-    source = (ROOT / ".github" / "workflows" / "terraform-apply.yml").read_text(encoding="utf-8")
+def test_production_deploy_accepts_only_an_immutable_release() -> None:
+    source = (ROOT / ".github" / "workflows" / "terraform-deploy-production.yml").read_text(
+        encoding="utf-8"
+    )
     trusted_call = (
         "uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@main"
     )
 
-    assert "types: [closed]" in source
-    assert "github.event.pull_request.merged == true" in source
-    assert "github.event.pull_request.base.ref == 'main'" in source
-    assert "github.event.pull_request.head.repo.full_name == github.repository" in source
-    assert "<!-- money-on-record-terraform-plan -->" in source
-    assert "gh api --paginate --slurp" in source
-    assert '.path == ".github/workflows/terraform-plan.yml"' in source
-    assert ".head_sha == $head_sha" in source
-    assert "any(.pull_requests[]?; .number == $pull_request_number)" in source
-    assert source.count(trusted_call) == 2
-    assert source.index("environment: uat") < source.index("environment: production")
-    assert "needs: [reviewed-plan, apply-uat]" in source
-    assert "cancel-in-progress: false" in source
-    assert "pull_request_target" not in source
+    assert "workflow_call:" in source
+    assert "workflow_dispatch:" in source
+    assert "confirm_production_deployment:" in source
+    assert "default: false" in source
+    assert "Resolve immutable release" in source
+    assert ".draft == false and .prerelease == false and .immutable == true" in source
+    assert "X-GitHub-Api-Version: 2026-03-10" in source
+    assert "The release target is not an exact commit SHA" in source
+    assert "The release target changed after release creation" in source
+    assert source.count(trusted_call) == 1
+    assert "environment: production" in source
+    assert "environment: uat" not in source
+    assert "pull_request:" not in source
+    assert "push:" not in source
+
+
+def test_release_is_manual_attested_and_optionally_deploys_production() -> None:
+    source = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    production_call = (
+        "uses: joshcazalas/money-on-record/.github/workflows/terraform-deploy-production.yml@main"
+    )
+
+    assert "workflow_dispatch:" in source
+    assert "deploy_production:" in source
+    assert "default: false" in source
+    assert "pull_request:" not in source
+    assert "push:" not in source
+    assert "refs/heads/main" in source
+    assert "Releases require Josh's immutable actor ID" in source
+    assert "RELEASE_IMMUTABILITY_ENABLED" in source
+    assert "scripts/prepare-release.py" in source
+    assert "uv export" in source
+    assert "--format cyclonedx1.5" in source
+    assert "uv build" in source
+    assert "anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26" in source
+    assert source.count("actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6") == 3
+    assert "dependency-snapshot: true" in source
+    assert "cd release/publish" in source
+    assert "sha256sum -- * >../SHA256SUMS" in source
+    assert "mv release/SHA256SUMS release/publish/SHA256SUMS" in source
+    assert 'gh release create "$RELEASE_TAG"' in source
+    assert ".immutable == true" in source
+    assert "X-GitHub-Api-Version: 2026-03-10" in source
+    assert "if: inputs.deploy_production" in source
+    assert source.count(production_call) == 1
+    assert not (ROOT / ".github" / "workflows" / "terraform-apply.yml").exists()
 
 
 def test_pull_request_plans_call_only_the_trusted_main_workflow() -> None:

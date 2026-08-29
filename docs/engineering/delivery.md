@@ -99,11 +99,16 @@ Delete the prefix when the PR closes. If the application becomes dynamic, use
 the same principle with isolated Lambda aliases or an explicitly provisioned
 preview stack only when isolation is needed.
 
-Infrastructure changes should produce a sticky production-plan summary on the
-PR and deploy to UAT after merge to `main`. The current component intentionally
-rejects preview workspaces; any future preview infrastructure requires a
-separately reviewed state, naming, TTL, and cleanup contract. Ordinary static
-previews remain application artifacts under the persistent UAT distribution.
+Infrastructure changes produce one sticky UAT/production plan summary on the
+PR. A same-repository PR with a successful trusted plan deploys the merged
+Terraform configuration to UAT first and production second. Each environment
+uses its exact OIDC deploy chain, creates a fresh locked saved plan, applies it
+only from `main`, and proves post-apply convergence. This changes infrastructure
+configuration only; it does not publish an application artifact or create a
+semantic release. The current component intentionally rejects preview
+workspaces; any future preview infrastructure requires a separately reviewed
+state, naming, TTL, and cleanup contract. Ordinary static previews remain
+application artifacts under the persistent UAT distribution.
 
 ## Intentional releases
 

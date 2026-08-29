@@ -56,12 +56,11 @@ provider "aws" {
 
 resource "terraform_data" "workspace_contract" {
   input = {
-    workspace         = terraform.workspace
-    environment       = local.environment
-    aws_account_id    = local.aws_account_id
-    site_bucket_name  = local.site_bucket_name
-    state_object_key  = local.state_object_key
-    workload_role_arn = var.aws_workload_role_arn
+    workspace        = terraform.workspace
+    environment      = local.environment
+    aws_account_id   = local.aws_account_id
+    site_bucket_name = local.site_bucket_name
+    state_object_key = local.state_object_key
   }
 
   lifecycle {

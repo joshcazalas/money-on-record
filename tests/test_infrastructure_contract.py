@@ -26,7 +26,6 @@ def _assert_native_terraform_exit_contract(source: str) -> None:
     assert setup_steps[0]["with"]["terraform_wrapper"] is False
     assert "id" not in setup_steps[0]
     assert not re.search(r"steps\.[^.}\s]+\.outputs\.(?:exitcode|stdout|stderr)", source)
-    assert "plan_status=$?" in source
 
 
 def test_centralized_backend_derives_exact_workspace_keys() -> None:
@@ -63,6 +62,7 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     source = (ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml").read_text(
         encoding="utf-8"
     )
+    runner = (ROOT / "scripts" / "run-terraform-plan.sh").read_text(encoding="utf-8")
 
     assert "workflow_call:" in source
     assert "contents: read" in source
@@ -70,30 +70,36 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "CALLER_REPOSITORY" in source
     assert "Fork pull requests cannot request AWS-backed Terraform plans" in source
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
-    assert "terraform init" in source
-    assert "-backend-config=use_lockfile=false" in source
+    assert "Check out pull-request source" in source
+    assert "Check out trusted planning code" in source
+    assert source.count("persist-credentials: false") == 2
+    assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
+    assert 'terraform -chdir="$root_directory" init' in runner
+    assert "-backend-config=use_lockfile=false" in runner
     assert (
         "STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate"
         in source
     )
     assert "Detect selected workspace state" in source
-    assert "if: steps.state.outputs.exists == 'true'" in source
-    assert "if: steps.state.outputs.exists == 'false'" in source
-    assert 'mv -- backend.tf "$BACKEND_STASH_PATH"' in source
-    assert "-backend=false" in source
-    assert "plan_args+=(-refresh=false)" in source
-    assert "-input=false" in source
-    assert "-lockfile=readonly" in source
-    assert 'terraform plan "${plan_args[@]}"' in source
-    assert "-lock=false" in source
-    assert "-detailed-exitcode" in source
+    assert 'mv -- "$backend_path" "$temporary_directory/backend.tf"' in runner
+    assert "-backend=false" in runner
+    assert "plan_arguments+=(-refresh=false)" in runner
+    assert "-input=false" in runner
+    assert "-lockfile=readonly" in runner
+    assert 'plan "${plan_arguments[@]}"' in runner
+    assert "-lock=false" in runner
+    assert "-detailed-exitcode" in runner
+    assert 'plan_exit_code="${PIPESTATUS[0]}"' in runner
     assert "S3 therefore returns 404 while the opposite state is" in source
     assert 'if [[ "$state_status" -eq 0 ]]' in source
     assert "AccessDenied|\\(404\\)|Not Found|NoSuchKey" in source
-    assert "terraform workspace new" not in source
-    assert "terraform workspace select" not in source
-    assert "terraform apply" not in source
-    assert "upload-artifact" not in source
+    assert "terraform workspace new" not in runner
+    assert "terraform workspace select" not in runner
+    assert "terraform apply" not in runner
+    assert "actions/upload-artifact@" in source
+    assert "name: terraform-plan-${{ inputs.environment }}" in source
+    assert "retention-days: 7" in source
+    assert "The binary plan and raw JSON remain only inside temporary_directory" in runner
     _assert_native_terraform_exit_contract(source)
 
 
@@ -183,10 +189,16 @@ def test_pull_request_plans_call_only_the_trusted_main_workflow() -> None:
     assert "permissions: {}" in source
     assert source.count(trusted_call) == 2
     assert "uses: ./.github/workflows/reusable-terraform-plan.yml" not in source
-    assert source.count("github.event.pull_request.head.repo.full_name == github.repository") == 2
-    assert source.count("contents: read") == 2
+    assert source.count("github.event.pull_request.head.repo.full_name == github.repository") == 3
+    assert source.count("contents: read") == 3
     assert source.count("id-token: write") == 2
+    assert "actions: read" in source
+    assert "pull-requests: write" in source
     assert "needs: plan-uat" in source
+    assert "needs: [plan-uat, plan-production]" in source
+    assert "actions/download-artifact@" in source
+    assert "trusted/scripts/render-plan-comment.py" in source
+    assert "trusted/scripts/publish-plan-comment.sh" in source
     assert source.index("environment: uat") < source.index("environment: production")
     assert "reusable-terraform-deploy" not in source
 

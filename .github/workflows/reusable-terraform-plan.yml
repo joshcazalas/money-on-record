@@ -97,7 +97,18 @@ jobs:
             echo "::error::The workload plan role does not match the selected environment."; exit 1;
           }
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Check out pull-request source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: source
+          persist-credentials: false
+
+      - name: Check out trusted planning code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          path: trusted
+          persist-credentials: false
 
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
@@ -236,84 +247,42 @@ jobs:
             exit 1
           fi
 
-      - name: Initialize the reviewed remote backend
-        if: steps.state.outputs.exists == 'true'
-        working-directory: infra/components/static-site
-        run: >-
-          terraform init
-          -backend-config=use_lockfile=false
-          -input=false
-          -lock=false
-          -lockfile=readonly
-          -no-color
-
-      - name: Initialize an ephemeral empty-state backend
-        if: steps.state.outputs.exists == 'false'
-        env:
-          BACKEND_STASH_PATH: ${{ runner.temp }}/money-on-record-static-site-backend.tf
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          if [[ ! -f backend.tf ]]; then
-            echo "::error::The reviewed backend configuration is missing."
-            exit 1
-          fi
-          mv -- backend.tf "$BACKEND_STASH_PATH"
-          terraform init \
-            -backend=false \
-            -input=false \
-            -lockfile=readonly \
-            -no-color
-
-      - name: Verify selected workspace
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          selected_workspace="$(terraform workspace show)"
-          if [[ "$selected_workspace" != "$TF_WORKSPACE" ]]; then
-            echo "::error::Expected workspace $TF_WORKSPACE, got $selected_workspace."
-            exit 1
-          fi
-
-      - name: Validate Terraform configuration
-        working-directory: infra/components/static-site
-        run: terraform validate -no-color
-
-      - name: Terraform plan
+      - name: Run trusted Terraform plan
         id: plan
+        continue-on-error: true
         env:
           STATE_EXISTS: ${{ steps.state.outputs.exists }}
-        working-directory: infra/components/static-site
         run: |
           set -euo pipefail
-          plan_args=(
-            -input=false
-            -lock=false
-            -no-color
-            -detailed-exitcode
-          )
-          plan_mode="remote state"
-          if [[ "$STATE_EXISTS" == "false" ]]; then
-            plan_args+=(-refresh=false)
-            plan_mode="ephemeral empty state"
+          bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh" \
+            "$GITHUB_WORKSPACE/source" \
+            "$TF_WORKSPACE" \
+            "$STATE_EXISTS" \
+            "$GITHUB_WORKSPACE/plan-result"
+
+          metadata="$GITHUB_WORKSPACE/plan-result/${TF_WORKSPACE}/metadata.json"
+          has_changes="$(jq -er '.exit_code == 2' "$metadata")"
+          echo "has_changes=$has_changes" >>"$GITHUB_OUTPUT"
+
+      - name: Upload sanitized Terraform plan result
+        id: upload
+        if: always() && steps.plan.outcome != 'skipped'
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: terraform-plan-${{ inputs.environment }}
+          path: plan-result
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce Terraform plan result
+        if: always()
+        env:
+          PLAN_OUTCOME: ${{ steps.plan.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+        run: |
+          set -euo pipefail
+          if [[ "$PLAN_OUTCOME" != "success" || "$UPLOAD_OUTCOME" != "success" ]]; then
+            echo "::error::The Terraform plan pipeline did not complete successfully."
+            exit 1
           fi
-
-          set +e
-          terraform plan "${plan_args[@]}"
-          plan_status=$?
-          set -e
-
-          case "$plan_status" in
-            0)
-              echo "has_changes=false" >>"$GITHUB_OUTPUT"
-              echo "### Terraform plan: no changes ($TF_WORKSPACE, $plan_mode)" >>"$GITHUB_STEP_SUMMARY"
-              ;;
-            2)
-              echo "has_changes=true" >>"$GITHUB_OUTPUT"
-              echo "### Terraform plan: changes proposed ($TF_WORKSPACE, $plan_mode)" >>"$GITHUB_STEP_SUMMARY"
-              ;;
-            *)
-              echo "::error::Terraform plan failed with exit code $plan_status."
-              exit "$plan_status"
-              ;;
-          esac

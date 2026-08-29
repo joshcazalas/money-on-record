@@ -31,3 +31,60 @@ jobs:
     uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@main
     with:
       environment: production
+
+  plan-comment:
+    name: Terraform plan comment
+    if: always() && github.event.pull_request.head.repo.full_name == github.repository
+    needs: [plan-uat, plan-production]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download sanitized plan results
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: terraform-plan-*
+          path: plan-results
+          merge-multiple: true
+
+      - name: Check out trusted comment code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          path: trusted
+          persist-credentials: false
+
+      - name: Detect live-plan implementation
+        id: implementation
+        run: |
+          if [[ -f trusted/scripts/render-plan-comment.py ]]; then
+            echo "available=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "available=false" >>"$GITHUB_OUTPUT"
+            echo "The trusted main branch does not publish Terraform plan comments yet."
+          fi
+
+      - name: Render plan comment
+        if: steps.implementation.outputs.available == 'true'
+        run: |
+          python3 trusted/scripts/render-plan-comment.py \
+            "$GITHUB_WORKSPACE/plan-results" \
+            "$RUNNER_TEMP/plan-comment.md" \
+            "$GITHUB_REPOSITORY" \
+            "$GITHUB_RUN_ID"
+
+      - name: Publish sticky plan comment
+        if: steps.implementation.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          bash trusted/scripts/publish-plan-comment.sh \
+            "$RUNNER_TEMP/plan-comment.md" \
+            "$GITHUB_REPOSITORY" \
+            "$PULL_REQUEST_NUMBER"

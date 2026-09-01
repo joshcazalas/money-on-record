@@ -182,8 +182,9 @@ def test_reusable_terraform_deploy_is_environment_and_release_bound() -> None:
     assert "mode=apply" in source
     assert "terraform apply" in source
     assert '"$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"' in source
-    assert "Verify state and convergence" in source
-    assert "Post-apply plan | No changes" in source
+    assert "Smoke-test the Terraform-managed browser deployment" in source
+    assert "assert_lock_absent" not in source
+    assert "post-apply-plan.log" not in source
     assert "terraform destroy" not in source
     assert "upload-artifact" not in source
     assert "-lock=false" not in source

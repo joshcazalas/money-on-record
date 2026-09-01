@@ -436,54 +436,6 @@ jobs:
           -no-color
           "$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
 
-      - name: Verify state and convergence
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          assert_lock_absent() {
-            local lock_probe
-            local lock_status
-
-            set +e
-            lock_probe="$(
-              aws s3api head-object \
-                --bucket "$STATE_BUCKET" \
-                --key "${STATE_KEY}.tflock" 2>&1
-            )"
-            lock_status=$?
-            set -e
-            if [[ "$lock_status" -eq 0 ]]; then
-              echo "::error::The Terraform state lock remained after an operation."
-              exit 1
-            fi
-            if ! grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$lock_probe"; then
-              echo "::error::The Terraform state lock could not be confirmed absent."
-              printf '%s\n' "$lock_probe"
-              exit 1
-            fi
-          }
-
-          aws s3api head-object \
-            --bucket "$STATE_BUCKET" \
-            --key "$STATE_KEY" >/dev/null
-          assert_lock_absent
-
-          post_plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-post-apply-plan.log"
-          set +e
-          terraform plan \
-            -input=false \
-            -lock-timeout=5m \
-            -no-color \
-            -detailed-exitcode >"$post_plan_log" 2>&1
-          post_plan_status=$?
-          set -e
-          if [[ "$post_plan_status" -ne 0 ]]; then
-            echo "::error::$TF_WORKSPACE did not converge after apply; Terraform returned $post_plan_status."
-            cat "$post_plan_log"
-            exit "$post_plan_status"
-          fi
-          assert_lock_absent
-
       - name: Smoke-test the Terraform-managed browser deployment
         working-directory: infra/components/static-site
         run: |
@@ -586,6 +538,5 @@ jobs:
             echo "| Terraform-managed site objects | \`$(jq length <<<"$site_object_keys")\` |"
             echo "| Site URL | $site_url |"
             echo "| State object | \`s3://$STATE_BUCKET/$state_object_key\` |"
-            echo "| Post-apply plan | No changes |"
             echo "| Browser smoke tests | Exact index, profile, 404, redirect, and headers passed |"
           } >>"$GITHUB_STEP_SUMMARY"

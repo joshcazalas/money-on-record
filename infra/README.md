@@ -137,5 +137,5 @@ UAT builds the deterministic artifact from the exact current `main` revision.
 Production downloads and verifies the site ZIP and checksum from the selected
 immutable release. HTML and manifests use revalidation cache controls while
 content-hashed assets use immutable caching, so no mutable invalidation side
-effect or separate publishing identity is required. Read-only convergence and
-browser smoke tests verify the resulting deployment after apply.
+effect or separate publishing identity is required. Browser smoke tests verify
+the user-visible result after Terraform finishes the deployment.

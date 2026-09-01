@@ -102,10 +102,10 @@ preview stack only when isolation is needed.
 Infrastructure changes produce one sticky UAT/production plan summary on the
 PR. Pull requests never receive deployment credentials and never apply their
 changes. Every push that lands on `main` automatically creates a fresh locked
-plan for that exact revision, applies it only to UAT, and proves post-apply
-convergence. A superseded queued run exits before receiving AWS credentials so
-an older revision cannot roll UAT back after a newer merge. The same UAT path
-remains manually dispatchable for recovery.
+plan for that exact revision, applies it only to UAT, and smoke-tests the
+browser deployment. A superseded queued run exits before receiving AWS
+credentials so an older revision cannot roll UAT back after a newer merge. The
+same UAT path remains manually dispatchable for recovery.
 Production is never updated by a merge or arbitrary branch revision; it accepts
 only a published immutable semantic-version release. The current component
 intentionally rejects preview workspaces; any future preview infrastructure

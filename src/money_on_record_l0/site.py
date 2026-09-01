@@ -16,7 +16,8 @@ from urllib.parse import parse_qs, urlencode, urlparse
 
 from .privacy import contains_pii
 
-SITE_SCHEMA_VERSION = 2
+SITE_SCHEMA_VERSION = 1
+CONTENT_SCHEMA_VERSION = 2
 RECORD_SCHEMA_VERSION = 1
 MANIFEST_NAME = "site-manifest.json"
 MAX_ARCHIVE_FILES = 100
@@ -369,8 +370,8 @@ def load_site_content(path: Path) -> SiteContent:
         raise SiteBuildError(f"{path} is not valid UTF-8 JSON") from error
 
     _exact_keys(document, {"schema_version", "beta_notice", "profiles"}, "site content")
-    if document["schema_version"] != SITE_SCHEMA_VERSION:
-        raise SiteBuildError(f"site content schema must be {SITE_SCHEMA_VERSION}")
+    if document["schema_version"] != CONTENT_SCHEMA_VERSION:
+        raise SiteBuildError(f"site content schema must be {CONTENT_SCHEMA_VERSION}")
     beta_notice = _privacy_safe_text(document["beta_notice"], "beta_notice")
     raw_profiles = document["profiles"]
     if not isinstance(raw_profiles, list) or not raw_profiles:

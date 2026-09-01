@@ -16,7 +16,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 
 from .privacy import contains_pii
 
-SITE_SCHEMA_VERSION = 2
+SITE_SCHEMA_VERSION = 1
 CONTENT_SCHEMA_VERSION = 4
 RECORD_SCHEMA_VERSION = 1
 CAMPAIGN_PUBLICATION_SCHEMA_VERSION = 1
@@ -1641,7 +1641,6 @@ def _write_site(output: Path, content: SiteContent) -> dict[str, bytes]:
             name: {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
             for name, data in sorted(files.items())
         },
-        "campaigns": [campaign.slug for campaign in content.campaign_publication.campaigns],
         "profiles": [profile.slug for profile in content.profiles],
         "source_snapshots": sorted(
             {metric.snapshot_sha256 for profile in content.profiles for metric in profile.metrics}
@@ -1740,7 +1739,6 @@ def verify_site_archive(
                 "schema_version",
                 "content_sha256",
                 "files",
-                "campaigns",
                 "profiles",
                 "source_snapshots",
             },

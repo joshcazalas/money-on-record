@@ -220,9 +220,7 @@ def test_site_archive_verifies_manifest_and_extracts_safely(tmp_path: Path) -> N
     assert result.files == len([path for path in output.rglob("*") if path.is_file()])
     assert (extracted / "index.html").read_bytes() == (output / "index.html").read_bytes()
     manifest = json.loads((extracted / MANIFEST_NAME).read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == 2
-    assert len(manifest["campaigns"]) == 87
-    assert "watson-kirk-p" in manifest["campaigns"]
+    assert manifest["schema_version"] == 1
     assert manifest["profiles"] == ["austin-board-of-realtors"]
     assert len(manifest["source_snapshots"]) == 4
 

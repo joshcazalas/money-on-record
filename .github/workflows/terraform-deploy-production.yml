@@ -1,0 +1,86 @@
+name: Deploy release to production
+
+run-name: Deploy ${{ inputs.release_tag }} to production by @${{ github.actor }}
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Immutable semantic-version release to deploy.
+        required: true
+        type: string
+      revision:
+        description: Exact release commit SHA.
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Immutable semantic-version release to deploy.
+        required: true
+        type: string
+      confirm_production_deployment:
+        description: Confirm deployment of this release to production.
+        required: true
+        default: false
+        type: boolean
+
+permissions: {}
+
+jobs:
+  resolve-release:
+    name: Resolve immutable release
+    if: inputs.revision != '' || inputs.confirm_production_deployment
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      revision: ${{ steps.release.outputs.revision }}
+    steps:
+      - name: Resolve exact published release
+        id: release
+        env:
+          EXPECTED_REVISION: ${{ inputs.revision }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
+            echo "::error::release_tag must be an exact semantic version such as v1.2.3."
+            exit 1
+          }
+
+          release="$(
+            gh api \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG"
+          )"
+          revision="$(jq -er '
+            select(.draft == false and .prerelease == false and .immutable == true)
+            | .target_commitish
+          ' <<<"$release")" || {
+            echo "::error::Production requires a published immutable release."
+            exit 1
+          }
+          [[ "$revision" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error::The release target is not an exact commit SHA."
+            exit 1
+          }
+          if [[ -n "$EXPECTED_REVISION" && "$revision" != "$EXPECTED_REVISION" ]]; then
+            echo "::error::The release target changed after release creation."
+            exit 1
+          fi
+          echo "revision=$revision" >>"$GITHUB_OUTPUT"
+
+  deploy-production:
+    name: Deploy release to production
+    needs: resolve-release
+    permissions:
+      contents: read
+      id-token: write
+    uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@main
+    with:
+      environment: production
+      release_tag: ${{ inputs.release_tag }}
+      revision: ${{ needs.resolve-release.outputs.revision }}

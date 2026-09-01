@@ -1,12 +1,14 @@
 name: Deploy Terraform to UAT
 
-run-name: Deploy Terraform to UAT from ${{ github.ref_name }} by @${{ github.actor }}
+run-name: Deploy Terraform to UAT from ${{ github.sha }} by @${{ github.actor }}
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       confirm_uat_deployment:
-        description: Confirm an intentional Terraform deployment to UAT.
+        description: Confirm an intentional recovery deployment of current main to UAT.
         required: true
         default: false
         type: boolean
@@ -16,10 +18,11 @@ permissions: {}
 jobs:
   deploy-uat:
     name: Deploy Terraform to UAT
-    if: inputs.confirm_uat_deployment
+    if: github.event_name == 'push' || inputs.confirm_uat_deployment
     permissions:
       contents: read
       id-token: write
     uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@main
     with:
       environment: uat
+      revision: ${{ github.sha }}

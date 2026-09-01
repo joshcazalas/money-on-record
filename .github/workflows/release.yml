@@ -1,0 +1,206 @@
+name: Create release
+
+run-name: Create release from ${{ github.sha }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: Deploy the new immutable release to production after publication.
+        required: true
+        default: false
+        type: boolean
+
+permissions: {}
+
+concurrency:
+  group: create-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish immutable release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: write
+      id-token: write
+      pull-requests: read
+    outputs:
+      release_tag: ${{ steps.prepare.outputs.release_tag }}
+      revision: ${{ steps.prepare.outputs.revision }}
+    steps:
+      - name: Check out the exact main revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Enforce release caller and revision
+        env:
+          RELEASE_IMMUTABILITY_ENABLED: ${{ vars.RELEASE_IMMUTABILITY_ENABLED }}
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] || {
+            echo "::error::Releases require an intentional manual dispatch."; exit 1;
+          }
+          [[ "$GITHUB_ACTOR_ID" == "73436834" ]] || {
+            echo "::error::Releases require Josh's immutable actor ID."; exit 1;
+          }
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || {
+            echo "::error::Releases may only be created from main."; exit 1;
+          }
+          [[ "$RELEASE_IMMUTABILITY_ENABLED" == "true" ]] || {
+            echo "::error::Enable release immutability and set RELEASE_IMMUTABILITY_ENABLED=true."
+            exit 1
+          }
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]] || {
+            echo "::error::The checkout does not match the dispatched main revision."; exit 1;
+          }
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Calculate release from merged pull requests
+        id: prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p release/assets release/attestations release/sboms
+          python3 scripts/prepare-release.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --revision "$GITHUB_SHA" \
+            --output release/plan.json \
+            --notes release/notes.md
+
+          release_tag="$(jq -er '.tag' release/plan.json)"
+          release_version="$(jq -er '.version' release/plan.json)"
+          revision="$(jq -er '.revision' release/plan.json)"
+          {
+            echo "release_tag=$release_tag"
+            echo "release_version=$release_version"
+            echo "revision=$revision"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Build versioned release assets and Python SBOM
+        env:
+          RELEASE_VERSION: ${{ steps.prepare.outputs.release_version }}
+        run: |
+          set -euo pipefail
+          uv version "$RELEASE_VERSION" --no-sync
+          uv export \
+            --locked \
+            --all-groups \
+            --format cyclonedx1.5 \
+            --output-file release/sboms/python.cdx.json
+          uv build --out-dir release/assets
+
+          test -f "release/assets/money_on_record_l0-${RELEASE_VERSION}-py3-none-any.whl"
+          test -f "release/assets/money_on_record_l0-${RELEASE_VERSION}.tar.gz"
+          git archive \
+            --format=tar.gz \
+            --prefix="money-on-record-${RELEASE_VERSION}/" \
+            --output="release/assets/money-on-record-${RELEASE_VERSION}-source.tar.gz" \
+            "$GITHUB_SHA"
+          tar -czf "release/assets/money-on-record-${RELEASE_VERSION}-dependency-evidence.tar.gz" \
+            .github/workflows \
+            flake.lock \
+            infra/components/static-site/.terraform.lock.hcl \
+            infra/modules/static_site/.terraform.lock.hcl \
+            pyproject.toml \
+            uv.lock
+
+      - name: Generate SPDX SBOM and submit release dependency snapshot
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+        with:
+          dependency-snapshot: true
+          format: spdx-json
+          output-file: release/sboms/artifacts.spdx.json
+          path: release/assets
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Attest release asset provenance
+        id: provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: release/assets/*
+
+      - name: Attest release asset SPDX SBOM
+        id: spdx
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          sbom-path: release/sboms/artifacts.spdx.json
+          subject-path: release/assets/*
+
+      - name: Attest locked Python dependency SBOM
+        id: cyclone
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          sbom-path: release/sboms/python.cdx.json
+          subject-path: release/assets/money_on_record_l0-*
+
+      - name: Collect attestation bundles and checksums
+        env:
+          CYCLONE_BUNDLE: ${{ steps.cyclone.outputs.bundle-path }}
+          PROVENANCE_BUNDLE: ${{ steps.provenance.outputs.bundle-path }}
+          SPDX_BUNDLE: ${{ steps.spdx.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          mkdir -p release/publish
+          cp "$PROVENANCE_BUNDLE" release/attestations/provenance.sigstore.json
+          cp "$SPDX_BUNDLE" release/attestations/spdx-sbom.sigstore.json
+          cp "$CYCLONE_BUNDLE" release/attestations/python-sbom.sigstore.json
+          cp release/assets/* release/publish/
+          cp release/attestations/* release/publish/
+          cp release/sboms/* release/publish/
+          cp release/plan.json release/publish/release-plan.json
+          (
+            cd release/publish
+            sha256sum -- * >../SHA256SUMS
+          )
+          mv release/SHA256SUMS release/publish/SHA256SUMS
+
+      - name: Publish immutable GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.prepare.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" \
+            release/publish/* \
+            --fail-on-no-commits \
+            --latest \
+            --notes-file release/notes.md \
+            --target "$GITHUB_SHA" \
+            --title "$RELEASE_TAG"
+
+          release="$(
+            gh api \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG"
+          )"
+          jq -e '.immutable == true' <<<"$release" >/dev/null || {
+              echo "::error::The release was published without repository release immutability."
+              echo "::error::Enable release immutability before creating production releases."
+              exit 1
+            }
+
+  deploy-production:
+    name: Deploy new release to production
+    if: inputs.deploy_production
+    needs: release
+    permissions:
+      contents: read
+      id-token: write
+    uses: joshcazalas/money-on-record/.github/workflows/terraform-deploy-production.yml@main
+    with:
+      release_tag: ${{ needs.release.outputs.release_tag }}
+      revision: ${{ needs.release.outputs.revision }}

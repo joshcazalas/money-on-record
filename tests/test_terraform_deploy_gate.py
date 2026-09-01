@@ -10,26 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 COMPONENT = ROOT / "infra" / "components" / "static-site"
 WORKFLOW = ROOT / ".github" / "workflows" / "reusable-terraform-deploy.yml"
 
-EXPECTED_RESOURCES = [
-    "terraform_data.workspace_contract",
-    "module.static_site[0].aws_s3_bucket_policy.site",
-    "module.static_site[0].module.cdn.aws_cloudfront_distribution.this[0]",
-    'module.static_site[0].module.cdn.aws_cloudfront_origin_access_control.this["site"]',
-    "module.static_site[0].module.site_bucket.aws_s3_bucket.this[0]",
-    "module.static_site[0].module.site_bucket.aws_s3_bucket_ownership_controls.this[0]",
-    "module.static_site[0].module.site_bucket.aws_s3_bucket_public_access_block.this[0]",
-    (
-        "module.static_site[0].module.site_bucket."
-        "aws_s3_bucket_server_side_encryption_configuration.this[0]"
-    ),
-    "module.static_site[0].module.site_bucket.aws_s3_bucket_versioning.this[0]",
-]
 
-
-def _bootstrap_gate_script() -> str:
+def _plan_summary_script() -> str:
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     steps = workflow["jobs"]["deploy"]["steps"]
-    return next(step["run"] for step in steps if step["name"] == "Enforce bootstrap plan allowlist")
+    return next(step["run"] for step in steps if step["name"] == "Summarize fresh deployment plan")
 
 
 def _change(address: str, *actions: str) -> dict[str, object]:
@@ -70,9 +55,10 @@ def _run_gate(
         "PATH": f"{fake_bin}:{os.environ['PATH']}",
         "PLAN_HAS_CHANGES": str(plan_has_changes).lower(),
         "RUNNER_TEMP": str(tmp_path),
+        "TF_WORKSPACE": "uat",
     }
     return subprocess.run(
-        ["bash", "-c", _bootstrap_gate_script()],
+        ["bash", "-c", _plan_summary_script()],
         cwd=COMPONENT,
         env=env,
         check=False,
@@ -81,20 +67,25 @@ def _run_gate(
     )
 
 
-def test_bootstrap_gate_accepts_the_exact_nine_resource_create_plan(tmp_path: Path) -> None:
-    changes = [_change(address, "create") for address in EXPECTED_RESOURCES]
+def test_plan_summary_accepts_reviewed_configuration_changes(tmp_path: Path) -> None:
+    changes = [
+        _change("aws_s3_bucket.new", "create"),
+        _change("aws_cloudfront_distribution.site", "update"),
+        _change("aws_s3_bucket.old", "delete"),
+    ]
 
     result = _run_gate(tmp_path, changes, plan_has_changes=True)
 
     assert result.returncode == 0, result.stderr
-    assert (tmp_path / "github-output").read_text(encoding="utf-8") == "mode=create-nine\n"
-    assert "9 additions, 0 changes, 0 destroys" in (tmp_path / "github-summary").read_text(
-        encoding="utf-8"
-    )
+    assert (tmp_path / "github-output").read_text(encoding="utf-8") == "mode=apply\n"
+    summary = (tmp_path / "github-summary").read_text(encoding="utf-8")
+    assert "aws_s3_bucket.new" in summary
+    assert "aws_cloudfront_distribution.site" in summary
+    assert "aws_s3_bucket.old" in summary
 
 
-def test_bootstrap_gate_accepts_an_idempotent_plan(tmp_path: Path) -> None:
-    changes = [_change(address, "no-op") for address in EXPECTED_RESOURCES]
+def test_plan_summary_accepts_an_idempotent_plan(tmp_path: Path) -> None:
+    changes = [_change("aws_s3_bucket.site", "no-op")]
 
     result = _run_gate(tmp_path, changes, plan_has_changes=False)
 
@@ -103,47 +94,14 @@ def test_bootstrap_gate_accepts_an_idempotent_plan(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "resource_changes",
-    [
-        [_change(address, "create") for address in EXPECTED_RESOURCES[:-1]],
-        [
-            *[_change(address, "create") for address in EXPECTED_RESOURCES],
-            _change("aws_s3_object.unreviewed", "create"),
-        ],
-        [
-            *[_change(address, "create") for address in EXPECTED_RESOURCES[1:]],
-            _change(EXPECTED_RESOURCES[0], "update"),
-        ],
-        [
-            *[_change(address, "create") for address in EXPECTED_RESOURCES[1:]],
-            _change(EXPECTED_RESOURCES[0], "delete"),
-        ],
-        [
-            *[_change(address, "create") for address in EXPECTED_RESOURCES[1:]],
-            _change(EXPECTED_RESOURCES[0], "delete", "create"),
-        ],
-    ],
-    ids=["missing-resource", "extra-resource", "update", "delete", "replacement"],
-)
-def test_bootstrap_gate_rejects_any_unreviewed_resource_action(
-    tmp_path: Path,
-    resource_changes: list[dict[str, object]],
-) -> None:
-    result = _run_gate(tmp_path, resource_changes, plan_has_changes=True)
-
-    assert result.returncode != 0
-    assert "does not match the reviewed UAT bootstrap allowlist" in result.stdout
-
-
-@pytest.mark.parametrize(
     ("resource_changes", "plan_has_changes"),
     [
         ([], True),
-        ([_change(address, "create") for address in EXPECTED_RESOURCES], False),
+        ([_change("aws_s3_bucket.site", "create")], False),
     ],
     ids=["empty-plan-reported-changed", "create-plan-reported-unchanged"],
 )
-def test_bootstrap_gate_rejects_a_terraform_exit_status_mismatch(
+def test_plan_summary_rejects_a_terraform_exit_status_mismatch(
     tmp_path: Path,
     resource_changes: list[dict[str, object]],
     plan_has_changes: bool,

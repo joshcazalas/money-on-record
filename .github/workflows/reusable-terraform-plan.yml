@@ -7,11 +7,6 @@ on:
         description: Named Terraform workspace to plan.
         required: true
         type: string
-    outputs:
-      has_changes:
-        description: Whether Terraform reported proposed changes.
-        value: ${{ jobs.plan.outputs.has_changes }}
-
 permissions:
   actions: read
   contents: read
@@ -99,8 +94,6 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    outputs:
-      has_changes: ${{ steps.plan.outputs.has_changes }}
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
@@ -321,7 +314,6 @@ jobs:
 
       - name: Run trusted Terraform plan
         id: plan
-        continue-on-error: true
         env:
           STATE_EXISTS: ${{ steps.state.outputs.exists }}
         run: |
@@ -332,41 +324,11 @@ jobs:
             "$STATE_EXISTS" \
             "$GITHUB_WORKSPACE/plan-result"
 
-          metadata="$GITHUB_WORKSPACE/plan-result/${TF_WORKSPACE}/metadata.json"
-          plan_exit_code="$(jq -er '.exit_code' "$metadata")"
-          case "$plan_exit_code" in
-            0)
-              has_changes=false
-              ;;
-            2)
-              has_changes=true
-              ;;
-            *)
-              echo "::error::Successful plan metadata contained unexpected exit code $plan_exit_code."
-              exit 1
-              ;;
-          esac
-          echo "has_changes=$has_changes" >>"$GITHUB_OUTPUT"
-
       - name: Upload sanitized Terraform plan result
-        id: upload
         if: always() && steps.plan.outcome != 'skipped'
-        continue-on-error: true
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: terraform-plan-${{ inputs.environment }}
           path: plan-result
           if-no-files-found: error
           retention-days: 7
-
-      - name: Enforce Terraform plan result
-        if: always()
-        env:
-          PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
-        run: |
-          set -euo pipefail
-          if [[ "$PLAN_OUTCOME" != "success" || "$UPLOAD_OUTCOME" != "success" ]]; then
-            echo "::error::The Terraform plan pipeline did not complete successfully."
-            exit 1
-          fi

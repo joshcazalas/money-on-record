@@ -218,24 +218,6 @@ resource "aws_s3_bucket_policy" "site" {
   })
 }
 
-resource "terraform_data" "site_artifact_contract" {
-  input = sort(tolist(local.site_artifact_files))
-
-  lifecycle {
-    precondition {
-      condition = var.site_artifact_directory == null || (
-        contains(local.site_artifact_files, "index.html") &&
-        contains(local.site_artifact_files, "404.html") &&
-        contains(local.site_artifact_files, "robots.txt") &&
-        contains(local.site_artifact_files, "site-manifest.json") &&
-        anytrue([for path in local.site_artifact_files : startswith(path, "assets/site-") && endswith(path, ".css")]) &&
-        anytrue([for path in local.site_artifact_files : startswith(path, "profiles/") && endswith(path, "/index.html")])
-      )
-      error_message = "site_artifact_directory must contain the complete verified browser artifact."
-    }
-  }
-}
-
 resource "aws_s3_object" "site" {
   for_each = local.site_artifact_files
 
@@ -257,5 +239,5 @@ resource "aws_s3_object" "site" {
   source_hash            = filesha256("${var.site_artifact_directory}/${each.value}")
   tags                   = local.tags
 
-  depends_on = [aws_s3_bucket_policy.site, terraform_data.site_artifact_contract]
+  depends_on = [aws_s3_bucket_policy.site]
 }

@@ -37,19 +37,17 @@ The static-site infrastructure uses one component root and one reusable module:
 
 ```text
 infra/
-  components/static-site/  # centralized backend and workspace configuration
+  components/static-site/  # centralized backend and environment configuration
   modules/static_site/      # private S3 and CloudFront composition
 ```
 
-Only the named `uat` and `production` workspaces are valid. They select fixed
-configuration for workload accounts `732006412638` and `134604497564`
-respectively; `default` and unknown workspaces fail closed. Workspaces are not
-the security boundary: the provider's `allowed_account_ids`, exact workload
-role assumption, and separate workload accounts enforce that boundary.
+Only `uat` and `production` are valid environment inputs. They select fixed
+configuration for workload accounts `732006412638` and `134604497564`.
+The provider's `allowed_account_ids`, exact workload role assumption, and
+separate workload accounts enforce the security boundary.
 
-Both workspaces use the centralized deployment-account state bucket. The S3
-backend's `workspace_key_prefix = "money-on-record/static-site"` and
-`key = "terraform.tfstate"` produce these independent objects:
+Both environments use the centralized deployment-account state bucket with an
+exact backend key supplied during initialization:
 
 ```text
 money-on-record/static-site/uat/terraform.tfstate
@@ -101,15 +99,13 @@ preview stack only when isolation is needed.
 
 Infrastructure changes produce one sticky UAT/production plan summary on the
 PR. Pull requests never receive deployment credentials and never apply their
-changes. Every push that lands on `main` automatically creates a fresh locked
-plan for that exact revision, applies it only to UAT, and smoke-tests the
-browser deployment. A superseded queued run exits before receiving AWS
-credentials so an older revision cannot roll UAT back after a newer merge. The
-same UAT path remains manually dispatchable for recovery.
+changes. Every push that lands on `main` automatically creates and applies a
+fresh locked plan to UAT. The same UAT path remains manually dispatchable for
+recovery.
 Production is never updated by a merge or arbitrary branch revision; it accepts
-only a published immutable semantic-version release. The current component
-intentionally rejects preview workspaces; any future preview infrastructure
-requires a separately reviewed state, naming, TTL, and cleanup contract.
+only a published immutable semantic-version release. Any future preview
+infrastructure requires a separately reviewed state, naming, TTL, and cleanup
+contract.
 Ordinary static previews remain application artifacts under the persistent UAT
 distribution.
 

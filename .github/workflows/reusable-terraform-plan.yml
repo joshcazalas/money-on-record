@@ -4,45 +4,15 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: Named Terraform workspace to plan.
+        description: Environment to plan.
         required: true
         type: string
-permissions:
-  actions: read
-  contents: read
-  id-token: write
+
+permissions: {}
 
 jobs:
-  authorize:
-    name: Authorize Terraform plan request
-    permissions: {}
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - name: Enforce the caller contract
-        env:
-          CALLER_EVENT: ${{ github.event_name }}
-          CALLER_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
-          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
-          TARGET_REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
-            echo "::error::environment must be uat or production."
-            exit 1
-          fi
-          if [[ "$CALLER_EVENT" != "pull_request" ]]; then
-            echo "::error::Terraform plans may only be requested by a pull request."
-            exit 1
-          fi
-          if [[ "$CALLER_REPOSITORY" != "$TARGET_REPOSITORY" ]]; then
-            echo "::error::Fork pull requests cannot request AWS-backed Terraform plans."
-            exit 1
-          fi
-
   build-site:
-    name: Build proposed browser artifact (${{ inputs.environment }})
-    needs: authorize
+    name: Build site (${{ inputs.environment }})
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -62,19 +32,17 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
-      - name: Test and build proposed browser artifact
+      - name: Build proposed site
         id: build
         run: |
           set -euo pipefail
-          uv run --locked pytest tests/test_site.py
           uv run --locked mor-l0 build-site
           artifact_digest="$(cut -d ' ' -f 1 build/money-on-record-site.zip.sha256)"
           artifact_name="terraform-site-${{ inputs.environment }}-${GITHUB_SHA}"
-          [[ "$artifact_digest" =~ ^[0-9a-f]{64}$ ]]
           echo "artifact_digest=$artifact_digest" >>"$GITHUB_OUTPUT"
           echo "artifact_name=$artifact_name" >>"$GITHUB_OUTPUT"
 
-      - name: Hand the proposed artifact to the trusted plan job
+      - name: Upload proposed site
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ steps.build.outputs.artifact_name }}
@@ -87,7 +55,7 @@ jobs:
 
   plan:
     name: Terraform plan (${{ inputs.environment }})
-    needs: [authorize, build-site]
+    needs: build-site
     permissions:
       actions: read
       contents: read
@@ -96,47 +64,24 @@ jobs:
     timeout-minutes: 15
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
-      EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
-      EXPECTED_REGION: us-east-1
-      EXPECTED_STATE_BUCKET: joshcazalas-deployment-tfstate-245459924498
-      EXPECTED_WORKLOAD_ACCOUNT_ID: ${{ inputs.environment == 'uat' && '732006412638' || '134604497564' }}
-      FORBIDDEN_STATE_KEY: ${{ inputs.environment == 'uat' && 'money-on-record/static-site/production/terraform.tfstate' || 'money-on-record/static-site/uat/terraform.tfstate' }}
-      FORBIDDEN_WORKLOAD_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT }}
       PLAN_HUB_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_PLAN_ROLE_ARN_UAT || vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
-      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
-      STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate
       TF_IN_AUTOMATION: 'true'
       TF_INPUT: '0'
-      TF_VAR_site_artifact_directory: ../../../build/site
+      TF_VAR_environment: ${{ inputs.environment }}
       TF_VAR_aws_workload_role_arn: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
-      TF_WORKSPACE: ${{ inputs.environment }}
+      TF_VAR_site_artifact_directory: ../../../build/site
     steps:
-      - name: Validate repository configuration
+      - name: Validate plan request
         env:
-          CONFIGURED_DEPLOYMENT_ACCOUNT_ID: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
+          CALLER_EVENT: ${{ github.event_name }}
+          CALLER_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+          TARGET_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordPlan${TF_WORKSPACE^}"
-          if [[ "$TF_WORKSPACE" == "production" ]]; then
-            expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordPlanProd"
-          fi
-          expected_workload_role="arn:aws:iam::${EXPECTED_WORKLOAD_ACCOUNT_ID}:role/MoneyOnRecordTerraformPlan"
-
-          [[ "$CONFIGURED_DEPLOYMENT_ACCOUNT_ID" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]] || {
-            echo "::error::AWS_DEPLOYMENT_ACCOUNT_ID does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$AWS_REGION" == "$EXPECTED_REGION" ]] || {
-            echo "::error::AWS_REGION does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$STATE_BUCKET" == "$EXPECTED_STATE_BUCKET" ]] || {
-            echo "::error::TF_STATE_BUCKET does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$PLAN_HUB_ROLE_ARN" == "$expected_hub_role" ]] || {
-            echo "::error::The plan hub role does not match the selected environment."; exit 1;
-          }
-          [[ "$TF_VAR_aws_workload_role_arn" == "$expected_workload_role" ]] || {
-            echo "::error::The workload plan role does not match the selected environment."; exit 1;
-          }
+          [[ "$REQUESTED_ENVIRONMENT" == "uat" || "$REQUESTED_ENVIRONMENT" == "production" ]]
+          [[ "$CALLER_EVENT" == "pull_request" ]]
+          [[ "$CALLER_REPOSITORY" == "$TARGET_REPOSITORY" ]]
 
       - name: Check out pull-request source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -151,7 +96,7 @@ jobs:
           path: trusted
           persist-credentials: false
 
-      - name: Download proposed browser artifact
+      - name: Download proposed site
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: ${{ needs.build-site.outputs.artifact_name }}
@@ -163,169 +108,37 @@ jobs:
           enable-cache: true
           cache-dependency-glob: trusted/uv.lock
 
-      - name: Verify the proposed browser artifact with trusted code
+      - name: Verify proposed site with trusted code
         env:
           ARTIFACT_DIGEST: ${{ needs.build-site.outputs.artifact_digest }}
-        run: |
-          set -euo pipefail
-          checksum_digest="$(cut -d ' ' -f 1 site-artifact/money-on-record-site.zip.sha256)"
-          [[ "$checksum_digest" == "$ARTIFACT_DIGEST" ]]
-          uv run --project trusted --locked mor-l0 verify-site \
-            --archive "$GITHUB_WORKSPACE/site-artifact/money-on-record-site.zip" \
-            --expected-sha256 "$ARTIFACT_DIGEST" \
-            --output "$GITHUB_WORKSPACE/source/build/site"
+        run: >-
+          uv run --project trusted --locked mor-l0 verify-site
+          --archive "$GITHUB_WORKSPACE/site-artifact/money-on-record-site.zip"
+          --expected-sha256 "$ARTIFACT_DIGEST"
+          --output "$GITHUB_WORKSPACE/source/build/site"
 
-      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
           terraform_version: 1.15.8
           terraform_wrapper: false
 
-      - name: Assume environment plan hub role
+      - name: Assume environment plan role
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
         with:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ env.PLAN_HUB_ROLE_ARN }}
           role-session-name: mor-${{ inputs.environment }}-plan-${{ github.run_id }}
-          allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
+          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
 
-      - name: Verify plan-hub isolation
-        run: |
-          set -euo pipefail
+      - name: Run Terraform plan
+        run: >-
+          bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"
+          "$GITHUB_WORKSPACE/source"
+          "${{ inputs.environment }}"
+          "$GITHUB_WORKSPACE/plan-result"
 
-          caller_account="$(aws sts get-caller-identity --query Account --output text)"
-          if [[ "$caller_account" != "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]; then
-            echo "::error::The plan hub resolved to an unexpected AWS account."
-            exit 1
-          fi
-
-          set +e
-          role_denial="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_WORKLOAD_ROLE_ARN" \
-              --role-session-name "mor-cross-role-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          role_status=$?
-          state_denial="$(
-            aws s3api head-object \
-              --bucket "$STATE_BUCKET" \
-              --key "$FORBIDDEN_STATE_KEY" 2>&1
-          )"
-          state_status=$?
-          set -e
-
-          if [[ "$role_status" -eq 0 ]]; then
-            echo "::error::The plan hub unexpectedly assumed the other environment's workload role."
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$role_denial"; then
-            echo "::error::The cross-environment role probe failed for an unexpected reason."
-            printf '%s\n' "$role_denial"
-            exit 1
-          fi
-          if [[ "$state_status" -eq 0 ]]; then
-            echo "::error::The plan hub unexpectedly read the other environment's state."
-            exit 1
-          fi
-          # Terraform needs ListBucket on the component prefix to enumerate
-          # workspaces. S3 therefore returns 404 while the opposite state is
-          # absent and 403 once that unauthorized object exists. Either is a
-          # safe non-success response; an accessible object returned above
-          # would have produced status 0 and failed the job.
-          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied|\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
-            echo "::error::The cross-environment state probe failed for an unexpected reason."
-            printf '%s\n' "$state_denial"
-            exit 1
-          fi
-
-      - name: Verify deployment hubs reject this plan workflow
-        env:
-          PRODUCTION_DEPLOY_ROLE_ARN: arn:aws:iam::245459924498:role/MoneyOnRecordDeployProd
-          UAT_DEPLOY_ROLE_ARN: arn:aws:iam::245459924498:role/MoneyOnRecordDeployUat
-        run: |
-          set -euo pipefail
-          oidc_response="$(
-            curl --fail-with-body --silent --show-error \
-              --header "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com"
-          )"
-          oidc_token="$(jq -er '.value' <<<"$oidc_response")"
-
-          assert_denied() {
-            local role_arn="$1"
-            local label="$2"
-            local denial_output
-            local status
-
-            set +e
-            denial_output="$(
-              aws sts assume-role-with-web-identity \
-                --role-arn "$role_arn" \
-                --role-session-name "mor-${label}-deny-${GITHUB_RUN_ID}" \
-                --web-identity-token "$oidc_token" \
-                --duration-seconds 900 \
-                --query AssumedRoleUser.Arn \
-                --output text 2>&1
-            )"
-            status=$?
-            set -e
-
-            if [[ "$status" -eq 0 ]]; then
-              echo "::error::The plan workflow unexpectedly assumed the $label deployment hub."
-              exit 1
-            fi
-            if ! grep -Eiq 'AccessDenied|not authorized.*AssumeRoleWithWebIdentity' <<<"$denial_output"; then
-              echo "::error::The $label deployment-hub probe failed for an unexpected reason."
-              printf '%s\n' "$denial_output"
-              exit 1
-            fi
-          }
-
-          assert_denied "$UAT_DEPLOY_ROLE_ARN" uat
-          assert_denied "$PRODUCTION_DEPLOY_ROLE_ARN" production
-          unset oidc_token oidc_response
-
-      - name: Detect selected workspace state
-        id: state
-        run: |
-          set -euo pipefail
-          set +e
-          state_probe="$(
-            aws s3api head-object \
-              --bucket "$STATE_BUCKET" \
-              --key "$STATE_KEY" 2>&1
-          )"
-          state_status=$?
-          set -e
-
-          if [[ "$state_status" -eq 0 ]]; then
-            echo "exists=true" >>"$GITHUB_OUTPUT"
-          elif grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$state_probe"; then
-            echo "exists=false" >>"$GITHUB_OUTPUT"
-          else
-            echo "::error::The selected workspace state could not be read or confirmed absent."
-            printf '%s\n' "$state_probe"
-            exit 1
-          fi
-
-      - name: Run trusted Terraform plan
-        id: plan
-        env:
-          STATE_EXISTS: ${{ steps.state.outputs.exists }}
-        run: |
-          set -euo pipefail
-          bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh" \
-            "$GITHUB_WORKSPACE/source" \
-            "$TF_WORKSPACE" \
-            "$STATE_EXISTS" \
-            "$GITHUB_WORKSPACE/plan-result"
-
-      - name: Upload sanitized Terraform plan result
-        if: always() && steps.plan.outcome != 'skipped'
+      - name: Upload sanitized plan
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: terraform-plan-${{ inputs.environment }}

@@ -1,11 +1,11 @@
 output "artifact_bucket_name" {
   description = "Private bucket receiving immutable application artifacts."
-  value       = local.workspace_supported ? module.static_site[0].bucket_name : null
+  value       = module.static_site.bucket_name
 }
 
 output "cloudfront_distribution_id" {
   description = "Distribution ID used by the deploy workflow."
-  value       = local.workspace_supported ? module.static_site[0].cloudfront_distribution_id : null
+  value       = module.static_site.cloudfront_distribution_id
 }
 
 output "configured_site_bucket_name" {
@@ -14,26 +14,26 @@ output "configured_site_bucket_name" {
 }
 
 output "environment" {
-  description = "Canonical environment selected by the current workspace."
+  description = "Selected deployment environment."
   value       = local.environment
 }
 
 output "site_url" {
-  description = "Workspace site URL."
-  value       = local.workspace_supported ? module.static_site[0].site_url : null
+  description = "Environment site URL."
+  value       = module.static_site.site_url
 }
 
 output "site_object_keys" {
   description = "Rendered browser object keys managed by the selected environment."
-  value       = local.workspace_supported ? module.static_site[0].site_object_keys : []
+  value       = module.static_site.site_object_keys
 }
 
 output "state_object_key" {
-  description = "Derived centralized S3 backend object key for this workspace."
+  description = "Centralized S3 backend object key for this environment."
   value       = local.state_object_key
 }
 
 output "workload_account_id" {
-  description = "AWS workload account selected by the current workspace."
+  description = "AWS workload account selected by the environment."
   value       = local.aws_account_id
 }

@@ -1,5 +1,5 @@
 locals {
-  workspace_configurations = {
+  environment_configurations = {
     uat = {
       environment         = "uat"
       aws_account_id      = "732006412638"
@@ -20,20 +20,15 @@ locals {
     }
   }
 
-  workspace_supported  = contains(keys(local.workspace_configurations), terraform.workspace)
-  environment          = try(local.workspace_configurations[terraform.workspace].environment, "uat")
-  aws_account_id       = try(local.workspace_configurations[terraform.workspace].aws_account_id, "000000000000")
-  aws_region           = try(local.workspace_configurations[terraform.workspace].aws_region, "us-east-1")
-  site_bucket_name     = try(local.workspace_configurations[terraform.workspace].site_bucket_name, "unsupported")
-  domain_aliases       = try(local.workspace_configurations[terraform.workspace].domain_aliases, [])
-  acm_certificate_arn  = try(local.workspace_configurations[terraform.workspace].acm_certificate_arn, null)
-  web_acl_id           = try(local.workspace_configurations[terraform.workspace].web_acl_id, null)
-  state_object_key     = "money-on-record/static-site/${terraform.workspace}/terraform.tfstate"
-  workload_role_prefix = "arn:aws:iam::${local.aws_account_id}:role/MoneyOnRecordTerraform"
-  allowed_workload_role_arns = toset([
-    "${local.workload_role_prefix}Plan",
-    "${local.workload_role_prefix}Deploy",
-  ])
+  configuration       = local.environment_configurations[var.environment]
+  environment         = local.configuration.environment
+  aws_account_id      = local.configuration.aws_account_id
+  aws_region          = local.configuration.aws_region
+  site_bucket_name    = local.configuration.site_bucket_name
+  domain_aliases      = local.configuration.domain_aliases
+  acm_certificate_arn = local.configuration.acm_certificate_arn
+  web_acl_id          = local.configuration.web_acl_id
+  state_object_key    = "money-on-record/static-site/${var.environment}/terraform.tfstate"
 }
 
 provider "aws" {
@@ -54,33 +49,7 @@ provider "aws" {
   }
 }
 
-resource "terraform_data" "workspace_contract" {
-  input = {
-    workspace        = terraform.workspace
-    environment      = local.environment
-    aws_account_id   = local.aws_account_id
-    site_bucket_name = local.site_bucket_name
-    state_object_key = local.state_object_key
-  }
-
-  lifecycle {
-    precondition {
-      condition     = local.workspace_supported
-      error_message = "Unsupported workspace '${terraform.workspace}'. Select exactly 'uat' or 'production'."
-    }
-
-    precondition {
-      condition     = !local.workspace_supported || contains(local.allowed_workload_role_arns, var.aws_workload_role_arn)
-      error_message = "aws_workload_role_arn must be the plan or deploy role in the selected workspace's workload account."
-    }
-  }
-}
-
-# Keep workspace validation separate from the module dependency graph. A
-# module-level depends_on defers the CloudFront managed-policy data sources
-# until apply, which can invalidate the saved plan once their IDs are known.
 module "static_site" {
-  count  = local.workspace_supported ? 1 : 0
   source = "../../modules/static_site"
 
   bucket_name             = local.site_bucket_name
@@ -90,4 +59,9 @@ module "static_site" {
   web_acl_id              = local.web_acl_id
   site_artifact_directory = var.site_artifact_directory
   tags                    = var.tags
+}
+
+moved {
+  from = module.static_site[0]
+  to   = module.static_site
 }

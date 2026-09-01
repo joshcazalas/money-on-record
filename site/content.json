@@ -1,10 +1,15 @@
 {
-  "schema_version": 2,
+  "schema_version": 4,
   "beta_notice": "The records are public, but the match between the two organization names has not been verified.",
+  "campaign_publication": {
+    "file": "data/austin-campaigns.json",
+    "sha256": "67e528ef6e54ca433ee7b2bc640c64b68882effcfc7ec7d14da4521bc1c45f93"
+  },
   "profiles": [
     {
       "slug": "austin-board-of-realtors",
       "name": "Austin Board of REALTORS",
+      "jurisdiction": "Austin, Texas",
       "summary": "Records using the names Austin Board of REALTORS and AUSTIN BOARD OF REALTORS across two City of Austin datasets.",
       "identity": {
         "status": "Unverified match",

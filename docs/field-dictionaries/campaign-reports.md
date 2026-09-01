@@ -2,7 +2,7 @@
 
 - Dataset ID: `b2pc-2s8n`
 - Role: `canonical`
-- Frozen metadata: `data/metadata/b2pc-2s8n/089384ba62550e190741ec048c21e8cc33b0b8b65118510738eef8a4759adcb2.json`
+- Frozen metadata: `data/metadata/b2pc-2s8n/4483cc760b95833d1600709abf7b8d3cde47408f2b954ae157efb80de345207a.json`
 - Publication rule: default deny; only `PUBLIC_ALLOWLISTED` fields may leave the pipeline.
 
 ## Fields

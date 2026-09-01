@@ -1,0 +1,34 @@
+{
+  "artifact": "data/metadata/g4yx-aw9r/e800eb912482f2eb61955b63f42114660ecb23762860f6b4d8749e7fb78dbf9e.json",
+  "dataset_id": "g4yx-aw9r",
+  "details": {
+    "columns": 46,
+    "publication_date": 1551279640,
+    "rows_updated_at": 1788248116,
+    "view_last_modified": 1788247887
+  },
+  "manifest_version": 1,
+  "operation": "freeze-metadata",
+  "receipt": {
+    "bytes": 73940,
+    "requested_url": "https://data.austintexas.gov/api/views/g4yx-aw9r",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "connection": "close",
+      "content-type": "application/json; charset=utf-8",
+      "date": "Tue, 01 Sep 2026 22:04:34 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "384b9142972d1bc781cf0dbb1393e10c"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/g4yx-aw9r",
+    "retrieved_at": "2026-09-01T22:04:33.596418+00:00",
+    "sha256": "e800eb912482f2eb61955b63f42114660ecb23762860f6b4d8749e7fb78dbf9e",
+    "status": 200
+  },
+  "source_slug": "campaign-transactions",
+  "title": "Campaign Finance - Transaction Detail"
+}

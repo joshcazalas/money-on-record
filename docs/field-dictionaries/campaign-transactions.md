@@ -2,7 +2,7 @@
 
 - Dataset ID: `g4yx-aw9r`
 - Role: `canonical`
-- Frozen metadata: `data/metadata/g4yx-aw9r/de9e66abac77aad4e17efbddfff260d30887b3ee8fca674b93556297bdb66b0d.json`
+- Frozen metadata: `data/metadata/g4yx-aw9r/e800eb912482f2eb61955b63f42114660ecb23762860f6b4d8749e7fb78dbf9e.json`
 - Publication rule: default deny; only `PUBLIC_ALLOWLISTED` fields may leave the pipeline.
 
 ## Fields

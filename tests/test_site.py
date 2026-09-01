@@ -93,25 +93,41 @@ def test_site_build_is_a_reporter_oriented_record_explorer(tmp_path: Path) -> No
     profile = (output / "profiles" / "austin-board-of-realtors" / "index.html").read_text(
         encoding="utf-8"
     )
+    campaign = (output / "campaigns" / "watson-kirk-p" / "index.html").read_text(encoding="utf-8")
     not_found = (output / "404.html").read_text(encoding="utf-8")
 
-    assert "Austin campaign contributions and City payments" in index
+    assert "Campaign contributions reported in Austin" in index
+    assert "Search candidates and committees" in index
+    assert "121,629 contribution rows" in index
+    assert "Candidates and committees" in index
+    assert "Austin, Texas" in index
     assert "Follow the records" not in index
     assert "Keep the caveats" not in index
     assert 'href="/profiles/austin-board-of-realtors/index.html"' in index
-    assert "Do not treat this as a confirmed identity" in profile
+    assert 'href="/campaigns/watson-kirk-p/index.html"' in index
+    assert "Candidate or officeholder" in campaign
+    assert "Mayor of Austin" in campaign
+    assert "$2,321,220.30" in campaign
+    assert "6,669" in campaign
+    assert "3,122 marked corrections" in campaign
+    assert "Top reported contributors" in campaign
+    assert "Download full City projection" in campaign
+    assert campaign.count("data-record-row") == 100
+    assert "Organization record" in profile
+    assert "Unverified match" in profile
     assert "$240,133.82" in profile
     assert "$106,072.10" in profile
-    assert "Payments by department" in profile
+    assert "By department" in profile
     assert "Austin Energy" in profile
     assert "$86,195.00" in profile
     assert "Advertising/publication" in profile
-    assert "no line-item descriptions" in profile
+    assert "no descriptions for these lines" in profile
     assert profile.count("data-record-row") == 261
-    assert "Filter contributions" in profile
-    assert "Filter payment lines" in profile
-    assert "Download these 53 projected official rows as CSV" in profile
-    assert "Download these 208 projected official rows as CSV" in profile
+    assert "Campaign record filters" in profile
+    assert "City payment filters" in profile
+    assert "All departments" in profile
+    assert "All categories" in profile
+    assert profile.count("Download CSV") == 2
     assert "services.austintexas.gov/edims/document.cfm" in profile
     assert "There is no profile at this address" in not_found
     assert (output / "robots.txt").read_text(encoding="utf-8") == "User-agent: *\nDisallow: /\n"
@@ -174,10 +190,13 @@ def test_every_html_page_has_accessibility_and_privacy_controls(tmp_path: Path) 
 
     css = next((output / "assets").glob("site-*.css")).read_text(encoding="utf-8")
     javascript = next((output / "assets").glob("site-*.js")).read_text(encoding="utf-8")
-    assert "@media (max-width: 760px)" in css
+    assert "@media (max-width: 800px)" in css
     assert "@media (prefers-reduced-motion: reduce)" in css
     assert "data-record-filter" in javascript
     assert "data-record-sort" in javascript
+    assert "data-record-field" in javascript
+    assert "data-record-reset" in javascript
+    assert "data-directory-filter" in javascript
 
 
 def test_site_archive_is_byte_for_byte_reproducible(tmp_path: Path) -> None:
@@ -201,9 +220,11 @@ def test_site_archive_verifies_manifest_and_extracts_safely(tmp_path: Path) -> N
     assert result.files == len([path for path in output.rglob("*") if path.is_file()])
     assert (extracted / "index.html").read_bytes() == (output / "index.html").read_bytes()
     manifest = json.loads((extracted / MANIFEST_NAME).read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == 1
+    assert manifest["schema_version"] == 2
+    assert len(manifest["campaigns"]) == 87
+    assert "watson-kirk-p" in manifest["campaigns"]
     assert manifest["profiles"] == ["austin-board-of-realtors"]
-    assert len(manifest["source_snapshots"]) == 2
+    assert len(manifest["source_snapshots"]) == 4
 
 
 def test_site_archive_rejects_wrong_digest_and_unsafe_paths(tmp_path: Path) -> None:

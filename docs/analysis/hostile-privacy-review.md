@@ -29,6 +29,34 @@ The review treated the following as public surface, including indirect paths:
 The raw artifacts reviewed locally are the content-addressed snapshots already
 named in their acquisition manifests. They remain ignored private inputs.
 
+## September 1, 2026 campaign-explorer expansion
+
+The reporter explorer expands the public campaign surface without publishing a
+raw source mirror. Its deterministic transform processed 121,808 contribution
+rows, excluded 179 rows with no recipient, and produced 87 recipient profiles.
+The checked-in publication contains full-snapshot aggregates and 5,234 sampled
+row-level records: no more than the one hundred most recent rows for any
+recipient.
+
+The public campaign fields are recipient, donor name, donor type, contribution
+date and amount, contribution type, correction marker, transaction identifier,
+and the official filing link. Donor address, city/state/ZIP, employer,
+occupation, and free-form in-kind description are omitted. Every retained text
+value passes the existing contact/address scanner, every generated page escapes
+source text, and tests reject prohibited field names in the complete site
+artifact.
+
+Recipient-to-filer grouping uses only capitalization, punctuation, diacritic,
+and whitespace normalization. Office labels are added only from a report filer
+with that same strict key. Individual donors are not joined to other sources or
+resolved as people. Correction-marked rows remain labeled and included in the
+explicitly named reported-row total because the public projection does not
+provide a reliable supersession key.
+
+This expansion is an AI-assisted implementation review, not a new human privacy
+approval. Josh's review and merge decision on the campaign-explorer pull request
+is the required human acceptance of this larger public surface.
+
 ## Findings and disposition
 
 ### Exact source links returned more than the page allowed

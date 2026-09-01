@@ -333,7 +333,19 @@ jobs:
             "$GITHUB_WORKSPACE/plan-result"
 
           metadata="$GITHUB_WORKSPACE/plan-result/${TF_WORKSPACE}/metadata.json"
-          has_changes="$(jq -er '.exit_code == 2' "$metadata")"
+          plan_exit_code="$(jq -er '.exit_code' "$metadata")"
+          case "$plan_exit_code" in
+            0)
+              has_changes=false
+              ;;
+            2)
+              has_changes=true
+              ;;
+            *)
+              echo "::error::Successful plan metadata contained unexpected exit code $plan_exit_code."
+              exit 1
+              ;;
+          esac
           echo "has_changes=$has_changes" >>"$GITHUB_OUTPUT"
 
       - name: Upload sanitized Terraform plan result

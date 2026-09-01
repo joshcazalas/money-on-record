@@ -120,6 +120,11 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "actions/upload-artifact@" in source
     assert "name: terraform-plan-${{ inputs.environment }}" in source
     assert "retention-days: 7" in source
+    assert 'plan_exit_code="$(jq -er \'.exit_code\' "$metadata")"' in source
+    assert 'case "$plan_exit_code" in' in source
+    assert "has_changes=false" in source
+    assert "has_changes=true" in source
+    assert "'.exit_code == 2'" not in source
     assert "The binary plan and raw JSON remain only inside temporary_directory" in runner
     _assert_native_terraform_exit_contract(source)
 

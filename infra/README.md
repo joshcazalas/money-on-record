@@ -9,16 +9,18 @@ origin 403/404 responses render the reviewed `/404.html` page as HTTP 404.
 
 ```text
 infra/
-  components/static-site/  # one stateful root selected by environment input
+  components/static-site/  # one stateful root selected by named workspace
   modules/static_site/      # reusable private S3 and CloudFront stack
 ```
 
-## Accounts and environments
+## Accounts and workspaces
 
-Only `uat` and `production` are valid environment inputs. The root maps each
-environment to its workload account, site bucket, and future domain inputs:
+Only the `uat` and `production` Terraform workspaces are deployable. The root
+rejects `default` and every unknown workspace before it can plan resources. Its
+workspace map fixes the environment, workload account, site bucket, and future
+domain inputs together:
 
-| Environment | Workload account | Site bucket |
+| Workspace | Workload account | Site bucket |
 | --- | --- | --- |
 | `uat` | `732006412638` | `money-on-record-uat-732006412638-site` |
 | `production` | `134604497564` | `money-on-record-production-134604497564-site` |
@@ -31,8 +33,8 @@ credentials are inputs.
 ## Centralized state
 
 The component uses the single deployment-account bucket
-`joshcazalas-deployment-tfstate-245459924498`, native S3 locking, and one exact
-state key per environment:
+`joshcazalas-deployment-tfstate-245459924498`, native S3 locking, and these
+exact non-default workspace objects:
 
 ```text
 money-on-record/static-site/uat/terraform.tfstate
@@ -43,13 +45,13 @@ There are no environment-specific backend files or application-owned state
 buckets. Offline development and unprivileged CI use
 `terraform init -backend=false`.
 
-Automation supplies the exact environment state key and matching execution role:
+Automation selects a named workspace and supplies its matching execution role:
 
 ```bash
 cd infra/components/static-site
 export TF_VAR_aws_workload_role_arn=arn:aws:iam::732006412638:role/MoneyOnRecordTerraformPlan
-export TF_VAR_environment=uat
-terraform init -backend-config=key=money-on-record/static-site/uat/terraform.tfstate
+export TF_WORKSPACE=uat
+terraform init
 terraform plan -lock=false
 ```
 
@@ -108,8 +110,10 @@ same production workflow can deploy an existing immutable release manually.
 GitHub OIDC supplies all AWS and attestation identities; no GitHub App, PAT, or
 static AWS key is used.
 
-Terraform treats a missing environment state object as an empty state. The first
-authorized deployment creates it; later plans read the same exact key.
+Before a workspace's first deployment, its remote state object does not exist
+and the read-only plan role cannot create it. For that initial plan only, the
+workflow uses ephemeral local state with refresh disabled. Once remote state
+exists, plans use the normal S3 backend. Access errors still fail the workflow.
 
 ## Complete environment deployment
 

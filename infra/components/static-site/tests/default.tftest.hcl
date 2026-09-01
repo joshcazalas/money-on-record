@@ -2,7 +2,7 @@ mock_provider "aws" {
   override_during = plan
 }
 
-run "reject_unknown_workspace" {
+run "reject_default_workspace" {
   command = plan
 
   variables {

@@ -118,6 +118,7 @@ esac
             str(REPOSITORY_ROOT / "scripts" / "run-terraform-plan.sh"),
             str(source),
             "uat",
+            "false",
             str(results),
         ],
         check=True,

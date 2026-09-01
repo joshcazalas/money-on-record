@@ -35,12 +35,11 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       DEPLOY_HUB_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
-      DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
       DEPLOY_REVISION: ${{ inputs.revision }}
       RELEASE_TAG: ${{ inputs.release_tag }}
       TF_IN_AUTOMATION: 'true'
       TF_INPUT: '0'
-      TF_VAR_environment: ${{ inputs.environment }}
+      TF_WORKSPACE: ${{ inputs.environment }}
       TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
       TF_VAR_site_artifact_directory: ../../../build/site
     steps:
@@ -86,7 +85,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [[ "$DEPLOY_ENVIRONMENT" == "production" ]]; then
+          if [[ "$TF_WORKSPACE" == "production" ]]; then
             release_version="${RELEASE_TAG#v}"
             release_directory="$RUNNER_TEMP/release-site"
             archive="$release_directory/money-on-record-site-${release_version}.zip"
@@ -126,7 +125,6 @@ jobs:
         working-directory: infra/components/static-site
         run: >-
           terraform init
-          -backend-config="key=money-on-record/static-site/${DEPLOY_ENVIRONMENT}/terraform.tfstate"
           -input=false
           -lockfile=readonly
           -no-color
@@ -138,7 +136,7 @@ jobs:
           -input=false
           -lock-timeout=5m
           -no-color
-          -out="$RUNNER_TEMP/money-on-record-${DEPLOY_ENVIRONMENT}.tfplan"
+          -out="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
 
       - name: Apply deployment
         working-directory: infra/components/static-site
@@ -146,4 +144,4 @@ jobs:
           terraform apply
           -input=false
           -no-color
-          "$RUNNER_TEMP/money-on-record-${DEPLOY_ENVIRONMENT}.tfplan"
+          "$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"

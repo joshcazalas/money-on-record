@@ -28,14 +28,9 @@ def _assert_native_terraform_exit_contract(source: str) -> None:
     assert not re.search(r"steps\.[^.}\s]+\.outputs\.(?:exitcode|stdout|stderr)", source)
 
 
-def test_centralized_backend_uses_exact_environment_keys() -> None:
+def test_centralized_backend_uses_workspace_keys() -> None:
     backend = (COMPONENT / "backend.tf").read_text(encoding="utf-8")
-    plan_workflow = (ROOT / ".github/workflows/reusable-terraform-plan.yml").read_text(
-        encoding="utf-8"
-    )
-    deploy_workflow = (ROOT / ".github/workflows/reusable-terraform-deploy.yml").read_text(
-        encoding="utf-8"
-    )
+    component = (COMPONENT / "main.tf").read_text(encoding="utf-8")
 
     assert _quoted_assignment(backend, "bucket") == ("joshcazalas-deployment-tfstate-245459924498")
     assert _quoted_assignment(backend, "region") == "us-east-1"
@@ -47,15 +42,14 @@ def test_centralized_backend_uses_exact_environment_keys() -> None:
         re.MULTILINE,
     )
 
-    assert "workspace_key_prefix" not in backend
-    assert "terraform.workspace" not in (COMPONENT / "main.tf").read_text(encoding="utf-8")
-    assert "key=money-on-record/static-site/${environment}/terraform.tfstate" in (
-        ROOT / "scripts/run-terraform-plan.sh"
-    ).read_text(encoding="utf-8")
-    assert "key=money-on-record/static-site/${DEPLOY_ENVIRONMENT}/terraform.tfstate" in (
-        deploy_workflow
+    assert _quoted_assignment(backend, "key") == "terraform.tfstate"
+    assert _quoted_assignment(backend, "workspace_key_prefix") == ("money-on-record/static-site")
+    assert "terraform.workspace" in component
+    assert (
+        'state_object_key     = "money-on-record/static-site/'
+        '${terraform.workspace}/terraform.tfstate"'
+        in component
     )
-    assert "TF_VAR_environment: ${{ inputs.environment }}" in plan_workflow
 
 
 def test_environment_roots_were_replaced_by_one_component() -> None:
@@ -63,16 +57,16 @@ def test_environment_roots_were_replaced_by_one_component() -> None:
     assert not (ROOT / "infra" / "environments").exists()
 
 
-def test_environment_configuration_binds_each_account_and_role() -> None:
+def test_workspace_configuration_binds_each_account_and_role() -> None:
     source = (COMPONENT / "main.tf").read_text(encoding="utf-8")
     variables = (COMPONENT / "variables.tf").read_text(encoding="utf-8")
 
     assert 'aws_account_id      = "732006412638"' in source
     assert 'aws_account_id      = "134604497564"' in source
     assert "allowed_account_ids = [local.aws_account_id]" in source
-    assert "MoneyOnRecordTerraformPlan" in variables
-    assert "MoneyOnRecordTerraformDeploy" in variables
-    assert "terraform_data" not in source
+    assert "MoneyOnRecordTerraform(Plan|Deploy)" in variables
+    assert 'resource "terraform_data" "workspace_contract"' in source
+    assert "contains(local.allowed_workload_role_arns" in source
 
 
 def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
@@ -83,7 +77,7 @@ def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
     assert not re.search(r"^  push:$", source, re.MULTILINE)
 
 
-def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
+def test_reusable_terraform_plan_is_read_only_and_workspace_bound() -> None:
     source = (ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml").read_text(
         encoding="utf-8"
     )
@@ -93,17 +87,23 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "contents: read" in source
     assert "id-token: write" in source
     assert "CALLER_REPOSITORY" in source
-    assert "TF_VAR_environment: ${{ inputs.environment }}" in source
+    assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
+    assert "STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}" in source
+    assert (
+        "STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate"
+        in source
+    )
     assert "Check out pull-request source" in source
     assert "Check out trusted planning code" in source
     assert source.count("persist-credentials: false") == 3
     assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
     assert 'terraform -chdir="$terraform_root" init' in runner
     assert "-backend-config=use_lockfile=false" in runner
-    assert "key=money-on-record/static-site/${environment}/terraform.tfstate" in runner
-    assert "head-object" not in source
-    assert "-backend=false" not in runner
-    assert "-refresh=false" not in runner
+    assert "head-object" in source
+    assert "Not Found|NoSuchKey" in source
+    assert 'export TF_WORKSPACE="$environment"' in runner
+    assert "-backend=false" in runner
+    assert "-refresh=false" in runner
     assert "-lock=false" in runner
     assert "-detailed-exitcode" in runner
     assert "plan_exit_code=$?" in runner
@@ -139,9 +139,10 @@ def test_reusable_terraform_deploy_is_environment_and_release_bound() -> None:
     assert "terraform init" in source
     assert "-lockfile=readonly" in source
     assert "-lock-timeout=5m" in source
-    assert '-out="$RUNNER_TEMP/money-on-record-${DEPLOY_ENVIRONMENT}.tfplan"' in source
+    assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
+    assert '-out="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"' in source
     assert "terraform apply" in source
-    assert '"$RUNNER_TEMP/money-on-record-${DEPLOY_ENVIRONMENT}.tfplan"' in source
+    assert '"$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"' in source
     assert "continue-on-error" not in source
     assert "terraform show" not in source
     assert "Smoke-test" not in source

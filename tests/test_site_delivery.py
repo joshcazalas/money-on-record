@@ -33,7 +33,7 @@ def test_uat_deploy_builds_before_aws_and_terraform_apply_is_the_deployment() ->
 
     assert prepare < assume < plan < apply
     assert "TF_VAR_site_artifact_directory: ../../../build/site" in source
-    assert 'if [[ "$DEPLOY_ENVIRONMENT" == "production" ]]' in source
+    assert 'if [[ "$TF_WORKSPACE" == "production" ]]' in source
     assert "uv run --locked mor-l0 build-site" in source
     assert "terraform apply" in source
     assert "continue-on-error" not in source

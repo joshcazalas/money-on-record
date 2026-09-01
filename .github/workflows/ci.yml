@@ -130,8 +130,8 @@ jobs:
       - name: Lint workflows and shell scripts
         run: |
           actionlint
-          shellcheck scripts/*.sh
-          bash -n scripts/*.sh
+          shellcheck scripts/*.sh tools/*.sh
+          bash -n scripts/*.sh tools/*.sh
 
   terraform-format:
     name: Terraform format
@@ -165,18 +165,15 @@ jobs:
       - working-directory: infra/components/static-site
         run: terraform validate
 
-  terraform-environment-test:
-    name: Terraform environment contract
+  terraform-workspace-test:
+    name: Terraform workspace contract
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
           terraform_version: 1.15.8
-      - working-directory: infra/components/static-site
-        run: terraform init -backend=false -lockfile=readonly
-      - working-directory: infra/components/static-site
-        run: terraform test
+      - run: bash tools/check-terraform-workspaces.sh
 
   terraform-test:
     name: Terraform test

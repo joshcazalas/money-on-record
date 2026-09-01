@@ -37,17 +37,17 @@ The static-site infrastructure uses one component root and one reusable module:
 
 ```text
 infra/
-  components/static-site/  # centralized backend and environment configuration
+  components/static-site/  # centralized backend and workspace configuration
   modules/static_site/      # private S3 and CloudFront composition
 ```
 
-Only `uat` and `production` are valid environment inputs. They select fixed
+Only the `uat` and `production` workspaces are valid. They select fixed
 configuration for workload accounts `732006412638` and `134604497564`.
 The provider's `allowed_account_ids`, exact workload role assumption, and
 separate workload accounts enforce the security boundary.
 
-Both environments use the centralized deployment-account state bucket with an
-exact backend key supplied during initialization:
+Both workspaces use the centralized deployment-account state bucket and S3
+workspace prefix, which resolve to these exact objects:
 
 ```text
 money-on-record/static-site/uat/terraform.tfstate

@@ -214,8 +214,8 @@ state bucket. The centralized bucket has:
 - native Terraform locking through `use_lockfile = true`.
 
 Money on Record uses one `infra/components/static-site` root with explicit
-`uat` and `production` environment inputs. Automation supplies one of these
-independently permissioned backend keys during initialization:
+`uat` and `production` workspaces. The backend's workspace prefix resolves them
+to these independently permissioned state objects:
 
 ```text
 money-on-record/static-site/uat/terraform.tfstate

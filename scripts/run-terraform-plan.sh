@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$#" -ne 3 ]]; then
-  echo "usage: $0 SOURCE_DIRECTORY ENVIRONMENT RESULT_DIRECTORY" >&2
+if [[ "$#" -ne 4 ]]; then
+  echo "usage: $0 SOURCE_DIRECTORY ENVIRONMENT STATE_EXISTS RESULT_DIRECTORY" >&2
   exit 64
 fi
 
 source_directory="$(realpath "$1")"
 environment="$2"
-result_directory="$(realpath -m "$3")/$environment"
+state_exists="$3"
+result_directory="$(realpath -m "$4")/$environment"
 terraform_root="$source_directory/infra/components/static-site"
 script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 [[ "$environment" == "uat" || "$environment" == "production" ]]
+[[ "$state_exists" == "true" || "$state_exists" == "false" ]]
 [[ -d "$terraform_root" ]]
 
 temporary_directory="$(mktemp -d)"
@@ -20,15 +22,23 @@ trap 'rm -rf "$temporary_directory"' EXIT
 mkdir -p "$result_directory"
 
 export TF_IN_AUTOMATION=1
-export TF_VAR_environment="$environment"
+export TF_WORKSPACE="$environment"
 
-terraform -chdir="$terraform_root" init \
-  -backend-config="key=money-on-record/static-site/${environment}/terraform.tfstate" \
-  -backend-config=use_lockfile=false \
-  -input=false \
-  -lock=false \
-  -lockfile=readonly \
-  -no-color
+if [[ "$state_exists" == "true" ]]; then
+  terraform -chdir="$terraform_root" init \
+    -backend-config=use_lockfile=false \
+    -input=false \
+    -lock=false \
+    -lockfile=readonly \
+    -no-color
+else
+  mv "$terraform_root/backend.tf" "$temporary_directory/backend.tf"
+  terraform -chdir="$terraform_root" init \
+    -backend=false \
+    -input=false \
+    -lockfile=readonly \
+    -no-color
+fi
 
 plan_file="$temporary_directory/plan.tfplan"
 plan_json="$temporary_directory/plan.json"
@@ -41,6 +51,10 @@ plan_arguments=(
   -detailed-exitcode
   -out="$plan_file"
 )
+
+if [[ "$state_exists" == "false" ]]; then
+  plan_arguments+=("-refresh=false")
+fi
 
 set +e
 terraform -chdir="$terraform_root" plan "${plan_arguments[@]}"

@@ -65,9 +65,11 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       PLAN_HUB_ROLE_ARN: ${{ inputs.environment == 'uat' && vars.AWS_PLAN_ROLE_ARN_UAT || vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
+      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+      STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate
       TF_IN_AUTOMATION: 'true'
       TF_INPUT: '0'
-      TF_VAR_environment: ${{ inputs.environment }}
+      TF_WORKSPACE: ${{ inputs.environment }}
       TF_VAR_aws_workload_role_arn: ${{ inputs.environment == 'uat' && vars.AWS_WORKLOAD_PLAN_ROLE_ARN_UAT || vars.AWS_WORKLOAD_PLAN_ROLE_ARN_PRODUCTION }}
       TF_VAR_site_artifact_directory: ../../../build/site
     steps:
@@ -131,11 +133,30 @@ jobs:
           role-session-name: mor-${{ inputs.environment }}-plan-${{ github.run_id }}
           allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
 
+      - name: Detect existing workspace state
+        id: state
+        run: |
+          set -euo pipefail
+          set +e
+          state_probe="$(aws s3api head-object --bucket "$STATE_BUCKET" --key "$STATE_KEY" 2>&1)"
+          state_status=$?
+          set -e
+
+          if [[ "$state_status" -eq 0 ]]; then
+            echo "exists=true" >>"$GITHUB_OUTPUT"
+          elif grep -Eq '\(404\)|Not Found|NoSuchKey' <<<"$state_probe"; then
+            echo "exists=false" >>"$GITHUB_OUTPUT"
+          else
+            printf '%s\n' "$state_probe" >&2
+            exit "$state_status"
+          fi
+
       - name: Run Terraform plan
         run: >-
           bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"
           "$GITHUB_WORKSPACE/source"
           "${{ inputs.environment }}"
+          "${{ steps.state.outputs.exists }}"
           "$GITHUB_WORKSPACE/plan-result"
 
       - name: Upload sanitized plan

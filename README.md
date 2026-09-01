@@ -43,8 +43,9 @@ friendlier when `AUSTIN_SOCRATA_APP_TOKEN` is set. Never commit that value.
 
 ## Static site
 
-The reviewed, privacy-safe site input is [`site/content.json`](site/content.json).
-Build it without network or cloud access:
+The reviewed, privacy-safe site inputs are [`site/content.json`](site/content.json)
+and the narrow record projections in [`site/data/`](site/data/). Build them
+without network or cloud access:
 
 ```bash
 uv run --locked mor-l0 build-site
@@ -55,9 +56,9 @@ uv run --locked mor-l0 verify-site \
 
 The command creates `build/site/`, a byte-for-byte reproducible ZIP, and its
 SHA-256 checksum. Generated files remain ignored; source content, builder code,
-and tests are reviewed in pull requests. The archive contains only rendered
-HTML, a content-hashed stylesheet, `robots.txt`, and a source-fingerprint
-manifest—never raw downloads or candidate-review worksheets.
+and tests are reviewed in pull requests. The archive contains rendered HTML,
+content-hashed CSS and JavaScript, `robots.txt`, and a source-fingerprint
+manifest—never unrestricted source downloads or candidate-review worksheets.
 
 The environment's Terraform apply is the complete deployment. A UAT deployment
 builds and verifies the exact current `main` artifact before AWS authentication;

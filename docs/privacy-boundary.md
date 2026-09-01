@@ -19,7 +19,10 @@ schema. Each public artifact must choose the smallest fields and rows needed for
 its claim, then pass the scanner after that selection. Exact-row Socrata links
 must include an allowlisted `$select`; a `$where` alone is not a privacy
 boundary. Official dataset or filing links leave Money on Record and must be
-labeled as such rather than proxied or cached as product data.
+labeled as such. A small, field-minimized, human-reviewed projection may be
+versioned and rendered by the product when it is necessary to inspect the claim;
+unrestricted source responses and unreviewed fields must not be cached or
+republished.
 
 Names involved in a public transaction may be necessary factual content, but
 direct contact and street-address fields are never public product fields. L0

@@ -26,7 +26,7 @@ Ask the participant to think aloud and avoid explaining the interface first.
 
 1. What claim do you think this page is making about the organization?
 2. Find the campaign total and explain what records it includes.
-3. Find the City-payment total and open the official rows behind it.
+3. Filter the City-payment table to Austin Energy, then open one official row.
 4. How confident are you that the two names refer to the same organization? What evidence would
    you need before publication?
 5. What important question can this page answer, and what question can it not answer?
@@ -34,7 +34,7 @@ Ask the participant to think aloud and avoid explaining the interface first.
 ## Pass signals
 
 - The participant notices the unverified status before treating the cross-domain link as fact.
-- Both totals and source rows can be found without assistance.
+- Both totals and individual source rows can be found without assistance.
 - The participant understands that juxtaposition is not evidence of influence or wrongdoing.
 - At least one concrete use case remains valuable without person matching.
 
@@ -42,11 +42,11 @@ Ask the participant to think aloud and avoid explaining the interface first.
 
 Status: **NOT YET TESTED — TRACKED IN ISSUE #14**
 
-Source-link verification on August 18, 2026: the official APIs returned 53 rows
+Source-link verification on September 1, 2026: the official APIs returned 53 rows
 and `$240,133.82` for the campaign filter, and 208 rows and `$106,072.10` for the
 eCheckbook filter. These match the frozen-snapshot calculations displayed in the
-prototype. The links now request only allowlisted fields, and a local scan of
-both exact frozen projections produced zero PII-pattern findings.
+site. The checked-in projections contain only the fields needed for the record
+tables, and a local scan produced zero PII-pattern findings.
 
 Record observations, confusion, requested context, and resulting changes here.
 Do not describe the beta as externally validated until an eligible participant

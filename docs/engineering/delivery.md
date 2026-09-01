@@ -167,8 +167,8 @@ snapshot for every release, but the graph will also reflect current default-
 branch data. Release attestations and attached SBOMs are the authoritative
 historical record.
 
-The Terraform plan, automatic UAT infrastructure deploy, release, attestation,
-and release-gated production infrastructure workflows are implemented. The
-browser artifact now has a separate, manually confirmed first-publish path to
-UAT. Low-cost application previews and production artifact promotion remain
-separate follow-up work.
+The Terraform plan, automatic complete UAT deploy, release, attestation, and
+release-gated complete production deploy workflows are implemented. Rendered
+site files are normal Terraform-managed environment objects: UAT uses the exact
+current `main` build and production uses the verified immutable release asset.
+Low-cost application previews remain separate follow-up work.

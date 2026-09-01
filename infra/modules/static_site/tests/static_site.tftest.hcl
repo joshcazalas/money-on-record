@@ -13,6 +13,12 @@ mock_provider "aws" {
     }
   }
 
+  mock_resource "aws_s3_object" {
+    defaults = {
+      id = "site-object"
+    }
+  }
+
   mock_resource "aws_s3_bucket" {
     defaults = {
       arn                         = "arn:aws:s3:::money-on-record-uat-123456789012-site"
@@ -35,8 +41,9 @@ run "private_static_site" {
   command = plan
 
   variables {
-    bucket_name = "money-on-record-uat-123456789012-site"
-    environment = "uat"
+    bucket_name             = "money-on-record-uat-123456789012-site"
+    environment             = "uat"
+    site_artifact_directory = "tests/fixtures/site"
   }
 
   assert {
@@ -45,6 +52,22 @@ run "private_static_site" {
       "site-response-headers-policy-id"
     )
     error_message = "The module must create the project-owned response header policy."
+  }
+
+  assert {
+    condition = (
+      aws_s3_object.site["index.html"].content_type == "text/html; charset=utf-8" &&
+      aws_s3_object.site["index.html"].cache_control == "no-cache, max-age=0, must-revalidate"
+    )
+    error_message = "Terraform must publish HTML with browser-safe metadata and revalidation."
+  }
+
+  assert {
+    condition = (
+      aws_s3_object.site["assets/site-fixture.css"].content_type == "text/css; charset=utf-8" &&
+      aws_s3_object.site["assets/site-fixture.css"].cache_control == "public, max-age=31536000, immutable"
+    )
+    error_message = "Terraform must publish content-addressed assets with immutable caching."
   }
 
   assert {

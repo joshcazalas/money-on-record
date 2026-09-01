@@ -2,8 +2,8 @@
 
 This repository contains the reproducible source-safety workspace and the first
 browser-ready **Money on Record** static site. Local work does not require
-Cloudflare or AWS credentials. The deployment workflows keep infrastructure
-changes separate from publication of the reviewed browser artifact.
+Cloudflare or AWS credentials. Each environment's Terraform apply owns both
+infrastructure and publication of the reviewed browser artifact.
 
 The initial scope is six official City of Austin open-data sources:
 
@@ -59,12 +59,18 @@ and tests are reviewed in pull requests. The archive contains only rendered
 HTML, a content-hashed stylesheet, `robots.txt`, and a source-fingerprint
 manifest—never raw downloads or candidate-review worksheets.
 
-UAT publication is an intentional second step. From the current `main` branch,
-run **Publish site artifact to UAT** and enable its default-off confirmation.
-The workflow tests and builds once without cloud credentials, verifies the exact
-archive digest in a trusted reusable job, then publishes only to the dedicated
-UAT bucket and CloudFront distribution. It does not deploy Terraform,
-production, DNS, or a release.
+The environment's Terraform apply is the complete deployment. A UAT deployment
+builds and verifies the exact current `main` artifact before AWS authentication;
+Terraform then manages every rendered S3 object alongside the bucket and
+CloudFront configuration. HTML and manifests revalidate, content-hashed assets
+are immutable, and removing a generated path removes its state-owned object.
+There is no separate upload workflow or post-apply publication step.
+
+Production uses the same path but obtains `money-on-record-site-<version>.zip`
+and its checksum from the selected immutable GitHub release. The release asset
+is verified and extracted before the saved production plan is created, so that
+single Terraform apply publishes the exact released files rather than
+rebuilding them from a branch.
 
 ## Reproducible L0 workflow
 

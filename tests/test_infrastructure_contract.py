@@ -93,7 +93,7 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
     assert "Check out pull-request source" in source
     assert "Check out trusted planning code" in source
-    assert source.count("persist-credentials: false") == 2
+    assert source.count("persist-credentials: false") == 3
     assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
     assert 'terraform -chdir="$root_directory" init' in runner
     assert "-backend-config=use_lockfile=false" in runner
@@ -301,11 +301,9 @@ def test_obsolete_oidc_workflow_can_only_probe_denials() -> None:
 
     assert "Reject obsolete AWS OIDC workflow" in source
     assert source.count("assume-role-with-web-identity") == 1
-    assert "UAT_ARTIFACT_PUBLISH_ROLE_ARN" in source
     assert "UAT_PLAN_ROLE_ARN" in source
     assert "PRODUCTION_PLAN_ROLE_ARN" in source
     assert "UAT_DEPLOY_ROLE_ARN" in source
     assert "PRODUCTION_DEPLOY_ROLE_ARN" in source
-    assert "uat-artifact-publish" in source
     assert "configure-aws-credentials" not in source
     assert "terraform" not in source.lower()

@@ -11,6 +11,13 @@ variable "aws_workload_role_arn" {
   }
 }
 
+variable "site_artifact_directory" {
+  description = "Optional rendered site directory whose files Terraform manages as environment objects."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "tags" {
   description = "Additional resource tags."
   type        = map(string)

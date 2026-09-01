@@ -93,9 +93,11 @@ Superseded queued revisions stop before AWS authentication so UAT cannot be
 rolled backward by out-of-order workflow scheduling.
 Production has no merge trigger: `terraform-deploy-production.yml` accepts only
 a published immutable semantic-version release whose tag resolves to the exact
-authorized commit. Each privileged job runs inside the matching GitHub
-Environment, creates a fresh locked saved plan, applies that runner-local plan,
-and requires a final no-change plan. Saved plans are never uploaded or retained.
+authorized commit. Each job prepares the exact browser artifact before AWS
+authentication, then runs inside the matching GitHub Environment, creates a
+fresh locked saved plan covering infrastructure and site objects, applies that
+runner-local plan, and requires a final no-change plan. Saved plans are never
+uploaded or retained.
 
 `terraform-plan.yml` calls the trusted `@main` plan entry point for every
 same-repository pull request. UAT runs first; the production plan starts only
@@ -120,21 +122,20 @@ requests automatically plan against that state. An access error is never
 treated as an absent workspace.
 
 The legacy `aws-oidc-identity-test.yml` path is deliberately untrusted. It only
-verifies that all plan, deploy, and artifact-publication hub roles deny its OIDC
-token.
+verifies that all plan and deploy hub roles deny its OIDC token.
 
-## Site artifact publication
+## Complete environment deployment
 
-Application publication is deliberately not part of a Terraform apply. The
-manual, default-off `site-publish-uat.yml` entry point builds and tests the exact
-current `main` revision in a job without AWS identity. It passes that run-local
-artifact and SHA-256 to the trusted `reusable-site-publish.yml@main` workflow.
+Terraform owns the rendered browser files as `aws_s3_object` resources in the
+same state as the bucket and CloudFront distribution. The trusted deploy job
+prepares and verifies the artifact before AWS authentication, creates one fresh
+saved plan, and applies that exact plan. The apply therefore creates or updates
+infrastructure, publishes changed files, and deletes stale state-owned files as
+one environment deployment.
 
-The reusable job verifies the caller, current revision, archive digest,
-manifest, and safe extraction before assuming the dedicated artifact roles. The
-roles can manage objects only in the exact UAT site bucket and invalidations
-only for the exact UAT distribution; they cannot access Terraform state,
-production, or Terraform execution roles. HTML and manifests use no-cache,
-content-hashed assets use immutable caching, and only browser routes are
-invalidated. HTTPS, security headers, the index, representative profile,
-official-source link, and custom 404 are smoke-tested after publication.
+UAT builds the deterministic artifact from the exact current `main` revision.
+Production downloads and verifies the site ZIP and checksum from the selected
+immutable release. HTML and manifests use revalidation cache controls while
+content-hashed assets use immutable caching, so no mutable invalidation side
+effect or separate publishing identity is required. Read-only convergence and
+browser smoke tests verify the resulting deployment after apply.

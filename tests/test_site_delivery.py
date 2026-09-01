@@ -8,118 +8,81 @@ def _workflow(name: str) -> str:
     return (WORKFLOWS / name).read_text(encoding="utf-8")
 
 
-def test_uat_site_publish_is_manual_default_off_and_builds_without_aws() -> None:
-    source = _workflow("site-publish-uat.yml")
-    build_job, publish_job = source.split("\n  publish:\n", maxsplit=1)
+def test_terraform_owns_every_rendered_site_object_and_its_cache_metadata() -> None:
+    source = (ROOT / "infra/modules/static_site/main.tf").read_text(encoding="utf-8")
+    component = (ROOT / "infra/components/static-site/main.tf").read_text(encoding="utf-8")
 
-    assert "workflow_dispatch:" in source
-    assert "confirm_uat_publication:" in source
-    assert "default: false" in source
-    assert "if: inputs.confirm_uat_publication" in build_job
-    assert "push:" not in source
-    assert "pull_request:" not in source
-    assert "schedule:" not in source
-    assert "permissions: {}" in source
-    assert "id-token: write" not in build_job
+    assert 'resource "aws_s3_object" "site"' in source
+    assert "for_each = local.site_artifact_files" in source
+    assert "source_hash            = filesha256(" in source
+    assert "etag                   = filemd5(" in source
+    assert '"public, max-age=31536000, immutable"' in source
+    assert '"no-cache, max-age=0, must-revalidate"' in source
+    assert '"text/html; charset=utf-8"' in source
+    assert '"text/css; charset=utf-8"' in source
+    assert "site_artifact_contract" in source
+    assert "complete verified browser artifact" in source
+    assert "site_artifact_directory = var.site_artifact_directory" in component
+    assert "aws cloudfront create-invalidation" not in source
+
+
+def test_uat_deploy_builds_before_aws_and_terraform_apply_is_the_deployment() -> None:
+    source = _workflow("reusable-terraform-deploy.yml")
+    prepare = source.index("Prepare the exact browser artifact for Terraform")
+    assume = source.index("Assume environment deployment hub role")
+    plan = source.index("Create locked saved plan")
+    apply = source.index("Apply the exact saved plan")
+    smoke = source.index("Smoke-test the Terraform-managed browser deployment")
+
+    assert prepare < assume < plan < apply < smoke
+    assert "TF_VAR_site_artifact_directory: ../../../build/site" in source
+    assert 'if [[ "$TF_WORKSPACE" == "production" ]]' in source
+    assert "uv run --locked mor-l0 build-site" in source
+    assert "terraform apply" in source
+    assert "terraform output -json site_object_keys" in source
+    assert "Exact index, profile, 404, redirect, and headers passed" in source
+    assert "aws s3 sync" not in source
+    assert "create-invalidation" not in source
+    assert "reusable-site-publish" not in source
+
+
+def test_production_deploy_uses_the_exact_immutable_release_site_asset() -> None:
+    source = _workflow("reusable-terraform-deploy.yml")
+
+    assert "Production requires a published immutable release for the exact revision" in source
+    assert 'release_version="${RELEASE_TAG#v}"' in source
+    assert 'gh release download "$RELEASE_TAG"' in source
+    assert '--pattern "money-on-record-site-${release_version}.zip"' in source
+    assert '--pattern "money-on-record-site-${release_version}.zip.sha256"' in source
+    assert '--pattern "provenance.sigstore.json"' in source
+    assert 'gh attestation verify "$archive"' in source
+    assert '--bundle "$release_directory/provenance.sigstore.json"' in source
+    assert "mor-l0 verify-site" in source
+    assert "--output build/site" in source
+    assert source.index('gh release download "$RELEASE_TAG"') < source.index(
+        "Assume environment deployment hub role"
+    )
+
+
+def test_pr_plan_build_is_unprivileged_then_verified_before_aws() -> None:
+    source = _workflow("reusable-terraform-plan.yml")
+    build_job, plan_job = source.split("\n  plan:\n", maxsplit=1)
+
+    assert "build-site:" in build_job
+    assert "id-token: write" not in build_job.split("\n  build-site:\n", maxsplit=1)[1]
     assert "pytest tests/test_site.py" in build_job
     assert "mor-l0 build-site" in build_job
     assert "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" in build_job
-    assert "compression-level: 0" in build_job
-    assert "retention-days: 1" in build_job
-    assert "id-token: write" in publish_job
-    assert (
-        "uses: joshcazalas/money-on-record/.github/workflows/reusable-site-publish.yml@main"
-        in publish_job
-    )
-    assert "artifact_digest: ${{ needs.build.outputs.artifact_digest }}" in publish_job
-    assert "revision: ${{ github.sha }}" in publish_job
+    assert "actions: read" in plan_job
+    assert "Download proposed browser artifact" in plan_job
+    assert "Verify the proposed browser artifact with trusted code" in plan_job
+    assert "TF_VAR_site_artifact_directory: ../../../build/site" in plan_job
+    assert plan_job.index(
+        "Verify the proposed browser artifact with trusted code"
+    ) < plan_job.index("Assume environment plan hub role")
 
 
-def test_trusted_site_publisher_binds_caller_revision_artifact_and_uat() -> None:
-    source = _workflow("reusable-site-publish.yml")
-
-    for expected in (
-        "CALLER_EVENT",
-        "CALLER_ACTOR_ID",
-        "CALLER_OWNER_ID",
-        "CALLER_REPOSITORY_ID",
-        "CALLER_REF",
-        "EXPECTED_ACTOR_ID: '73436834'",
-        "EXPECTED_REPOSITORY_ID: '1338755168'",
-        '[[ "$CALLER_EVENT" == "workflow_dispatch" ]]',
-        '[[ "$CALLER_REF" == "refs/heads/main" ]]',
-        '[[ "$PUBLISH_REVISION" == "$CALLER_SHA" ]]',
-        "git/ref/heads/main",
-        "Only the current main revision may be published to UAT",
-        "environment: uat",
-        "EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'",
-        "EXPECTED_WORKLOAD_ACCOUNT_ID: '732006412638'",
-        "EXPECTED_SITE_BUCKET: money-on-record-uat-732006412638-site",
-        "EXPECTED_SITE_DISTRIBUTION_ID: EEZ2CUTI93E10",
-        "role/MoneyOnRecordArtifactPublishUat",
-        "role/MoneyOnRecordArtifactPublish",
-    ):
-        assert expected in source
-
-    assert "cancel-in-progress: false" in source
-    assert "environment: production" not in source
-    assert "terraform apply" not in source
-    assert "pull_request:" not in source
-    assert "push:" not in source
-
-
-def test_trusted_site_publisher_verifies_before_aws_and_proves_isolation() -> None:
-    source = _workflow("reusable-site-publish.yml")
-    download = source.index("Download run-local site artifact")
-    verify = source.index("Verify and extract the authorized artifact")
-    assume = source.index("Assume UAT artifact publishing hub role")
-
-    assert download < verify < assume
-    assert "money-on-record-site.zip money-on-record-site.zip.sha256" in source
-    assert '--expected-sha256 "$ARTIFACT_DIGEST"' in source
-    assert source.count("configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c") == 2
-    assert "allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}" in source
-    assert "allowed-account-ids: ${{ env.EXPECTED_WORKLOAD_ACCOUNT_ID }}" in source
-    assert "role-chaining: true" in source
-    assert "FORBIDDEN_STATE_BUCKET" in source
-    assert "FORBIDDEN_STATE_KEY" in source
-    assert "FORBIDDEN_WORKLOAD_ROLE_ARN" in source
-    assert "The artifact role unexpectedly read Terraform state" in source
-    assert "The UAT artifact role unexpectedly accessed the production site bucket" in source
-
-
-def test_uat_publish_uses_scoped_cache_deletion_invalidation_and_smoke_tests() -> None:
-    source = _workflow("reusable-site-publish.yml")
-
-    assert source.count('"s3://${SITE_BUCKET}') == 2
-    assert source.count("--delete") == 2
-    assert "--exclude 'assets/*'" in source
-    assert "no-cache, max-age=0, must-revalidate" in source
-    assert "public, max-age=31536000, immutable" in source
-    assert '--distribution-id "$SITE_DISTRIBUTION_ID"' in source
-    assert "--paths '/*'" not in source
-    for path in (
-        "'/'",
-        "'/index.html'",
-        "'/404.html'",
-        "'/robots.txt'",
-        "'/site-manifest.json'",
-        "'/profiles/*'",
-    ):
-        assert path in source
-    assert "aws cloudfront wait invalidation-completed" in source
-    assert "content-security-policy:" in source
-    assert "permissions-policy:" in source
-    assert "referrer-policy: no-referrer" in source
-    assert "x-content-type-options: nosniff" in source
-    assert "x-robots-tag: noindex, nofollow, noarchive" in source
-    assert "/profiles/austin-board-of-realtors/index.html" in source
-    assert "data.austintexas.gov/resource/3kfv-biw6.json" in source
-    assert "There is no profile at this address" in source
-    assert "Verified UAT site publication" in source
-
-
-def test_ci_and_releases_build_the_same_static_site_artifact() -> None:
+def test_ci_and_releases_build_the_deterministic_site_artifact() -> None:
     ci = _workflow("ci.yml")
     release = _workflow("release.yml")
 
@@ -134,7 +97,7 @@ def test_ci_and_releases_build_the_same_static_site_artifact() -> None:
 
 
 def test_cloudfront_serves_security_headers_and_a_browser_404() -> None:
-    source = (ROOT / "infra" / "modules" / "static_site" / "main.tf").read_text(encoding="utf-8")
+    source = (ROOT / "infra/modules/static_site/main.tf").read_text(encoding="utf-8")
 
     assert 'response_headers_policy_key = "site-security"' in source
     assert "\"default-src 'none'\"" in source
@@ -144,3 +107,8 @@ def test_cloudfront_serves_security_headers_and_a_browser_404() -> None:
     assert 'referrer_policy = "no-referrer"' in source
     assert 'response_page_path    = "/404.html"' in source
     assert source.count("response_code         = 404") == 2
+
+
+def test_no_parallel_site_publisher_workflow_remains() -> None:
+    assert not (WORKFLOWS / "site-publish-uat.yml").exists()
+    assert not (WORKFLOWS / "reusable-site-publish.yml").exists()

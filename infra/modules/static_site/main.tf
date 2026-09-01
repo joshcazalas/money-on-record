@@ -33,6 +33,10 @@ locals {
     "payment=()",
     "usb=()",
   ])
+  site_artifact_files = var.site_artifact_directory == null ? toset([]) : fileset(
+    var.site_artifact_directory,
+    "**",
+  )
   tags = merge(var.tags, {
     Component   = "static-site"
     Environment = var.environment
@@ -212,4 +216,46 @@ resource "aws_s3_bucket_policy" "site" {
       },
     ]
   })
+}
+
+resource "terraform_data" "site_artifact_contract" {
+  input = sort(tolist(local.site_artifact_files))
+
+  lifecycle {
+    precondition {
+      condition = var.site_artifact_directory == null || (
+        contains(local.site_artifact_files, "index.html") &&
+        contains(local.site_artifact_files, "404.html") &&
+        contains(local.site_artifact_files, "robots.txt") &&
+        contains(local.site_artifact_files, "site-manifest.json") &&
+        anytrue([for path in local.site_artifact_files : startswith(path, "assets/site-") && endswith(path, ".css")]) &&
+        anytrue([for path in local.site_artifact_files : startswith(path, "profiles/") && endswith(path, "/index.html")])
+      )
+      error_message = "site_artifact_directory must contain the complete verified browser artifact."
+    }
+  }
+}
+
+resource "aws_s3_object" "site" {
+  for_each = local.site_artifact_files
+
+  bucket = module.site_bucket.s3_bucket_id
+  key    = each.value
+  source = "${var.site_artifact_directory}/${each.value}"
+
+  cache_control = startswith(each.value, "assets/") ? (
+    "public, max-age=31536000, immutable"
+  ) : "no-cache, max-age=0, must-revalidate"
+  content_language = endswith(each.value, ".html") ? "en" : null
+  content_type = endswith(each.value, ".html") ? "text/html; charset=utf-8" : (
+    endswith(each.value, ".css") ? "text/css; charset=utf-8" : (
+      endswith(each.value, ".json") ? "application/json; charset=utf-8" : "text/plain; charset=utf-8"
+    )
+  )
+  etag                   = filemd5("${var.site_artifact_directory}/${each.value}")
+  server_side_encryption = "AES256"
+  source_hash            = filesha256("${var.site_artifact_directory}/${each.value}")
+  tags                   = local.tags
+
+  depends_on = [aws_s3_bucket_policy.site, terraform_data.site_artifact_contract]
 }

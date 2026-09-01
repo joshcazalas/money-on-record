@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      UAT_ARTIFACT_PUBLISH_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordArtifactPublishUat
       PRODUCTION_DEPLOY_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordDeployProd
       PRODUCTION_PLAN_ROLE_ARN: ${{ vars.AWS_PLAN_ROLE_ARN_PRODUCTION }}
       UAT_DEPLOY_ROLE_ARN: arn:aws:iam::${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}:role/MoneyOnRecordDeployUat
@@ -30,7 +29,6 @@ jobs:
           set -euo pipefail
           expected_prefix="arn:aws:iam::245459924498:role/MoneyOnRecord"
           for role_arn in \
-            "$UAT_ARTIFACT_PUBLISH_ROLE_ARN" \
             "$UAT_PLAN_ROLE_ARN" \
             "$PRODUCTION_PLAN_ROLE_ARN" \
             "$UAT_DEPLOY_ROLE_ARN" \
@@ -80,7 +78,6 @@ jobs:
           }
 
           assert_denied "$UAT_PLAN_ROLE_ARN" uat-plan
-          assert_denied "$UAT_ARTIFACT_PUBLISH_ROLE_ARN" uat-artifact-publish
           assert_denied "$PRODUCTION_PLAN_ROLE_ARN" production-plan
           assert_denied "$UAT_DEPLOY_ROLE_ARN" uat-deploy
           assert_denied "$PRODUCTION_DEPLOY_ROLE_ARN" production-deploy

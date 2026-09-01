@@ -1,0 +1,2547 @@
+{
+  "id" : "b2pc-2s8n",
+  "name" : "Campaign Finance - Report Detail",
+  "assetType" : "dataset",
+  "attribution" : "City of Austin, Texas - data.austintexas.gov",
+  "averageRating" : 0,
+  "category" : "City Government",
+  "createdAt" : 1452791835,
+  "description" : "This dataset contains data about the Campaign Finance Report received by a filer.  The Reports table contains information about the type of report filed, the due date, original filing date, and transaction totals.  \n\nTo access the Transactions table, where individual transactions are listed, please go to:  <a aria-label=\"View the Campaign Finance Transaction Detail Data Set in a new window\" href=\"https://data.austintexas.gov/Government/Campaign-Finance-Transaction-Detail/g4yx-aw9r\" target=\"_blank\">Campaign Finance - Transaction Detail</a>\n\nA data dictionary for this dataset is available at <a aria-label=\"View Campaign Finance Data\nData Dictionary in a new window\" href=\"http://services.austintexas.gov/edims/document.cfm?id=247730\" target=\"_blank\">Campaign Finance Data - Data Dictionary</a>\n\n* This dataset may not receive new data daily. \"Data Last Updated\" reflects the date of when new data was published.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 4386,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "PUBLIC_DOMAIN",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 41047163,
+  "provenance" : "official",
+  "publicationAppendEnabled" : true,
+  "publicationDate" : 1736550253,
+  "publicationGroup" : 7067742,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1788249765,
+  "rowsUpdatedBy" : "n58v-d7z9",
+  "tableId" : 19733344,
+  "totalTimesRated" : 0,
+  "viewCount" : 3187,
+  "viewLastModified" : 1788249760,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1551279792,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 6677405,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1551279792,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "failureCount" : 0,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "xwt9-6iq9",
+      "displayName" : "City of Austin - Elections"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 604005260,
+    "name" : "Filer_Name",
+    "dataTypeName" : "text",
+    "description" : "Name of individual, committee, or entity filing the report. This name is a standardized format used by the Office of the City Clerk to ensure all of a filer's reports are accessible under a single name",
+    "fieldName" : "filer_name",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834786,
+    "width" : 192,
+    "cachedContents" : {
+      "non_null" : "1095",
+      "largest" : "Xie, Selena",
+      "null" : "86",
+      "top" : [ {
+        "item" : "Home Builders Association of Greater Austin HOME-PAC Personal",
+        "count" : "90"
+      }, {
+        "item" : "Home Builders Association of Greater Austin HOME-PAC Corporate",
+        "count" : "90"
+      }, {
+        "item" : "Austin Firefighters Public Safety Fund",
+        "count" : "88"
+      }, {
+        "item" : "Austin Fire Fighters PAC",
+        "count" : "88"
+      }, {
+        "item" : "Austinites for Equity",
+        "count" : "60"
+      }, {
+        "item" : "The Real Estate Council of Austin, Inc. Advancing Democracy PAC",
+        "count" : "48"
+      }, {
+        "item" : "Austin Apartment Association PAC",
+        "count" : "39"
+      }, {
+        "item" : "Siegel, Mike",
+        "count" : "30"
+      }, {
+        "item" : "Equity Action",
+        "count" : "28"
+      }, {
+        "item" : "SafeTX PAC",
+        "count" : "22"
+      }, {
+        "item" : "Qadri, Zohaib",
+        "count" : "22"
+      }, {
+        "item" : "Vibrant Austin PAC",
+        "count" : "20"
+      }, {
+        "item" : "Guzman, Monica A.",
+        "count" : "20"
+      }, {
+        "item" : "Austin Board of Realtors PAC",
+        "count" : "20"
+      }, {
+        "item" : "Save Austin Now PAC",
+        "count" : "20"
+      }, {
+        "item" : "Austin United PAC",
+        "count" : "15"
+      }, {
+        "item" : "Watson, Kirk P.",
+        "count" : "14"
+      }, {
+        "item" : "Fuentes, Vanessa",
+        "count" : "14"
+      }, {
+        "item" : "Bowen, Jeffery L.",
+        "count" : "12"
+      }, {
+        "item" : "Carollo Engineers Inc. PAC",
+        "count" : "11"
+      } ],
+      "smallest" : "2040 PAC, inc.",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005261,
+    "name" : "Form",
+    "dataTypeName" : "text",
+    "description" : "The type of form filed.",
+    "fieldName" : "form_type",
+    "position" : 2,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834788,
+    "width" : 208,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "SPAC - Specific-Purpose Committee Campaign Finance Report",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MPAC - Monthly Filing General-Purpose Committee Campaign Finance Report",
+        "count" : "510"
+      }, {
+        "item" : "COH - Candidate /Officeholder Campaign Finance Report",
+        "count" : "254"
+      }, {
+        "item" : "GPAC - General-Purpose Committee Campaign Finance Report",
+        "count" : "151"
+      }, {
+        "item" : "SPAC - Specific-Purpose Committee Campaign Finance Report",
+        "count" : "84"
+      }, {
+        "item" : "CORCOH - Correction Affidavit For Candidate/Officeholder",
+        "count" : "50"
+      }, {
+        "item" : "ATX1 - Report of Direct Campaign Expenditures: Schedule ATX.1",
+        "count" : "41"
+      }, {
+        "item" : "CORPAC - Correction Affidavit For Political Committee",
+        "count" : "26"
+      }, {
+        "item" : "COHFR - Candidate/Officeholder Designation Of Final Report",
+        "count" : "23"
+      }, {
+        "item" : "PACATX7 - Pre-Election Report Political Committees: Form ATX.7PAC",
+        "count" : "22"
+      }, {
+        "item" : "PACDR - Political Committee Affidavit Of Dissolution",
+        "count" : "9"
+      }, {
+        "item" : "COHATX7 - Pre-Election Report Candidates and Office Holders: Form ATX.7COH",
+        "count" : "6"
+      }, {
+        "item" : "ATX8 - Report of Covered Transfers Supporting Direct Campaign Expenditures: Schedule ATX.8",
+        "count" : "3"
+      }, {
+        "item" : "CORATX1 - Correction Affidavit For Report of Direct Campaign Expenditures",
+        "count" : "2"
+      } ],
+      "smallest" : "ATX1 - Report of Direct Campaign Expenditures: Schedule ATX.1",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005262,
+    "name" : "Report_Type",
+    "dataTypeName" : "text",
+    "description" : "The primary report type as listed on the form.",
+    "fieldName" : "report_type",
+    "position" : 3,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834801,
+    "width" : 232,
+    "cachedContents" : {
+      "non_null" : "673",
+      "largest" : "Terminate treasurer appointment (Final Report) - July 15th semiannual",
+      "null" : "508",
+      "top" : [ {
+        "item" : "January 15th semiannual",
+        "count" : "199"
+      }, {
+        "item" : "July 15th semiannual",
+        "count" : "194"
+      }, {
+        "item" : "8th day before election",
+        "count" : "71"
+      }, {
+        "item" : "30th day before election",
+        "count" : "61"
+      }, {
+        "item" : "Report of Direct Campaign Expenditures - Schedule ATX.1",
+        "count" : "43"
+      }, {
+        "item" : "Pre-Election Report Political Committees - Form ATX.7PAC",
+        "count" : "22"
+      }, {
+        "item" : "Runoff",
+        "count" : "14"
+      }, {
+        "item" : "10th day after campaign treasurer termination",
+        "count" : "8"
+      }, {
+        "item" : "Pre-Election Report Candidates and Office Holders - Form ATX.7COH",
+        "count" : "6"
+      }, {
+        "item" : "CF Monthly Report - August",
+        "count" : "6"
+      }, {
+        "item" : "Terminate treasurer appointment (Final Report) - January 15th semiannual",
+        "count" : "6"
+      }, {
+        "item" : "CF Monthly Report - October",
+        "count" : "5"
+      }, {
+        "item" : "CF Monthly Report - April",
+        "count" : "5"
+      }, {
+        "item" : "CF Monthly Report - February",
+        "count" : "4"
+      }, {
+        "item" : "CF Monthly Report - May",
+        "count" : "4"
+      }, {
+        "item" : "Terminate treasurer appointment (Final Report) - July 15th semiannual",
+        "count" : "4"
+      }, {
+        "item" : "CF Monthly Report - November",
+        "count" : "4"
+      }, {
+        "item" : "CF Monthly Report - June",
+        "count" : "3"
+      }, {
+        "item" : "Report of Covered Transfers Supporting Direct Campaign Expenditures - Schedule ATX.8",
+        "count" : "3"
+      }, {
+        "item" : "CF Monthly Report - December",
+        "count" : "2"
+      } ],
+      "smallest" : "10th day after campaign treasurer termination",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005263,
+    "name" : "Report_Type2",
+    "dataTypeName" : "text",
+    "description" : "Secondary report type as listed on the form submitted, if applicable.",
+    "fieldName" : "report_type2",
+    "position" : 4,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834802,
+    "width" : 156,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "1181",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005264,
+    "name" : "View_Report",
+    "dataTypeName" : "url",
+    "description" : "A link to view a PDF version of the report filed with the Office of the City Clerk.",
+    "fieldName" : "link_to_report",
+    "position" : 5,
+    "renderTypeName" : "url",
+    "tableColumnId" : 33834787,
+    "width" : 167,
+    "format" : {
+      "align" : "left"
+    },
+    "subColumnTypes" : [ "url", "description" ]
+  }, {
+    "id" : 604005265,
+    "name" : "Date_Filed",
+    "dataTypeName" : "calendar_date",
+    "description" : "Date the structured data file was received by the Office of the City Clerk",
+    "fieldName" : "date_filed",
+    "position" : 6,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 33834784,
+    "width" : 144,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "2026-08-31T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2024-10-07T00:00:00.000",
+        "count" : "41"
+      }, {
+        "item" : "2023-01-17T00:00:00.000",
+        "count" : "36"
+      }, {
+        "item" : "2024-10-28T00:00:00.000",
+        "count" : "34"
+      }, {
+        "item" : "2026-07-15T00:00:00.000",
+        "count" : "33"
+      }, {
+        "item" : "2026-01-15T00:00:00.000",
+        "count" : "33"
+      }, {
+        "item" : "2025-01-15T00:00:00.000",
+        "count" : "30"
+      }, {
+        "item" : "2026-07-09T00:00:00.000",
+        "count" : "24"
+      }, {
+        "item" : "2024-07-15T00:00:00.000",
+        "count" : "24"
+      }, {
+        "item" : "2025-07-15T00:00:00.000",
+        "count" : "23"
+      }, {
+        "item" : "2024-01-16T00:00:00.000",
+        "count" : "21"
+      }, {
+        "item" : "2023-07-17T00:00:00.000",
+        "count" : "18"
+      }, {
+        "item" : "2025-10-06T00:00:00.000",
+        "count" : "17"
+      }, {
+        "item" : "2025-10-27T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2023-02-06T00:00:00.000",
+        "count" : "12"
+      }, {
+        "item" : "2024-11-05T00:00:00.000",
+        "count" : "11"
+      }, {
+        "item" : "2024-12-06T00:00:00.000",
+        "count" : "10"
+      }, {
+        "item" : "2024-12-05T00:00:00.000",
+        "count" : "10"
+      }, {
+        "item" : "2024-10-30T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2025-07-16T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2026-07-14T00:00:00.000",
+        "count" : "9"
+      } ],
+      "smallest" : "2023-01-03T00:00:00.000",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005266,
+    "name" : "Filer_Address",
+    "dataTypeName" : "text",
+    "description" : "The filer's street or mailing address.",
+    "fieldName" : "filer_address_2",
+    "position" : 7,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33920252,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "PO Box 9123",
+      "null" : "0",
+      "top" : [ {
+        "item" : "7800 Shoal Creek Blvd, Ste 225E",
+        "count" : "262"
+      }, {
+        "item" : "7537 Cameron Road",
+        "count" : "176"
+      }, {
+        "item" : "1812 Centre Creek Dr Suite 310",
+        "count" : "60"
+      }, {
+        "item" : "98 San Jacinto Blvd., Suite 510",
+        "count" : "48"
+      }, {
+        "item" : "8620 Burnet Road, #475",
+        "count" : "39"
+      }, {
+        "item" : "PO Box 9123",
+        "count" : "30"
+      }, {
+        "item" : "PO Box 300812",
+        "count" : "28"
+      }, {
+        "item" : "P.O. Box 4944",
+        "count" : "22"
+      }, {
+        "item" : "3112 Windsor Rd, Ste A #131",
+        "count" : "22"
+      }, {
+        "item" : "3110 Manor Rd, Suite H",
+        "count" : "21"
+      }, {
+        "item" : "8400 Jamestown Dr Apt 322",
+        "count" : "20"
+      }, {
+        "item" : "807 Brazos St., Suite 306",
+        "count" : "20"
+      }, {
+        "item" : "PO Box 2392",
+        "count" : "20"
+      }, {
+        "item" : "PO Box 146",
+        "count" : "17"
+      }, {
+        "item" : "4800 Spicewood Springs Rd.",
+        "count" : "16"
+      }, {
+        "item" : "PO Box 17221",
+        "count" : "14"
+      }, {
+        "item" : "PO Box 300903",
+        "count" : "14"
+      }, {
+        "item" : "8404 Caspian Drive",
+        "count" : "12"
+      }, {
+        "item" : "3150 Bristol St., Ste. 500, c/o Krista Anderson",
+        "count" : "11"
+      }, {
+        "item" : "4303 Cumbria Ln",
+        "count" : "11"
+      } ],
+      "smallest" : "1023 WISTERIA TRL",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : { }
+  }, {
+    "id" : 604005267,
+    "name" : "Filer_City_State_Zip",
+    "dataTypeName" : "text",
+    "description" : "The filer’s city.",
+    "fieldName" : "filer_city",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834791,
+    "width" : 140,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "West Lake Hills, TX, 78746",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Austin, TX, 78757",
+        "count" : "316"
+      }, {
+        "item" : "Austin, TX, 78752",
+        "count" : "176"
+      }, {
+        "item" : "Austin, TX, 78703",
+        "count" : "80"
+      }, {
+        "item" : "Austin, TX, 78701",
+        "count" : "72"
+      }, {
+        "item" : "Austin, TX, 78754",
+        "count" : "60"
+      }, {
+        "item" : "Austin, TX, 78723",
+        "count" : "50"
+      }, {
+        "item" : "Austin, TX, 78768",
+        "count" : "36"
+      }, {
+        "item" : "Austin, TX, 78759",
+        "count" : "35"
+      }, {
+        "item" : "Austin, TX, 78704",
+        "count" : "33"
+      }, {
+        "item" : "Austin, TX, 78766",
+        "count" : "31"
+      }, {
+        "item" : "Austin, TX, 78767",
+        "count" : "22"
+      }, {
+        "item" : "Austin, TX, 78702",
+        "count" : "21"
+      }, {
+        "item" : "Austin, TX, 78731",
+        "count" : "20"
+      }, {
+        "item" : "Austin, TX, 78758",
+        "count" : "20"
+      }, {
+        "item" : "Austin, TX, 78749",
+        "count" : "17"
+      }, {
+        "item" : "Austin, TX, 78722",
+        "count" : "16"
+      }, {
+        "item" : "Austin, TX, 78760",
+        "count" : "14"
+      }, {
+        "item" : "Austin, TX, 78705",
+        "count" : "14"
+      }, {
+        "item" : "Austin, TX, 78727",
+        "count" : "11"
+      }, {
+        "item" : "Costa Mesa, CA, 92626",
+        "count" : "11"
+      } ],
+      "smallest" : "Austin, TX, 78701",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005268,
+    "name" : "Report_ID",
+    "dataTypeName" : "text",
+    "description" : "Unique identifier for the specific report - can be used to link individual transactions to a specific report.",
+    "fieldName" : "report_id",
+    "position" : 9,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834783,
+    "width" : 153,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "R20260726100722447",
+      "null" : "0",
+      "top" : [ {
+        "item" : "R20240726100718443",
+        "count" : "4"
+      }, {
+        "item" : "R20240926100718953",
+        "count" : "4"
+      }, {
+        "item" : "R20250526100720325",
+        "count" : "4"
+      }, {
+        "item" : "R20250626100720532",
+        "count" : "4"
+      }, {
+        "item" : "R20231026100716781",
+        "count" : "4"
+      }, {
+        "item" : "R20230126100715295",
+        "count" : "4"
+      }, {
+        "item" : "R20241026100719009",
+        "count" : "4"
+      }, {
+        "item" : "R20221226100715261",
+        "count" : "4"
+      }, {
+        "item" : "R20230326100716021",
+        "count" : "4"
+      }, {
+        "item" : "R20260226100722253",
+        "count" : "4"
+      }, {
+        "item" : "R20250926100720898",
+        "count" : "4"
+      }, {
+        "item" : "R20250126100719436",
+        "count" : "4"
+      }, {
+        "item" : "R20240226100717270",
+        "count" : "4"
+      }, {
+        "item" : "R20230626100716409",
+        "count" : "4"
+      }, {
+        "item" : "R20230726100716443",
+        "count" : "4"
+      }, {
+        "item" : "R20241126100719128",
+        "count" : "4"
+      }, {
+        "item" : "R20230226100715565",
+        "count" : "4"
+      }, {
+        "item" : "R20260526100722252",
+        "count" : "4"
+      }, {
+        "item" : "R20260426100722256",
+        "count" : "4"
+      }, {
+        "item" : "R20230526100716167",
+        "count" : "4"
+      } ],
+      "smallest" : "R20220101100714161",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005269,
+    "name" : "Treasurer_Name",
+    "dataTypeName" : "text",
+    "description" : "Name of the filer's campaign treasurer as listed on the report filed with the Office of the City Clerk.",
+    "fieldName" : "treasurer_name",
+    "position" : 10,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834795,
+    "width" : 226,
+    "cachedContents" : {
+      "non_null" : "1180",
+      "largest" : "Worthge, Brian M.",
+      "null" : "1",
+      "top" : [ {
+        "item" : "Glenn, David",
+        "count" : "133"
+      }, {
+        "item" : "Jackson, Taylor",
+        "count" : "133"
+      }, {
+        "item" : "Coulter, Rachel",
+        "count" : "48"
+      }, {
+        "item" : "Pope, Gregory",
+        "count" : "44"
+      }, {
+        "item" : "Finkenbinder, Adam",
+        "count" : "44"
+      }, {
+        "item" : "Nicks, Robert S.",
+        "count" : "44"
+      }, {
+        "item" : "Lake, Joshua",
+        "count" : "44"
+      }, {
+        "item" : "Blair, Emily",
+        "count" : "39"
+      }, {
+        "item" : "Kirfman, Jack",
+        "count" : "21"
+      }, {
+        "item" : "Korgel, Skyler",
+        "count" : "20"
+      }, {
+        "item" : "Chenevert, Emily",
+        "count" : "20"
+      }, {
+        "item" : "Guthrie, Carol A.",
+        "count" : "18"
+      }, {
+        "item" : "Blanton, Christopher",
+        "count" : "18"
+      }, {
+        "item" : "Chevalier, Joi",
+        "count" : "15"
+      }, {
+        "item" : "Payne, Tanya",
+        "count" : "15"
+      }, {
+        "item" : "Wick, Jim",
+        "count" : "15"
+      }, {
+        "item" : "Webber, Rebecca R.",
+        "count" : "14"
+      }, {
+        "item" : "Mendoza, Rosie",
+        "count" : "14"
+      }, {
+        "item" : "Mitchell, Kathleen",
+        "count" : "14"
+      }, {
+        "item" : "Garcia, Blanca E. Zamora",
+        "count" : "14"
+      } ],
+      "smallest" : "Abraham, Farrah L.",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005270,
+    "name" : "Treasurer_Address",
+    "dataTypeName" : "text",
+    "description" : "Address of the filer's campaign treasurer.",
+    "fieldName" : "treasurer_address_2",
+    "position" : 11,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33920867,
+    "width" : 173,
+    "cachedContents" : {
+      "non_null" : "1172",
+      "largest" : "PO Box 50038",
+      "null" : "9",
+      "top" : [ {
+        "item" : "7800 Shoal Creek Blvd, Ste 225E",
+        "count" : "133"
+      }, {
+        "item" : "7800 Shoal Creek, Suite 225E",
+        "count" : "89"
+      }, {
+        "item" : "7537 Cameron Road",
+        "count" : "88"
+      }, {
+        "item" : "98 San Jacinto Blvd., Suite 510",
+        "count" : "48"
+      }, {
+        "item" : "1310 E Hempstead Street",
+        "count" : "44"
+      }, {
+        "item" : "11607 Karst Ln.",
+        "count" : "44"
+      }, {
+        "item" : "7800 Shoal Creek Blvd, Suite 225E",
+        "count" : "44"
+      }, {
+        "item" : "8620 Burnet Road, #475",
+        "count" : "39"
+      }, {
+        "item" : "11002 Point Clear Ct",
+        "count" : "30"
+      }, {
+        "item" : "1812 Centre Creek Dr Suite 310",
+        "count" : "21"
+      }, {
+        "item" : "1812 Centre Creek Dr, Suite 310",
+        "count" : "18"
+      }, {
+        "item" : "1812 Centre Creek Dr., STE. 310",
+        "count" : "18"
+      }, {
+        "item" : "4800 Spicewood Springs Rd.",
+        "count" : "16"
+      }, {
+        "item" : "8005 Yokohama Terrace",
+        "count" : "14"
+      }, {
+        "item" : "4228 Threadgill Street",
+        "count" : "14"
+      }, {
+        "item" : "3412 Green Emerald Terrace",
+        "count" : "14"
+      }, {
+        "item" : "1403 Ulit Ave",
+        "count" : "14"
+      }, {
+        "item" : "4772 E Yager Ln, Apt. 4208",
+        "count" : "13"
+      }, {
+        "item" : "815 Brazos Street, Suite 701",
+        "count" : "11"
+      }, {
+        "item" : "1102 Claire Ave",
+        "count" : "11"
+      } ],
+      "smallest" : "1010 Austin Highlands Blvd",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005295,
+    "name" : "Treasurer_City_State_Zip",
+    "dataTypeName" : "text",
+    "description" : "City of the filer’s campaign treasurer.",
+    "fieldName" : "treasurer_city_state_zip",
+    "position" : 12,
+    "renderTypeName" : "text",
+    "tableColumnId" : 156257288,
+    "width" : 163,
+    "cachedContents" : {
+      "non_null" : "1180",
+      "largest" : "Washington, DC, 20001",
+      "null" : "1",
+      "top" : [ {
+        "item" : "Austin, TX, 78757",
+        "count" : "311"
+      }, {
+        "item" : "Austin, TX, 78701",
+        "count" : "100"
+      }, {
+        "item" : "Austin, TX, 78754",
+        "count" : "60"
+      }, {
+        "item" : "Austin, TX, 78723",
+        "count" : "55"
+      }, {
+        "item" : "Austin, TX, 78747",
+        "count" : "50"
+      }, {
+        "item" : "Austin, TX, 78752",
+        "count" : "45"
+      }, {
+        "item" : "Austin, TX, 78748",
+        "count" : "45"
+      }, {
+        "item" : "Austin , TX, 78752",
+        "count" : "44"
+      }, {
+        "item" : "Giddings, TX, 78942",
+        "count" : "44"
+      }, {
+        "item" : "Austin, TX, 78702",
+        "count" : "40"
+      }, {
+        "item" : "Austin, TX, 78703",
+        "count" : "34"
+      }, {
+        "item" : "Austin, TX, 78759",
+        "count" : "33"
+      }, {
+        "item" : "Austin, TX, 78704",
+        "count" : "28"
+      }, {
+        "item" : "Austin, TX, 78722",
+        "count" : "25"
+      }, {
+        "item" : "Austin, TX, 78731",
+        "count" : "24"
+      }, {
+        "item" : "Austin, TX, 78735",
+        "count" : "21"
+      }, {
+        "item" : "Austin, TX, 78744",
+        "count" : "17"
+      }, {
+        "item" : "Austin, TX, 78758",
+        "count" : "15"
+      }, {
+        "item" : "Austin, TX, 78746",
+        "count" : "14"
+      }, {
+        "item" : "Austin, TX, 78745",
+        "count" : "14"
+      } ],
+      "smallest" : "Austin, TX, 78653",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005272,
+    "name" : "Date_Due",
+    "dataTypeName" : "calendar_date",
+    "description" : "Due date of the report, if applicable.",
+    "fieldName" : "date_due",
+    "position" : 13,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 33834785,
+    "width" : 141,
+    "cachedContents" : {
+      "non_null" : "1133",
+      "largest" : "2026-09-07T00:00:00.000",
+      "null" : "48",
+      "top" : [ {
+        "item" : "2026-07-15T00:00:00.000",
+        "count" : "424"
+      }, {
+        "item" : "2026-08-05T00:00:00.000",
+        "count" : "301"
+      }, {
+        "item" : "2026-09-07T00:00:00.000",
+        "count" : "222"
+      }, {
+        "item" : "2025-01-15T00:00:00.000",
+        "count" : "27"
+      }, {
+        "item" : "2025-07-15T00:00:00.000",
+        "count" : "25"
+      }, {
+        "item" : "2023-01-17T00:00:00.000",
+        "count" : "20"
+      }, {
+        "item" : "2024-10-28T00:00:00.000",
+        "count" : "11"
+      }, {
+        "item" : "2025-06-11T00:00:00.000",
+        "count" : "10"
+      }, {
+        "item" : "2025-09-18T00:00:00.000",
+        "count" : "10"
+      }, {
+        "item" : "2024-12-31T00:00:00.000",
+        "count" : "10"
+      }, {
+        "item" : "2025-10-27T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2023-07-17T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2025-10-28T00:00:00.000",
+        "count" : "8"
+      }, {
+        "item" : "2023-04-28T00:00:00.000",
+        "count" : "6"
+      }, {
+        "item" : "2022-10-31T00:00:00.000",
+        "count" : "5"
+      }, {
+        "item" : "2024-09-16T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2024-01-15T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2024-10-29T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2024-12-05T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2023-01-02T00:00:00.000",
+        "count" : "3"
+      } ],
+      "smallest" : "2022-10-31T00:00:00.000",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005273,
+    "name" : "Name_as_Reported",
+    "dataTypeName" : "text",
+    "description" : "Name of the filer, committee, or entity as listed on the report filed with the Office of the City Clerk.",
+    "fieldName" : "name_as_reported",
+    "position" : 14,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834790,
+    "width" : 228,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "Xie, Selena",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Home Builders Association of Greater Austin HOME-PAC Corporate",
+        "count" : "178"
+      }, {
+        "item" : "Austin Firefighters Public Safety Fund",
+        "count" : "88"
+      }, {
+        "item" : "Austin Firefighters PAC",
+        "count" : "88"
+      }, {
+        "item" : "Home Builders Association of Greater Austin HOME-PAC Personal",
+        "count" : "88"
+      }, {
+        "item" : "Austinites for Equity",
+        "count" : "60"
+      }, {
+        "item" : "The Real Estate Council of Austin, Inc. Advancing Democracy PAC",
+        "count" : "48"
+      }, {
+        "item" : "Austin Apartment Association",
+        "count" : "39"
+      }, {
+        "item" : "Siegel, Mike",
+        "count" : "30"
+      }, {
+        "item" : "Equity Action",
+        "count" : "28"
+      }, {
+        "item" : "SafeTX Political Action Committee",
+        "count" : "22"
+      }, {
+        "item" : "Qadri, Zohaib A.",
+        "count" : "22"
+      }, {
+        "item" : "Vibrant Austin PAC",
+        "count" : "20"
+      }, {
+        "item" : "Austin Board of Realtors PAC",
+        "count" : "20"
+      }, {
+        "item" : "Guzman, Monica A.",
+        "count" : "20"
+      }, {
+        "item" : "Save Austin Now PAC",
+        "count" : "20"
+      }, {
+        "item" : "Austin United PAC",
+        "count" : "15"
+      }, {
+        "item" : "Watson, Kirk",
+        "count" : "14"
+      }, {
+        "item" : "Fuentes, Vanessa",
+        "count" : "14"
+      }, {
+        "item" : "Bowen, Jeffery",
+        "count" : "12"
+      }, {
+        "item" : "Carollo Engineers Inc. PAC",
+        "count" : "11"
+      } ],
+      "smallest" : "2040 PAC, inc.",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "displayStyle" : "plain",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005274,
+    "name" : "Filer_Phone",
+    "dataTypeName" : "text",
+    "description" : "The filer’s area code, phone number, and (if applicable) extension.",
+    "fieldName" : "filer_phone",
+    "position" : 15,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834794,
+    "width" : 150,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "9729782908",
+      "null" : "0",
+      "top" : [ {
+        "item" : "5124545588",
+        "count" : "198"
+      }, {
+        "item" : "5124417572",
+        "count" : "176"
+      }, {
+        "item" : "5129148269",
+        "count" : "68"
+      }, {
+        "item" : "5126584892",
+        "count" : "60"
+      }, {
+        "item" : "5123204151",
+        "count" : "48"
+      }, {
+        "item" : "7376159044",
+        "count" : "31"
+      }, {
+        "item" : "5125678377",
+        "count" : "28"
+      }, {
+        "item" : "5123230990 ext. 101",
+        "count" : "26"
+      }, {
+        "item" : "5125429744",
+        "count" : "22"
+      }, {
+        "item" : "3616528290",
+        "count" : "22"
+      }, {
+        "item" : "5124828107",
+        "count" : "22"
+      }, {
+        "item" : "8178990666",
+        "count" : "21"
+      }, {
+        "item" : "5124547636 ext. 1000",
+        "count" : "20"
+      }, {
+        "item" : "5126589752",
+        "count" : "17"
+      }, {
+        "item" : "5128279495",
+        "count" : "16"
+      }, {
+        "item" : "5124269735",
+        "count" : "15"
+      }, {
+        "item" : "5127904318",
+        "count" : "14"
+      }, {
+        "item" : "5123230990 ext. 2275",
+        "count" : "13"
+      }, {
+        "item" : "5122808640",
+        "count" : "12"
+      }, {
+        "item" : "9036476770",
+        "count" : "11"
+      } ],
+      "smallest" : "1847508215",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005275,
+    "name" : "Treasurer_State",
+    "dataTypeName" : "text",
+    "description" : "State of the filer’s campaign treasurer.",
+    "fieldName" : "treasurer_state",
+    "position" : 16,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834798,
+    "width" : 161,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "1181",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005276,
+    "name" : "Treasurer_Zip_Code",
+    "dataTypeName" : "text",
+    "description" : "Zip code of the filer’s campaign treasurer.",
+    "fieldName" : "treasurer_zip_code",
+    "position" : 17,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834799,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "1181",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005277,
+    "name" : "Treasurer_Phone",
+    "dataTypeName" : "text",
+    "description" : "The area code, phone number and (if applicable) extension of the filer’s campaign treasurer",
+    "fieldName" : "treasurer_phone",
+    "position" : 18,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834800,
+    "width" : 166,
+    "cachedContents" : {
+      "non_null" : "1180",
+      "largest" : "9729782908",
+      "null" : "1",
+      "top" : [ {
+        "item" : "5124545588",
+        "count" : "266"
+      }, {
+        "item" : "5126260173",
+        "count" : "76"
+      }, {
+        "item" : "5122173474",
+        "count" : "46"
+      }, {
+        "item" : "5127856631",
+        "count" : "42"
+      }, {
+        "item" : "5126584892",
+        "count" : "34"
+      }, {
+        "item" : "5124813058",
+        "count" : "33"
+      }, {
+        "item" : "5126999506",
+        "count" : "28"
+      }, {
+        "item" : "5123230990 ext. 101",
+        "count" : "26"
+      }, {
+        "item" : "5123719442",
+        "count" : "24"
+      }, {
+        "item" : "5124311283",
+        "count" : "22"
+      }, {
+        "item" : "5124775544 ext. 202",
+        "count" : "20"
+      }, {
+        "item" : "5124547636 ext. 1000",
+        "count" : "20"
+      }, {
+        "item" : "8178990666",
+        "count" : "20"
+      }, {
+        "item" : "5124505100",
+        "count" : "17"
+      }, {
+        "item" : "5124269735",
+        "count" : "15"
+      }, {
+        "item" : "5123204151",
+        "count" : "15"
+      }, {
+        "item" : "5127896716",
+        "count" : "14"
+      }, {
+        "item" : "5127319805",
+        "count" : "14"
+      }, {
+        "item" : "5123230990 ext. 2275",
+        "count" : "13"
+      }, {
+        "item" : "5122808640",
+        "count" : "12"
+      } ],
+      "smallest" : "2108873540",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005278,
+    "name" : "Period_From",
+    "dataTypeName" : "calendar_date",
+    "description" : "The date on which the reporting period for this report starts. ",
+    "fieldName" : "period_from",
+    "position" : 19,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 33834803,
+    "width" : 159,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "2026-07-26T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2024-07-01T00:00:00.000",
+        "count" : "57"
+      }, {
+        "item" : "2026-01-01T00:00:00.000",
+        "count" : "56"
+      }, {
+        "item" : "2024-01-01T00:00:00.000",
+        "count" : "47"
+      }, {
+        "item" : "2025-01-01T00:00:00.000",
+        "count" : "46"
+      }, {
+        "item" : "2025-07-01T00:00:00.000",
+        "count" : "46"
+      }, {
+        "item" : "2023-07-01T00:00:00.000",
+        "count" : "44"
+      }, {
+        "item" : "2024-10-27T00:00:00.000",
+        "count" : "44"
+      }, {
+        "item" : "2023-01-01T00:00:00.000",
+        "count" : "43"
+      }, {
+        "item" : "2024-09-27T00:00:00.000",
+        "count" : "35"
+      }, {
+        "item" : "2022-10-30T00:00:00.000",
+        "count" : "22"
+      }, {
+        "item" : "2022-07-01T00:00:00.000",
+        "count" : "20"
+      }, {
+        "item" : "2025-09-26T00:00:00.000",
+        "count" : "19"
+      }, {
+        "item" : "2025-10-26T00:00:00.000",
+        "count" : "19"
+      }, {
+        "item" : "2022-12-26T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2025-08-26T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2022-12-04T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2024-12-05T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2024-10-26T00:00:00.000",
+        "count" : "15"
+      }, {
+        "item" : "2023-06-26T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2026-06-26T00:00:00.000",
+        "count" : "14"
+      } ],
+      "smallest" : "2022-01-01T00:00:00.000",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005279,
+    "name" : "Period_To",
+    "dataTypeName" : "calendar_date",
+    "description" : "The date on which the reporting period for this report ends, if applicable.\n\nFor  the ATX 1, this field corresponds to the report date listed on the form.",
+    "fieldName" : "period_to",
+    "position" : 20,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 33834804,
+    "width" : 148,
+    "cachedContents" : {
+      "non_null" : "1181",
+      "largest" : "2026-08-25T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2022-12-31T00:00:00.000",
+        "count" : "61"
+      }, {
+        "item" : "2026-06-30T00:00:00.000",
+        "count" : "60"
+      }, {
+        "item" : "2024-12-31T00:00:00.000",
+        "count" : "56"
+      }, {
+        "item" : "2024-06-30T00:00:00.000",
+        "count" : "51"
+      }, {
+        "item" : "2025-12-31T00:00:00.000",
+        "count" : "46"
+      }, {
+        "item" : "2023-12-31T00:00:00.000",
+        "count" : "44"
+      }, {
+        "item" : "2024-10-26T00:00:00.000",
+        "count" : "44"
+      }, {
+        "item" : "2025-06-30T00:00:00.000",
+        "count" : "41"
+      }, {
+        "item" : "2023-06-30T00:00:00.000",
+        "count" : "38"
+      }, {
+        "item" : "2024-09-26T00:00:00.000",
+        "count" : "34"
+      }, {
+        "item" : "2025-09-25T00:00:00.000",
+        "count" : "26"
+      }, {
+        "item" : "2025-10-25T00:00:00.000",
+        "count" : "22"
+      }, {
+        "item" : "2023-01-25T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2023-07-25T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2025-03-25T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2026-07-25T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2024-11-25T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2024-12-04T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2024-10-25T00:00:00.000",
+        "count" : "14"
+      }, {
+        "item" : "2024-04-25T00:00:00.000",
+        "count" : "13"
+      } ],
+      "smallest" : "2022-06-30T00:00:00.000",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005280,
+    "name" : "Election_Date",
+    "dataTypeName" : "calendar_date",
+    "description" : "The date of the election for which this report is filed, if applicable",
+    "fieldName" : "election_date",
+    "position" : 21,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 33834805,
+    "width" : 157,
+    "cachedContents" : {
+      "non_null" : "395",
+      "largest" : "2104-11-06T00:00:00.000",
+      "null" : "786",
+      "top" : [ {
+        "item" : "2024-11-05T00:00:00.000",
+        "count" : "156"
+      }, {
+        "item" : "2026-11-03T00:00:00.000",
+        "count" : "54"
+      }, {
+        "item" : "2025-11-04T00:00:00.000",
+        "count" : "33"
+      }, {
+        "item" : "2024-12-14T00:00:00.000",
+        "count" : "33"
+      }, {
+        "item" : "2022-11-08T00:00:00.000",
+        "count" : "25"
+      }, {
+        "item" : "2022-12-13T00:00:00.000",
+        "count" : "19"
+      }, {
+        "item" : "2023-05-06T00:00:00.000",
+        "count" : "16"
+      }, {
+        "item" : "2016-11-08T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2020-11-03T00:00:00.000",
+        "count" : "9"
+      }, {
+        "item" : "2024-03-05T00:00:00.000",
+        "count" : "8"
+      }, {
+        "item" : "2026-03-03T00:00:00.000",
+        "count" : "5"
+      }, {
+        "item" : "2024-05-04T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2023-11-07T00:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2022-01-25T00:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2024-11-04T00:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-05-03T00:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2026-05-26T00:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2021-11-02T00:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2023-11-05T00:00:00.000",
+        "count" : "1"
+      }, {
+        "item" : "2104-11-06T00:00:00.000",
+        "count" : "1"
+      } ],
+      "smallest" : "2016-11-08T00:00:00.000",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "view" : "date",
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005281,
+    "name" : "Election_Type",
+    "dataTypeName" : "text",
+    "description" : "The type of the election for which this report is filed, if applicable",
+    "fieldName" : "election_type",
+    "position" : 22,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834806,
+    "width" : 159,
+    "cachedContents" : {
+      "non_null" : "402",
+      "largest" : "SPECIAL",
+      "null" : "779",
+      "top" : [ {
+        "item" : "GENERAL",
+        "count" : "304"
+      }, {
+        "item" : "RUNOFF",
+        "count" : "55"
+      }, {
+        "item" : "PRIMARY",
+        "count" : "19"
+      }, {
+        "item" : "SPECIAL",
+        "count" : "15"
+      }, {
+        "item" : "OTHER",
+        "count" : "9"
+      } ],
+      "smallest" : "GENERAL",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005282,
+    "name" : "Office_Held",
+    "dataTypeName" : "text",
+    "description" : "For officeholders, the office currently held.",
+    "fieldName" : "office_held",
+    "position" : 23,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834807,
+    "width" : 163,
+    "cachedContents" : {
+      "non_null" : "233",
+      "largest" : "NONE District None",
+      "null" : "948",
+      "top" : [ {
+        "item" : "NONE",
+        "count" : "76"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_09",
+        "count" : "19"
+      }, {
+        "item" : "MAYOR",
+        "count" : "16"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_04 District 4",
+        "count" : "13"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_02",
+        "count" : "12"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_07",
+        "count" : "11"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_05",
+        "count" : "9"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_01 District 1",
+        "count" : "8"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_06 District 6",
+        "count" : "8"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_08 District District 8",
+        "count" : "7"
+      }, {
+        "item" : "NONE District 8",
+        "count" : "6"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_09 District 9",
+        "count" : "6"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_10",
+        "count" : "5"
+      }, {
+        "item" : "NONE District None",
+        "count" : "4"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_03",
+        "count" : "4"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_03 District 3",
+        "count" : "4"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_10 District 10",
+        "count" : "3"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_06",
+        "count" : "3"
+      }, {
+        "item" : "NONE District Austin",
+        "count" : "3"
+      }, {
+        "item" : "NONE District 5",
+        "count" : "3"
+      } ],
+      "smallest" : "COUNCIL_MBR_DISTRICT_01 District 1",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005283,
+    "name" : "Office_Sought",
+    "dataTypeName" : "text",
+    "description" : "For candidates in an upcoming election, the office being sought. For unsuccessful candidates in a recently held election, the office sought during the election preceding the deadline for this report.",
+    "fieldName" : "office_sought",
+    "position" : 24,
+    "renderTypeName" : "text",
+    "tableColumnId" : 33834808,
+    "width" : 162,
+    "cachedContents" : {
+      "non_null" : "304",
+      "largest" : "NONE",
+      "null" : "877",
+      "top" : [ {
+        "item" : "MAYOR",
+        "count" : "34"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_04 District 4",
+        "count" : "34"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_07 District 7",
+        "count" : "28"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_07",
+        "count" : "27"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_02",
+        "count" : "21"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_09",
+        "count" : "18"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_06 District 6",
+        "count" : "14"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_01 District 1",
+        "count" : "14"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_09 District 9",
+        "count" : "13"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_10 District 10",
+        "count" : "12"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_05",
+        "count" : "12"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_08 District 8",
+        "count" : "10"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_08",
+        "count" : "9"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_03 District 3",
+        "count" : "9"
+      }, {
+        "item" : "NONE",
+        "count" : "9"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_05 District 5",
+        "count" : "7"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_07 District District 7",
+        "count" : "7"
+      }, {
+        "item" : "MAYOR District Austin",
+        "count" : "6"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_03",
+        "count" : "4"
+      }, {
+        "item" : "COUNCIL_MBR_DISTRICT_02 District 2",
+        "count" : "3"
+      } ],
+      "smallest" : "COUNCIL_MBR_DISTRICT_01",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "align" : "left"
+    }
+  }, {
+    "id" : 604005284,
+    "name" : "Unitemized_Contrib_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized contributions received by the filer during the reporting period\n",
+    "fieldName" : "unitemized_contrib_total",
+    "position" : 25,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834809,
+    "width" : 228,
+    "cachedContents" : {
+      "non_null" : "374",
+      "largest" : "36510.35",
+      "null" : "807",
+      "top" : [ {
+        "item" : "0",
+        "count" : "336"
+      }, {
+        "item" : "50.00",
+        "count" : "4"
+      }, {
+        "item" : "1.00",
+        "count" : "3"
+      }, {
+        "item" : "20.00",
+        "count" : "3"
+      }, {
+        "item" : "2025.00",
+        "count" : "2"
+      }, {
+        "item" : "2375.00",
+        "count" : "2"
+      }, {
+        "item" : "100.00",
+        "count" : "2"
+      }, {
+        "item" : "500.00",
+        "count" : "2"
+      }, {
+        "item" : "550.00",
+        "count" : "2"
+      }, {
+        "item" : "10.00",
+        "count" : "2"
+      }, {
+        "item" : "366.00",
+        "count" : "1"
+      }, {
+        "item" : "450.00",
+        "count" : "1"
+      }, {
+        "item" : "478.00",
+        "count" : "1"
+      }, {
+        "item" : "677.00",
+        "count" : "1"
+      }, {
+        "item" : "785.02",
+        "count" : "1"
+      }, {
+        "item" : "879.90",
+        "count" : "1"
+      }, {
+        "item" : "36510.35",
+        "count" : "1"
+      }, {
+        "item" : "0.02",
+        "count" : "1"
+      }, {
+        "item" : "20.83",
+        "count" : "1"
+      }, {
+        "item" : "34.53",
+        "count" : "1"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005285,
+    "name" : "Contrib_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all contributions received by the filer during the reporting period (itemized and unitemized)\n",
+    "fieldName" : "contrib_total",
+    "position" : 26,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834810,
+    "width" : 181,
+    "cachedContents" : {
+      "non_null" : "806",
+      "largest" : "710580.84",
+      "null" : "375",
+      "top" : [ {
+        "item" : "0",
+        "count" : "185"
+      }, {
+        "item" : "100.00",
+        "count" : "15"
+      }, {
+        "item" : "500.00",
+        "count" : "6"
+      }, {
+        "item" : "1000.00",
+        "count" : "6"
+      }, {
+        "item" : "250.00",
+        "count" : "6"
+      }, {
+        "item" : "5000.00",
+        "count" : "5"
+      }, {
+        "item" : "218174.47",
+        "count" : "4"
+      }, {
+        "item" : "2275.00",
+        "count" : "4"
+      }, {
+        "item" : "38253.00",
+        "count" : "4"
+      }, {
+        "item" : "6763.23",
+        "count" : "4"
+      }, {
+        "item" : "79010.26",
+        "count" : "4"
+      }, {
+        "item" : "972.00",
+        "count" : "4"
+      }, {
+        "item" : "22000.00",
+        "count" : "4"
+      }, {
+        "item" : "37474.00",
+        "count" : "4"
+      }, {
+        "item" : "130281.00",
+        "count" : "4"
+      }, {
+        "item" : "25891.28",
+        "count" : "4"
+      }, {
+        "item" : "8858.00",
+        "count" : "4"
+      }, {
+        "item" : "44555.11",
+        "count" : "4"
+      }, {
+        "item" : "36500.00",
+        "count" : "3"
+      }, {
+        "item" : "30000.00",
+        "count" : "3"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005286,
+    "name" : "Unitemized_Expend_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized expenditures made by the filer during the reporting period\n",
+    "fieldName" : "unitemized_expend_total",
+    "position" : 27,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834811,
+    "width" : 226,
+    "cachedContents" : {
+      "non_null" : "391",
+      "largest" : "13749.00",
+      "null" : "790",
+      "top" : [ {
+        "item" : "0",
+        "count" : "311"
+      }, {
+        "item" : "125.00",
+        "count" : "6"
+      }, {
+        "item" : "55.80",
+        "count" : "3"
+      }, {
+        "item" : "104.28",
+        "count" : "3"
+      }, {
+        "item" : "1000.00",
+        "count" : "3"
+      }, {
+        "item" : "123.36",
+        "count" : "3"
+      }, {
+        "item" : "119.17",
+        "count" : "3"
+      }, {
+        "item" : "1250.00",
+        "count" : "3"
+      }, {
+        "item" : "48.96",
+        "count" : "3"
+      }, {
+        "item" : "39.00",
+        "count" : "3"
+      }, {
+        "item" : "205.00",
+        "count" : "2"
+      }, {
+        "item" : "58.78",
+        "count" : "2"
+      }, {
+        "item" : "60.30",
+        "count" : "2"
+      }, {
+        "item" : "160.30",
+        "count" : "2"
+      }, {
+        "item" : "140.50",
+        "count" : "2"
+      }, {
+        "item" : "974.68",
+        "count" : "2"
+      }, {
+        "item" : "50.10",
+        "count" : "2"
+      }, {
+        "item" : "100.20",
+        "count" : "2"
+      }, {
+        "item" : "88.00",
+        "count" : "2"
+      }, {
+        "item" : "120.58",
+        "count" : "2"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005287,
+    "name" : "Expend_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all expenditures made by the filer during the reporting period (itemized and unitemized)\n",
+    "fieldName" : "expend_total",
+    "position" : 28,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834812,
+    "width" : 164,
+    "cachedContents" : {
+      "non_null" : "783",
+      "largest" : "488657.64",
+      "null" : "398",
+      "top" : [ {
+        "item" : "0",
+        "count" : "191"
+      }, {
+        "item" : "2000.00",
+        "count" : "10"
+      }, {
+        "item" : "5000.00",
+        "count" : "8"
+      }, {
+        "item" : "1000.00",
+        "count" : "7"
+      }, {
+        "item" : "2500.00",
+        "count" : "7"
+      }, {
+        "item" : "370.48",
+        "count" : "6"
+      }, {
+        "item" : "68601.23",
+        "count" : "6"
+      }, {
+        "item" : "4500.00",
+        "count" : "6"
+      }, {
+        "item" : "4000.00",
+        "count" : "6"
+      }, {
+        "item" : "500.00",
+        "count" : "5"
+      }, {
+        "item" : "2625.00",
+        "count" : "5"
+      }, {
+        "item" : "26183.20",
+        "count" : "4"
+      }, {
+        "item" : "15527.43",
+        "count" : "4"
+      }, {
+        "item" : "47884.58",
+        "count" : "4"
+      }, {
+        "item" : "13115.44",
+        "count" : "4"
+      }, {
+        "item" : "2871.38",
+        "count" : "4"
+      }, {
+        "item" : "450.00",
+        "count" : "4"
+      }, {
+        "item" : "835.82",
+        "count" : "4"
+      }, {
+        "item" : "7286.36",
+        "count" : "4"
+      }, {
+        "item" : "76225.20",
+        "count" : "3"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005288,
+    "name" : "Contrib_Balance",
+    "dataTypeName" : "number",
+    "description" : "The total of all political contributions, including interest and additional income, as of the last day of the reporting period\n",
+    "fieldName" : "contrib_balance",
+    "position" : 29,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834813,
+    "width" : 184,
+    "cachedContents" : {
+      "non_null" : "1107",
+      "largest" : "778323.75",
+      "null" : "74",
+      "top" : [ {
+        "item" : "0",
+        "count" : "99"
+      }, {
+        "item" : "25073.28",
+        "count" : "16"
+      }, {
+        "item" : "24884.64",
+        "count" : "12"
+      }, {
+        "item" : "25144.49",
+        "count" : "12"
+      }, {
+        "item" : "91289.35",
+        "count" : "11"
+      }, {
+        "item" : "79.95",
+        "count" : "8"
+      }, {
+        "item" : "24868.79",
+        "count" : "8"
+      }, {
+        "item" : "419.84",
+        "count" : "8"
+      }, {
+        "item" : "7877.77",
+        "count" : "8"
+      }, {
+        "item" : "82447.08",
+        "count" : "6"
+      }, {
+        "item" : "3127.65",
+        "count" : "6"
+      }, {
+        "item" : "33069.06",
+        "count" : "6"
+      }, {
+        "item" : "26111.54",
+        "count" : "6"
+      }, {
+        "item" : "24039.48",
+        "count" : "6"
+      }, {
+        "item" : "180826.69",
+        "count" : "6"
+      }, {
+        "item" : "9858.00",
+        "count" : "6"
+      }, {
+        "item" : "3128.65",
+        "count" : "6"
+      }, {
+        "item" : "118.14",
+        "count" : "5"
+      }, {
+        "item" : "9124.33",
+        "count" : "4"
+      }, {
+        "item" : "5227.37",
+        "count" : "4"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005289,
+    "name" : "Outstand_Loan",
+    "dataTypeName" : "number",
+    "description" : "Outstanding principal of all loans maintained as of the last day of the reporting period\n",
+    "fieldName" : "outstand_loan",
+    "position" : 30,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834814,
+    "width" : 193,
+    "cachedContents" : {
+      "non_null" : "1107",
+      "largest" : "444412.87",
+      "null" : "74",
+      "top" : [ {
+        "item" : "0",
+        "count" : "925"
+      }, {
+        "item" : "4551.54",
+        "count" : "16"
+      }, {
+        "item" : "20000.00",
+        "count" : "15"
+      }, {
+        "item" : "29453.12",
+        "count" : "9"
+      }, {
+        "item" : "10500.00",
+        "count" : "8"
+      }, {
+        "item" : "30000.00",
+        "count" : "8"
+      }, {
+        "item" : "3851.40",
+        "count" : "7"
+      }, {
+        "item" : "10000.00",
+        "count" : "6"
+      }, {
+        "item" : "25000.00",
+        "count" : "6"
+      }, {
+        "item" : "2000.00",
+        "count" : "6"
+      }, {
+        "item" : "15000.00",
+        "count" : "5"
+      }, {
+        "item" : "41000.00",
+        "count" : "5"
+      }, {
+        "item" : "5000.00",
+        "count" : "4"
+      }, {
+        "item" : "181807.06",
+        "count" : "4"
+      }, {
+        "item" : "39785.07",
+        "count" : "4"
+      }, {
+        "item" : "8923.85",
+        "count" : "4"
+      }, {
+        "item" : "9124.33",
+        "count" : "4"
+      }, {
+        "item" : "7735.92",
+        "count" : "4"
+      }, {
+        "item" : "75500.00",
+        "count" : "3"
+      }, {
+        "item" : "46675.75",
+        "count" : "3"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005290,
+    "name" : "Unitemized_InKind_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized in-kind contributions received by the filer during the reporting period\n",
+    "fieldName" : "unitemized_inkind_total",
+    "position" : 31,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834815,
+    "width" : 228,
+    "cachedContents" : {
+      "non_null" : "0",
+      "null" : "1181",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005291,
+    "name" : "Unitemized_Pledge_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized pledges received by the filer during the reporting period\n",
+    "fieldName" : "unitemized_pledge_total",
+    "position" : 32,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834816,
+    "width" : 215,
+    "cachedContents" : {
+      "non_null" : "316",
+      "largest" : "0",
+      "null" : "865",
+      "top" : [ {
+        "item" : "0",
+        "count" : "316"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005292,
+    "name" : "Unitemized_Loan_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized loans maintained by the filer during the reporting period\n",
+    "fieldName" : "unitemized_loan_total",
+    "position" : 33,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834817,
+    "width" : 247,
+    "cachedContents" : {
+      "non_null" : "323",
+      "largest" : "2000.00",
+      "null" : "858",
+      "top" : [ {
+        "item" : "0",
+        "count" : "320"
+      }, {
+        "item" : "2000.00",
+        "count" : "2"
+      }, {
+        "item" : "1037.55",
+        "count" : "1"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005293,
+    "name" : "Unitemized_Unpaid_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized unpaid obligations incurred by the filer during the reporting period\n",
+    "fieldName" : "unitemized_unpaid_total",
+    "position" : 34,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834818,
+    "width" : 244,
+    "cachedContents" : {
+      "non_null" : "316",
+      "largest" : "0",
+      "null" : "865",
+      "top" : [ {
+        "item" : "0",
+        "count" : "316"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  }, {
+    "id" : 604005294,
+    "name" : "Unitemized_Cred_Card_Total",
+    "dataTypeName" : "number",
+    "description" : "The total of all unitemized credit card expenditures made by the filer during the reporting period\n",
+    "fieldName" : "unitemized_cred_card_total",
+    "position" : 35,
+    "renderTypeName" : "number",
+    "tableColumnId" : 33834819,
+    "width" : 246,
+    "cachedContents" : {
+      "non_null" : "315",
+      "largest" : "618.90",
+      "null" : "866",
+      "top" : [ {
+        "item" : "0",
+        "count" : "314"
+      }, {
+        "item" : "618.90",
+        "count" : "1"
+      } ],
+      "smallest" : "0",
+      "count" : "1181",
+      "cardinality" : "1181"
+    },
+    "format" : {
+      "precisionStyle" : "currency",
+      "humane" : "false",
+      "currencyStyle" : "USD",
+      "precision" : "2",
+      "align" : "right"
+    }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Public Domain"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Ownership" : {
+        "Department name" : "Austin City Clerk's Office"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "Daily"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "rowLabel" : "Report",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "g5jz-k5ye",
+    "createdAt" : 1677783984,
+    "displayName" : "Austin City Clerk's Office Owners",
+    "screenName" : "Austin City Clerk's Office Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "mh57-jiiu",
+      "createdAt" : 1677714429,
+      "displayName" : "Adriana.Vazquez@austintexas.gov",
+      "screenName" : "Adriana.Vazquez@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "gfc2-mutd",
+      "createdAt" : 1569004659,
+      "displayName" : "Bethany Smith",
+      "screenName" : "Bethany Smith",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "8vyj-enc6",
+      "createdAt" : 1724953795,
+      "displayName" : "Christi.Vitela@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/8vyj-enc6/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/8vyj-enc6/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/8vyj-enc6/profile_images/TINY",
+      "screenName" : "Christi.Vitela@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "n58v-d7z9",
+      "createdAt" : 1362155996,
+      "disabledAt" : 1674498362,
+      "displayName" : "Danhao.Lu@austintexas.gov",
+      "screenName" : "Danhao.Lu@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "xwt9-6iq9",
+      "createdAt" : 1550011472,
+      "disabledAt" : 1674498378,
+      "displayName" : "City of Austin - Elections",
+      "screenName" : "City of Austin - Elections",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "y68m-gvpr",
+      "createdAt" : 1549999655,
+      "disabledAt" : 1674498379,
+      "displayName" : "City of Austin - Lobbyists",
+      "screenName" : "City of Austin - Lobbyists",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "g5jz-k5ye",
+    "createdAt" : 1677783984,
+    "displayName" : "Austin City Clerk's Office Owners",
+    "screenName" : "Austin City Clerk's Office Owners",
+    "type" : "team",
+    "members" : [ {
+      "id" : "mh57-jiiu",
+      "createdAt" : 1677714429,
+      "displayName" : "Adriana.Vazquez@austintexas.gov",
+      "screenName" : "Adriana.Vazquez@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "gfc2-mutd",
+      "createdAt" : 1569004659,
+      "displayName" : "Bethany Smith",
+      "screenName" : "Bethany Smith",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "8vyj-enc6",
+      "createdAt" : 1724953795,
+      "displayName" : "Christi.Vitela@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/8vyj-enc6/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/8vyj-enc6/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/8vyj-enc6/profile_images/TINY",
+      "screenName" : "Christi.Vitela@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "n58v-d7z9",
+      "createdAt" : 1362155996,
+      "disabledAt" : 1674498362,
+      "displayName" : "Danhao.Lu@austintexas.gov",
+      "screenName" : "Danhao.Lu@austintexas.gov",
+      "teamId" : 1500274,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "xwt9-6iq9",
+      "createdAt" : 1550011472,
+      "disabledAt" : 1674498378,
+      "displayName" : "City of Austin - Elections",
+      "screenName" : "City of Austin - Elections",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "y68m-gvpr",
+      "createdAt" : 1549999655,
+      "disabledAt" : 1674498379,
+      "displayName" : "City of Austin - Lobbyists",
+      "screenName" : "City of Austin - Lobbyists",
+      "teamId" : 1500274,
+      "teamRole" : "member",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "campaign finance", "city clerk", "contributions", "election", "expenditures", "financial" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

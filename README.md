@@ -43,8 +43,13 @@ friendlier when `AUSTIN_SOCRATA_APP_TOKEN` is set. Never commit that value.
 
 ## Static site
 
-The reviewed, privacy-safe site input is [`site/content.json`](site/content.json).
-Build it without network or cloud access:
+The reviewed, privacy-safe site inputs are [`site/content.json`](site/content.json)
+and the narrow publication files in [`site/data/`](site/data/). The campaign
+publication indexes all recipient totals from the frozen contribution snapshot,
+retains the top twenty contributor aggregates, and includes at most the one
+hundred most recent row-level records per recipient. Raw addresses, employer,
+occupation, contact fields, and unrestricted source rows are not included.
+Build the checked-in snapshot without network or cloud access:
 
 ```bash
 uv run --locked mor-l0 build-site
@@ -55,9 +60,9 @@ uv run --locked mor-l0 verify-site \
 
 The command creates `build/site/`, a byte-for-byte reproducible ZIP, and its
 SHA-256 checksum. Generated files remain ignored; source content, builder code,
-and tests are reviewed in pull requests. The archive contains only rendered
-HTML, a content-hashed stylesheet, `robots.txt`, and a source-fingerprint
-manifest—never raw downloads or candidate-review worksheets.
+and tests are reviewed in pull requests. The archive contains rendered HTML,
+content-hashed CSS and JavaScript, `robots.txt`, and a source-fingerprint
+manifest—never unrestricted source downloads or candidate-review worksheets.
 
 The environment's Terraform apply is the complete deployment. A UAT deployment
 builds and verifies the exact current `main` artifact before AWS authentication;
@@ -87,6 +92,10 @@ uv run mor-l0 verify-artifacts
 # Compute exact row/null/date/identity statistics from the acquired snapshots.
 uv run mor-l0 profile --all
 
+# Build the deterministic campaign publication from the latest acquired
+# campaign-contribution and campaign-report snapshots.
+uv run mor-l0 publish-campaigns
+
 # Validate a public CSV projection with both a field allowlist and PII scanner.
 uv run mor-l0 privacy-check path/to/public.csv --source campaign-contributions
 
@@ -110,6 +119,11 @@ specific analytical release needs to be reconstructed.
 
 Aggregate-only profile reports are safe to version and are written to
 `reports/profiles/`; they cite the ignored raw artifact by content hash.
+`publish-campaigns` writes the bounded, privacy-checked campaign input consumed
+by the static site. It groups recipient and filer names only with the existing
+typography-only strict key; it does not fuzzy-match people. Correction-marked
+rows remain separately labeled because the City projection does not provide a
+reliable key identifying the row each correction replaces.
 After all candidates are adjudicated, `mor-l0 review-summary` emits a safe,
 aggregate-only review report under `reports/reviews/`.
 

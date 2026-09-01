@@ -1,0 +1,35 @@
+{
+  "artifact": "data/raw/g4yx-aw9r/0c2a511442ded8c0dd204b99c414756f60f5b657cf3b456bd7c18a49966526bf.csv",
+  "dataset_id": "g4yx-aw9r",
+  "manifest_version": 1,
+  "operation": "acquire-csv",
+  "receipt": {
+    "bytes": 64468618,
+    "requested_url": "https://data.austintexas.gov/api/views/g4yx-aw9r/rows.csv?accessType=DOWNLOAD",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, must-revalidate, max-age=21600",
+      "connection": "close",
+      "content-disposition": "attachment; filename=Campaign_Finance_-_Transaction_Detail.csv",
+      "content-type": "text/csv; charset=utf-8",
+      "date": "Tue, 01 Sep 2026 21:47:59 GMT",
+      "etag": "W/\"Zm94dHJvdC40Mjk0OV8xMV8yOTEyc2Iybjgxc0d2aTlzbHg1NVNRbkNDWG9NLU9j---gzipIl3_DlikHbx224N0DQCgSb7FVT8--gzip--gzip\"",
+      "last-modified": "Tue, 01 Sep 2026 07:35:17 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "084838d66edf82be5dda16a6995ab388",
+      "x-soda2-data-out-of-date": "false",
+      "x-soda2-secondary-last-modified": "Tue, 01 Sep 2026 07:35:17 GMT",
+      "x-soda2-truth-last-modified": "Tue, 01 Sep 2026 07:35:17 GMT"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/g4yx-aw9r/rows.csv?accessType=DOWNLOAD",
+    "retrieved_at": "2026-09-01T21:47:58.608682+00:00",
+    "sha256": "0c2a511442ded8c0dd204b99c414756f60f5b657cf3b456bd7c18a49966526bf",
+    "status": 200
+  },
+  "source_slug": "campaign-transactions",
+  "title": "Campaign Finance - Transaction Detail"
+}

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import shutil
 import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -63,48 +66,87 @@ class PageAudit(HTMLParser):
             self._link_text.append(data)
 
 
-def _build(tmp_path: Path, suffix: str = "one") -> tuple[Path, Path, Path]:
+def _build(tmp_path: Path, suffix: str = "one", content: Path = CONTENT) -> tuple[Path, Path, Path]:
     output = tmp_path / f"site-{suffix}"
     archive = tmp_path / f"site-{suffix}.zip"
     checksum = tmp_path / f"site-{suffix}.zip.sha256"
-    build_site(content_path=CONTENT, output=output, archive=archive, checksum=checksum)
+    build_site(content_path=content, output=output, archive=archive, checksum=checksum)
     return output, archive, checksum
 
 
-def test_site_build_is_navigable_caveated_and_source_auditable(tmp_path: Path) -> None:
+def _content_copy(tmp_path: Path) -> tuple[dict[str, Any], Path]:
+    directory = tmp_path / "content"
+    directory.mkdir()
+    shutil.copytree(ROOT / "site" / "data", directory / "data")
+    document = json.loads(CONTENT.read_text(encoding="utf-8"))
+    return document, directory / "content.json"
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def test_site_build_is_a_reporter_oriented_record_explorer(tmp_path: Path) -> None:
     output, archive, checksum = _build(tmp_path)
 
     index = (output / "index.html").read_text(encoding="utf-8")
     profile = (output / "profiles" / "austin-board-of-realtors" / "index.html").read_text(
         encoding="utf-8"
     )
+    campaign = (output / "campaigns" / "watson-kirk-p" / "index.html").read_text(encoding="utf-8")
     not_found = (output / "404.html").read_text(encoding="utf-8")
 
-    assert "Follow the records" in index
+    assert "Campaign contributions reported in Austin" in index
+    assert "Search candidates and committees" in index
+    assert "121,629 contribution rows" in index
+    assert "Candidates and committees" in index
+    assert "Austin, Texas" in index
+    assert "Follow the records" not in index
+    assert "Keep the caveats" not in index
     assert 'href="/profiles/austin-board-of-realtors/index.html"' in index
-    assert "This identity link has not been verified" in profile
-    assert "does not establish a quid pro quo" in profile
+    assert 'href="/campaigns/watson-kirk-p/index.html"' in index
+    assert "Candidate or officeholder" in campaign
+    assert "Mayor of Austin" in campaign
+    assert "$2,321,220.30" in campaign
+    assert "6,669" in campaign
+    assert "3,122 marked corrections" in campaign
+    assert "Top reported contributors" in campaign
+    assert "Download full City projection" in campaign
+    assert campaign.count("data-record-row") == 100
+    assert "Organization record" in profile
+    assert "Unverified match" in profile
     assert "$240,133.82" in profile
     assert "$106,072.10" in profile
-    assert profile.count('referrerpolicy="no-referrer" rel="external noopener"') == 4
-    assert profile.count("data.austintexas.gov/resource/") == 2
-    assert profile.count("%24select=") == 2
+    assert "By department" in profile
+    assert "Austin Energy" in profile
+    assert "$86,195.00" in profile
+    assert "Advertising/publication" in profile
+    assert "no descriptions for these lines" in profile
+    assert profile.count("data-record-row") == 261
+    assert "Campaign record filters" in profile
+    assert "City payment filters" in profile
+    assert "All departments" in profile
+    assert "All categories" in profile
+    assert profile.count("Download CSV") == 2
+    assert "services.austintexas.gov/edims/document.cfm" in profile
     assert "There is no profile at this address" in not_found
-    assert (output / "robots.txt").read_text(encoding="utf-8") == ("User-agent: *\nDisallow: /\n")
+    assert (output / "robots.txt").read_text(encoding="utf-8") == "User-agent: *\nDisallow: /\n"
     assert (
         checksum.read_text(encoding="utf-8").split()[0]
         == verify_site_archive(archive).archive_sha256
     )
-    assert {
+
+    public_files = {
         path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()
-    } == {
-        "404.html",
-        "assets/site-2ff6ac2217acc6f7.css",
-        "index.html",
-        "profiles/austin-board-of-realtors/index.html",
-        "robots.txt",
-        "site-manifest.json",
     }
+    assert {
+        path for path in public_files if path.startswith("assets/site-") and path.endswith(".css")
+    }
+    assert {
+        path for path in public_files if path.startswith("assets/site-") and path.endswith(".js")
+    }
+    assert "site-manifest.json" in public_files
+    assert not any(path.startswith("data/") for path in public_files)
 
     public_bytes = b"".join(
         path.read_bytes() for path in sorted(output.rglob("*")) if path.is_file()
@@ -118,12 +160,13 @@ def test_site_build_is_navigable_caveated_and_source_auditable(tmp_path: Path) -
         assert prohibited not in public_bytes
 
 
-def test_every_html_page_has_basic_accessibility_and_privacy_controls(tmp_path: Path) -> None:
+def test_every_html_page_has_accessibility_and_privacy_controls(tmp_path: Path) -> None:
     output, _archive, _checksum = _build(tmp_path)
 
     for page in sorted(output.rglob("*.html")):
         audit = PageAudit()
-        audit.feed(page.read_text(encoding="utf-8"))
+        source = page.read_text(encoding="utf-8")
+        audit.feed(source)
 
         assert audit.html_lang == "en", page
         assert audit.has_viewport, page
@@ -137,16 +180,23 @@ def test_every_html_page_has_basic_accessibility_and_privacy_controls(tmp_path: 
             assert text or attributes.get("aria-label"), (page, attributes)
             if attributes["href"].startswith("https://"):
                 assert attributes.get("referrerpolicy") == "no-referrer"
+                assert "noopener" in attributes.get("rel", "")
 
-        source = page.read_text(encoding="utf-8")
         assert 'href="#content">Skip to content</a>' in source
         assert 'name="robots" content="noindex,nofollow,noarchive"' in source
         assert "default-src 'none'" in source
+        assert "script-src 'self'" in source
         assert 'name="referrer" content="no-referrer"' in source
 
     css = next((output / "assets").glob("site-*.css")).read_text(encoding="utf-8")
-    assert "@media (max-width: 760px)" in css
+    javascript = next((output / "assets").glob("site-*.js")).read_text(encoding="utf-8")
+    assert "@media (max-width: 800px)" in css
     assert "@media (prefers-reduced-motion: reduce)" in css
+    assert "data-record-filter" in javascript
+    assert "data-record-sort" in javascript
+    assert "data-record-field" in javascript
+    assert "data-record-reset" in javascript
+    assert "data-directory-filter" in javascript
 
 
 def test_site_archive_is_byte_for_byte_reproducible(tmp_path: Path) -> None:
@@ -170,8 +220,9 @@ def test_site_archive_verifies_manifest_and_extracts_safely(tmp_path: Path) -> N
     assert result.files == len([path for path in output.rglob("*") if path.is_file()])
     assert (extracted / "index.html").read_bytes() == (output / "index.html").read_bytes()
     manifest = json.loads((extracted / MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == 1
     assert manifest["profiles"] == ["austin-board-of-realtors"]
-    assert len(manifest["source_snapshots"]) == 2
+    assert len(manifest["source_snapshots"]) == 4
 
 
 def test_site_archive_rejects_wrong_digest_and_unsafe_paths(tmp_path: Path) -> None:
@@ -186,56 +237,72 @@ def test_site_archive_rejects_wrong_digest_and_unsafe_paths(tmp_path: Path) -> N
         verify_site_archive(unsafe)
 
 
-def test_site_content_rejects_broad_links_and_sensitive_text(tmp_path: Path) -> None:
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
+def test_site_content_rejects_broad_links_sensitive_text_and_wrong_totals(tmp_path: Path) -> None:
+    document, content_path = _content_copy(tmp_path)
     document["profiles"][0]["summary"] = "Contact research@example.org for details."
-    unsafe_content = tmp_path / "unsafe-content.json"
-    unsafe_content.write_text(json.dumps(document), encoding="utf-8")
+    _write_json(content_path, document)
     with pytest.raises(SiteBuildError, match="prohibited contact"):
-        load_site_content(unsafe_content)
+        load_site_content(content_path)
 
     document = json.loads(CONTENT.read_text(encoding="utf-8"))
     document["profiles"][0]["metrics"][0]["official_rows_url"] = (
         "https://data.austintexas.gov/resource/3kfv-biw6.json?$where=donor%3Dtest"
     )
-    broad_content = tmp_path / "broad-content.json"
-    broad_content.write_text(json.dumps(document), encoding="utf-8")
+    _write_json(content_path, document)
     with pytest.raises(SiteBuildError, match="only \\$select"):
-        load_site_content(broad_content)
+        load_site_content(content_path)
 
     document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"][0]["metrics"][0]["official_rows_url"] = document["profiles"][0]["metrics"][
-        0
-    ]["official_rows_url"].replace("transaction_id%2C", "donor_address%2C")
-    unsafe_projection = tmp_path / "unsafe-projection.json"
-    unsafe_projection.write_text(json.dumps(document), encoding="utf-8")
+    metric = document["profiles"][0]["metrics"][0]
+    metric["official_rows_url"] = metric["official_rows_url"].replace(
+        "transaction_id%2C", "donor_address%2C"
+    )
+    _write_json(content_path, document)
     with pytest.raises(SiteBuildError, match="prohibited public fields"):
-        load_site_content(unsafe_projection)
+        load_site_content(content_path)
+
+    document = json.loads(CONTENT.read_text(encoding="utf-8"))
+    document["profiles"][0]["metrics"][0]["amount_cents"] += 1
+    _write_json(content_path, document)
+    with pytest.raises(SiteBuildError, match="does not match its records"):
+        load_site_content(content_path)
+
+    document = json.loads(CONTENT.read_text(encoding="utf-8"))
+    document["profiles"][0]["metrics"][0]["records_sha256"] = "0" * 64
+    _write_json(content_path, document)
+    with pytest.raises(SiteBuildError, match="does not match records_sha256"):
+        load_site_content(content_path)
+
+
+def test_record_projection_rejects_sensitive_text(tmp_path: Path) -> None:
+    document, content_path = _content_copy(tmp_path)
+    records_path = content_path.parent / "data" / "austin-board-of-realtors-campaign.json"
+    records = json.loads(records_path.read_text(encoding="utf-8"))
+    records["records"][0]["recipient"] = "Contact research@example.org"
+    _write_json(records_path, records)
+    metric = document["profiles"][0]["metrics"][0]
+    metric["records_sha256"] = hashlib.sha256(records_path.read_bytes()).hexdigest()
+    _write_json(content_path, document)
+
+    with pytest.raises(SiteBuildError, match="prohibited contact"):
+        load_site_content(content_path)
 
 
 def test_site_content_rejects_an_empty_profile_set(tmp_path: Path) -> None:
     document = json.loads(CONTENT.read_text(encoding="utf-8"))
     document["profiles"] = []
     empty_content = tmp_path / "empty-content.json"
-    empty_content.write_text(json.dumps(document), encoding="utf-8")
+    _write_json(empty_content, document)
 
     with pytest.raises(SiteBuildError, match="non-empty list"):
         load_site_content(empty_content)
 
 
 def test_generated_html_escapes_hostile_source_text(tmp_path: Path) -> None:
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
+    document, content_path = _content_copy(tmp_path)
     document["profiles"][0]["name"] = "Example <script>alert(1)</script>"
-    hostile_content = tmp_path / "hostile-content.json"
-    hostile_content.write_text(json.dumps(document), encoding="utf-8")
-    output = tmp_path / "hostile-site"
-
-    build_site(
-        content_path=hostile_content,
-        output=output,
-        archive=tmp_path / "hostile.zip",
-        checksum=tmp_path / "hostile.zip.sha256",
-    )
+    _write_json(content_path, document)
+    output, _archive, _checksum = _build(tmp_path, "hostile", content_path)
     profile = (output / "profiles" / "austin-board-of-realtors" / "index.html").read_text(
         encoding="utf-8"
     )

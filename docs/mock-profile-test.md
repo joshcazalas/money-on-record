@@ -1,10 +1,8 @@
-# Static profile usability test
+# Static explorer usability test
 
-Prototype: [`../prototypes/organization-profile.html`](../prototypes/organization-profile.html)
-
-The page intentionally uses an unverified strict-name candidate and labels that status at the
-top, beside the identity explanation, and in the footer. It is a local research artifact, not a
-publication decision.
+The beta contains source-specific candidate and committee pages plus a separate
+unverified organization-to-City-vendor example. Source-specific campaign pages
+do not claim a cross-domain person identity.
 
 ## Deployed-beta participant gate
 
@@ -24,17 +22,24 @@ validation.
 
 Ask the participant to think aloud and avoid explaining the interface first.
 
-1. What claim do you think this page is making about the organization?
-2. Find the campaign total and explain what records it includes.
-3. Find the City-payment total and open the official rows behind it.
-4. How confident are you that the two names refer to the same organization? What evidence would
-   you need before publication?
-5. What important question can this page answer, and what question can it not answer?
+1. Find a candidate or committee by name, office, or district.
+2. Identify its largest reported contributors and explain what the displayed
+   total includes.
+3. Filter the displayed contribution rows by year or donor type, then open one
+   official filing.
+4. Explain how correction-marked rows affect what can and cannot be concluded
+   from the reported-row total.
+5. Open the linked organization example and explain why its campaign-to-City
+   vendor identity remains unverified.
 
 ## Pass signals
 
-- The participant notices the unverified status before treating the cross-domain link as fact.
-- Both totals and source rows can be found without assistance.
+- A candidate, committee, or district can be found without assistance.
+- Full-snapshot summaries and sampled source rows are not confused with one
+  another.
+- The participant notices the unverified status before treating the separate
+  cross-domain organization link as fact.
+- Totals and individual source filings can be found without assistance.
 - The participant understands that juxtaposition is not evidence of influence or wrongdoing.
 - At least one concrete use case remains valuable without person matching.
 
@@ -42,11 +47,12 @@ Ask the participant to think aloud and avoid explaining the interface first.
 
 Status: **NOT YET TESTED — TRACKED IN ISSUE #14**
 
-Source-link verification on August 18, 2026: the official APIs returned 53 rows
-and `$240,133.82` for the campaign filter, and 208 rows and `$106,072.10` for the
-eCheckbook filter. These match the frozen-snapshot calculations displayed in the
-prototype. The links now request only allowlisted fields, and a local scan of
-both exact frozen projections produced zero PII-pattern findings.
+Source-link verification on September 1, 2026: the checked-in campaign
+publication was derived from 121,808 City contribution rows, excludes 179 rows
+without a recipient, and groups the remaining 121,629 rows into 87 recipient
+profiles. It retains only reviewed fields and at most the one hundred most recent
+rows per profile. The existing linked-organization projection still contains 53
+campaign rows and 208 eCheckbook rows.
 
 Record observations, confusion, requested context, and resulting changes here.
 Do not describe the beta as externally validated until an eligible participant

@@ -19,12 +19,26 @@ schema. Each public artifact must choose the smallest fields and rows needed for
 its claim, then pass the scanner after that selection. Exact-row Socrata links
 must include an allowlisted `$select`; a `$where` alone is not a privacy
 boundary. Official dataset or filing links leave Money on Record and must be
-labeled as such rather than proxied or cached as product data.
+labeled as such. A small, field-minimized, human-reviewed projection may be
+versioned and rendered by the product when it is necessary to inspect the claim;
+unrestricted source responses and unreviewed fields must not be cached or
+republished.
 
 Names involved in a public transaction may be necessary factual content, but
-direct contact and street-address fields are never public product fields. L0
-cross-domain matching is further limited to records explicitly typed as entities;
-there is no person matching or inference from name shape.
+direct contact, street-address, employer, and occupation fields are never public
+product fields. Campaign recipient pages group source names only with the
+typography-only strict key and may display the donor name, donor type, amount,
+date, contribution type, correction marker, and official filing link. They do
+not join individual donors to any other dataset or infer that similarly named
+people are the same person. Cross-domain organization matching remains limited
+to records explicitly typed as entities.
+
+The checked-in campaign publication is bounded rather than a source mirror. It
+contains full-snapshot recipient/year/top-contributor aggregates and no more
+than the one hundred most recent row-level records per recipient. The complete
+filtered record set remains an outbound link to the City's official projection.
+Rows the City marks as corrections remain labeled; Money on Record does not
+silently discard or replace a row without a reliable public supersession key.
 
 A scanner pass is a guardrail, not proof. Before launch, a hostile human review
 must inspect the public schema, samples, URLs, free-text fields, downloadable

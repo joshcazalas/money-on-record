@@ -20,6 +20,7 @@ from .dictionary import write_field_dictionary
 from .fixtures import create_redacted_fixture
 from .privacy import PublicSchemaError, scan_public_csv, scan_source_csv
 from .profile import profile_csv, summarize_profiles
+from .publication import DEFAULT_SAMPLE_LIMIT, PublicationError, build_campaign_publication
 from .review import (
     REVIEW_PROVENANCES,
     ReviewError,
@@ -89,6 +90,17 @@ def build_parser() -> argparse.ArgumentParser:
     _add_selection(acquire)
     profile = subparsers.add_parser("profile", help="calculate exact source profiles")
     _add_selection(profile)
+    publication = subparsers.add_parser(
+        "publish-campaigns",
+        help="build a deterministic privacy-safe campaign dataset from acquired snapshots",
+    )
+    publication.add_argument("--output", type=Path)
+    publication.add_argument(
+        "--sample-limit",
+        type=int,
+        default=DEFAULT_SAMPLE_LIMIT,
+        help="maximum recent contribution rows retained per campaign profile",
+    )
     dictionaries = subparsers.add_parser(
         "field-dictionaries", help="render default-deny field dictionaries from metadata"
     )
@@ -201,6 +213,21 @@ def run(args: argparse.Namespace) -> int:
             f"PASS: deterministic site artifact {artifact.archive_sha256} "
             f"({artifact.files} files, {artifact.bytes} bytes)"
         )
+        return 0
+
+    if args.command == "publish-campaigns":
+        output = _project_path(
+            args.root,
+            args.output,
+            "site/data/austin-campaigns.json",
+        )
+        build_campaign_publication(
+            inventory,
+            output=output,
+            root=args.root,
+            sample_limit=args.sample_limit,
+        )
+        print(f"PASS: wrote deterministic campaign publication to {output}")
         return 0
 
     if args.command == "verify-site":
@@ -363,6 +390,7 @@ def main() -> None:
         AcquisitionError,
         CandidateError,
         ContractError,
+        PublicationError,
         PublicSchemaError,
         ReviewError,
         VersionedDataError,

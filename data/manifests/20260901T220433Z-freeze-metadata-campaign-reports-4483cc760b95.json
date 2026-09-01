@@ -1,0 +1,34 @@
+{
+  "artifact": "data/metadata/b2pc-2s8n/4483cc760b95833d1600709abf7b8d3cde47408f2b954ae157efb80de345207a.json",
+  "dataset_id": "b2pc-2s8n",
+  "details": {
+    "columns": 35,
+    "publication_date": 1736550253,
+    "rows_updated_at": 1788249765,
+    "view_last_modified": 1788249760
+  },
+  "manifest_version": 1,
+  "operation": "freeze-metadata",
+  "receipt": {
+    "bytes": 67882,
+    "requested_url": "https://data.austintexas.gov/api/views/b2pc-2s8n",
+    "response_headers": {
+      "access-control-allow-origin": "*",
+      "connection": "close",
+      "content-type": "application/json; charset=utf-8",
+      "date": "Tue, 01 Sep 2026 22:04:33 GMT",
+      "server": "nginx",
+      "strict-transport-security": "max-age=31536000; includeSubDomains",
+      "transfer-encoding": "chunked",
+      "vary": "Accept-Encoding",
+      "x-socrata-region": "aws-us-east-1-fedramp-prod",
+      "x-socrata-requestid": "17268effe118ce3c56706bd4f9703512"
+    },
+    "response_url": "https://data.austintexas.gov/api/views/b2pc-2s8n",
+    "retrieved_at": "2026-09-01T22:04:33.245628+00:00",
+    "sha256": "4483cc760b95833d1600709abf7b8d3cde47408f2b954ae157efb80de345207a",
+    "status": 200
+  },
+  "source_slug": "campaign-reports",
+  "title": "Campaign Finance - Report Detail"
+}

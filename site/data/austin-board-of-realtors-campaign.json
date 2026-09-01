@@ -1,0 +1,430 @@
+{
+  "kind": "campaign",
+  "records": [
+    {
+      "amount_cents": 250000,
+      "date": "2026-06-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=476823",
+      "transaction_id": "R20260517100722311-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2025-12-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 300000,
+      "date": "2025-12-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00008",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 480000,
+      "date": "2025-12-18",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 321667,
+      "date": "2025-12-11",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 123900,
+      "date": "2025-12-04",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00007",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 128803,
+      "date": "2025-10-22",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=466109",
+      "transaction_id": "R20250701100721179-A00004",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2025-06-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=455340",
+      "transaction_id": "R20250101100720406-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 275500,
+      "date": "2025-05-22",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=455340",
+      "transaction_id": "R20250101100720406-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 114420,
+      "date": "2025-04-24",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=455340",
+      "transaction_id": "R20250101100720406-A00009",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 31032,
+      "date": "2025-03-26",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=455340",
+      "transaction_id": "R20250101100720406-A00011",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 8000,
+      "date": "2025-02-27",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=455340",
+      "transaction_id": "R20250101100720406-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2024-12-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=444059",
+      "transaction_id": "R20241205100719188-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 15906,
+      "date": "2024-12-19",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=444059",
+      "transaction_id": "R20241205100719188-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 626949,
+      "date": "2024-12-16",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=444059",
+      "transaction_id": "R20241205100719188-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 1656993,
+      "date": "2024-11-11",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=442651",
+      "transaction_id": "R20241027100719010-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 301092,
+      "date": "2024-10-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=442651",
+      "transaction_id": "R20241027100719010-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 443972,
+      "date": "2024-10-29",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=442651",
+      "transaction_id": "R20241027100719010-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 151550,
+      "date": "2024-09-16",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00007",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 1308541,
+      "date": "2024-09-11",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 76900,
+      "date": "2024-08-26",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 261188,
+      "date": "2024-08-25",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00011",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 175906,
+      "date": "2024-08-12",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 324779,
+      "date": "2024-08-11",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 424905,
+      "date": "2024-08-06",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=438487",
+      "transaction_id": "R20240701100718570-A00009",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2024-06-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 38970,
+      "date": "2024-06-29",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00008",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 1627909,
+      "date": "2024-06-06",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 41315,
+      "date": "2024-05-23",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 249780,
+      "date": "2024-05-14",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00004",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 725206,
+      "date": "2024-04-19",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 248663,
+      "date": "2024-02-29",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00007",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 3039257,
+      "date": "2024-02-28",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=432354",
+      "transaction_id": "R20240101100718313-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2023-12-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00003",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 76144,
+      "date": "2023-12-24",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00009",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 921983,
+      "date": "2023-12-15",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 199616,
+      "date": "2023-10-18",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 730659,
+      "date": "2023-09-14",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00010",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 227682,
+      "date": "2023-09-13",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00004",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 219206,
+      "date": "2023-08-21",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 91049,
+      "date": "2023-07-25",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=422142",
+      "transaction_id": "R20230701100717091-A00007",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2023-06-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00008",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 235691,
+      "date": "2023-06-14",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00011",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 41135,
+      "date": "2023-05-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 2406594,
+      "date": "2023-05-04",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00006",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 906898,
+      "date": "2023-03-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 29587,
+      "date": "2023-03-30",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00007",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 1293465,
+      "date": "2023-03-22",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00004",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 286567,
+      "date": "2023-02-12",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00010",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 358698,
+      "date": "2023-02-03",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=412113",
+      "transaction_id": "R20230101100716173-A00005",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 250000,
+      "date": "2022-12-31",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=401212",
+      "transaction_id": "R20221204100715164-A00001",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 120699,
+      "date": "2022-12-24",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=401212",
+      "transaction_id": "R20221204100715164-A00004",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    },
+    {
+      "amount_cents": 344606,
+      "date": "2022-12-15",
+      "recipient": "Austin Board of Realtors PAC",
+      "report_url": "https://services.austintexas.gov/edims/document.cfm?id=401212",
+      "transaction_id": "R20221204100715164-A00002",
+      "type": "Non-Monetary Support From Corporation Or Labor Organization"
+    }
+  ],
+  "schema_version": 1
+}

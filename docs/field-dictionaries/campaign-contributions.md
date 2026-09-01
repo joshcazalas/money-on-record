@@ -2,7 +2,7 @@
 
 - Dataset ID: `3kfv-biw6`
 - Role: `official_projection`
-- Frozen metadata: `data/metadata/3kfv-biw6/59a2b3fc58004e70b974b53bf92f24373aeda32aca7d9826a106d37d2afd3569.json`
+- Frozen metadata: `data/metadata/3kfv-biw6/51a60656aa73b1c287c9425a3bad0bff25548a4070cc91de81b09197d04a53d0.json`
 - Publication rule: default deny; only `PUBLIC_ALLOWLISTED` fields may leave the pipeline.
 
 ## Fields

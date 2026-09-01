@@ -1,10 +1,10 @@
-name: Reusable Terraform deploy
+name: Reusable environment deploy
 
 on:
   workflow_call:
     inputs:
       environment:
-        description: Named Terraform workspace to deploy.
+        description: Named environment Terraform deploys completely.
         required: true
         type: string
       revision:
@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   authorize:
-    name: Authorize Terraform deployment request
+    name: Authorize environment deployment request
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -114,7 +114,7 @@ jobs:
           echo "deploy_allowed=true" >>"$GITHUB_OUTPUT"
 
   deploy:
-    name: Terraform deploy (${{ inputs.environment }})
+    name: Complete environment deploy (${{ inputs.environment }})
     needs: authorize
     if: needs.authorize.outputs.deploy_allowed == 'true'
     permissions:
@@ -136,6 +136,7 @@ jobs:
       STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate
       TF_IN_AUTOMATION: 'true'
       TF_INPUT: '0'
+      TF_VAR_site_artifact_directory: ../../../build/site
       TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
       TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
       DEPLOY_REVISION: ${{ inputs.revision }}
@@ -217,6 +218,47 @@ jobs:
                 exit 1
               }
           fi
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Prepare the exact browser artifact for Terraform
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [[ "$TF_WORKSPACE" == "production" ]]; then
+            release_version="${RELEASE_TAG#v}"
+            release_directory="$RUNNER_TEMP/release-site"
+            archive="$release_directory/money-on-record-site-${release_version}.zip"
+            checksum="${archive}.sha256"
+            mkdir -p "$release_directory"
+            gh release download "$RELEASE_TAG" \
+              --pattern "money-on-record-site-${release_version}.zip" \
+              --pattern "money-on-record-site-${release_version}.zip.sha256" \
+              --pattern "provenance.sigstore.json" \
+              --dir "$release_directory"
+            gh attestation verify "$archive" \
+              --repo "$GITHUB_REPOSITORY" \
+              --bundle "$release_directory/provenance.sigstore.json"
+            artifact_digest="$(cut -d ' ' -f 1 "$checksum")"
+            uv run --locked mor-l0 verify-site \
+              --archive "$archive" \
+              --expected-sha256 "$artifact_digest" \
+              --output build/site
+          else
+            uv run --locked mor-l0 build-site
+            archive="build/money-on-record-site.zip"
+            artifact_digest="$(cut -d ' ' -f 1 build/money-on-record-site.zip.sha256)"
+            uv run --locked mor-l0 verify-site \
+              --archive "$archive" \
+              --expected-sha256 "$artifact_digest"
+          fi
+          [[ "$artifact_digest" =~ ^[0-9a-f]{64}$ ]]
+          echo "SITE_ARTIFACT_DIGEST=$artifact_digest" >>"$GITHUB_ENV"
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
@@ -426,6 +468,65 @@ jobs:
             --key "$STATE_KEY" >/dev/null
           assert_lock_absent
 
+      - name: Smoke-test the Terraform-managed browser deployment
+        working-directory: infra/components/static-site
+        run: |
+          set -euo pipefail
+          site_url="$(terraform output -raw site_url)"
+          headers="$RUNNER_TEMP/site-headers.txt"
+          body="$RUNNER_TEMP/site-body.html"
+
+          assert_deployed_file() {
+            local path="$1"
+            local expected_status="$2"
+            local expected_file="$3"
+            local status=""
+            local _attempt
+
+            for _attempt in {1..12}; do
+              status="$(
+                curl --silent --show-error \
+                  --dump-header "$headers" \
+                  --output "$body" \
+                  --write-out '%{http_code}' \
+                  "${site_url}${path}"
+              )"
+              if [[ "$status" == "$expected_status" ]] && cmp --silent "$body" "$expected_file"; then
+                return 0
+              fi
+              sleep 5
+            done
+            echo "::error::${path} did not serve the Terraform-managed file with HTTP ${expected_status}."
+            return 1
+          }
+
+          assert_deployed_file "/" "200" "$GITHUB_WORKSPACE/build/site/index.html"
+          grep -Eiq '^content-security-policy:.*frame-ancestors .none.' "$headers"
+          grep -Eiq '^permissions-policy:' "$headers"
+          grep -Eiq '^referrer-policy: no-referrer' "$headers"
+          grep -Eiq '^x-content-type-options: nosniff' "$headers"
+          grep -Eiq '^x-robots-tag: noindex, nofollow, noarchive' "$headers"
+
+          assert_deployed_file \
+            "/profiles/austin-board-of-realtors/index.html" \
+            "200" \
+            "$GITHUB_WORKSPACE/build/site/profiles/austin-board-of-realtors/index.html"
+          grep -Fq 'This identity link has not been verified.' "$body"
+          grep -Fq 'data.austintexas.gov/resource/3kfv-biw6.json' "$body"
+
+          assert_deployed_file \
+            "/definitely-not-a-profile" \
+            "404" \
+            "$GITHUB_WORKSPACE/build/site/404.html"
+
+          redirect_status="$(
+            curl --silent --show-error \
+              --output /dev/null \
+              --write-out '%{http_code}' \
+              "http://${site_url#https://}/"
+          )"
+          [[ "$redirect_status" =~ ^30[1278]$ ]]
+
           post_plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-post-apply-plan.log"
           set +e
           terraform plan \
@@ -452,6 +553,7 @@ jobs:
           workload_account_id="$(terraform output -raw workload_account_id)"
           bucket_name="$(terraform output -raw artifact_bucket_name)"
           distribution_id="$(terraform output -raw cloudfront_distribution_id)"
+          site_object_keys="$(terraform output -json site_object_keys)"
           site_url="$(terraform output -raw site_url)"
           state_object_key="$(terraform output -raw state_object_key)"
 
@@ -467,6 +569,9 @@ jobs:
           [[ "$state_object_key" == "$STATE_KEY" ]] || {
             echo "::error::Terraform output reported an unexpected state object key."; exit 1;
           }
+          [[ "$(jq length <<<"$site_object_keys")" -gt 0 ]] || {
+            echo "::error::Terraform did not report any managed browser objects."; exit 1;
+          }
 
           {
             echo "### Verified ${TF_WORKSPACE^} Terraform deployment"
@@ -477,7 +582,10 @@ jobs:
             echo "| Workload account | \`$workload_account_id\` |"
             echo "| Artifact bucket | \`$bucket_name\` |"
             echo "| CloudFront distribution | \`$distribution_id\` |"
+            echo "| Site artifact SHA-256 | \`$SITE_ARTIFACT_DIGEST\` |"
+            echo "| Terraform-managed site objects | \`$(jq length <<<"$site_object_keys")\` |"
             echo "| Site URL | $site_url |"
             echo "| State object | \`s3://$STATE_BUCKET/$state_object_key\` |"
             echo "| Post-apply plan | No changes |"
+            echo "| Browser smoke tests | Exact index, profile, 404, redirect, and headers passed |"
           } >>"$GITHUB_STEP_SUMMARY"

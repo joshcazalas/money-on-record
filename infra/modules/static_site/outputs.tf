@@ -9,7 +9,7 @@ output "bucket_arn" {
 }
 
 output "cloudfront_distribution_id" {
-  description = "CloudFront distribution ID used for deployments and invalidations."
+  description = "CloudFront distribution ID for deployment verification."
   value       = module.cdn.cloudfront_distribution_id
 }
 
@@ -29,4 +29,9 @@ output "site_url" {
     "https://%s",
     length(var.domain_aliases) == 0 ? module.cdn.cloudfront_distribution_domain_name : var.domain_aliases[0],
   )
+}
+
+output "site_object_keys" {
+  description = "Rendered browser object keys managed by Terraform."
+  value       = sort(keys(aws_s3_object.site))
 }

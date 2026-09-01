@@ -23,6 +23,11 @@ output "site_url" {
   value       = local.workspace_supported ? module.static_site[0].site_url : null
 }
 
+output "site_object_keys" {
+  description = "Rendered browser object keys managed by the selected environment."
+  value       = local.workspace_supported ? module.static_site[0].site_object_keys : []
+}
+
 output "state_object_key" {
   description = "Derived centralized S3 backend object key for this workspace."
   value       = local.state_object_key

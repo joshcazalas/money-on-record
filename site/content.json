@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "beta_notice": "This research beta is not yet externally validated. Every cross-source identity remains unverified.",
+  "profiles": [
+    {
+      "slug": "austin-board-of-realtors",
+      "name": "Austin Board of REALTORS",
+      "summary": "A source-auditable view of public records that may refer to the same organization across Austin campaign-finance disclosures and City payment data.",
+      "identity": {
+        "status": "Unverified match",
+        "evidence_tier": "Tier A — strict normalized name",
+        "campaign_name": "Austin Board of REALTORS",
+        "public_spending_name": "AUSTIN BOARD OF REALTORS",
+        "explanation": "The organization names become identical after conservative typography-only normalization. Name agreement alone is not proof that the records describe the same legal organization."
+      },
+      "metrics": [
+        {
+          "kind": "campaign",
+          "label": "Campaign contributions disclosed",
+          "amount_cents": 24013382,
+          "row_count": 53,
+          "row_description": "rows explicitly classified as ENTITY",
+          "source_title": "Campaign Finance — Contributions",
+          "dataset_id": "3kfv-biw6",
+          "dataset_url": "https://data.austintexas.gov/d/3kfv-biw6",
+          "official_rows_url": "https://data.austintexas.gov/resource/3kfv-biw6.json?%24select=transaction_id%2Cdonor%2Cdonor_type%2Crecipient%2Ccontribution_date%2Ccontribution_amount%2Ccontribution_year%2Ccontribution_type%2Cdate_reported%2Creport_filed%2Cin_kind_description%2Cout_of_state_pac%2Ccorrection%2Cview_report&%24where=donor%20%3D%20%27Austin%20Board%20of%20REALTORS%27%20AND%20donor_type%20%3D%20%27ENTITY%27&%24limit=50000",
+          "snapshot_sha256": "365d9e3f5c32aa627849ceae36c58a50bb22e539e31158bcfcd97e1ffec3d01f"
+        },
+        {
+          "kind": "spending",
+          "label": "City payment lines",
+          "amount_cents": 10607210,
+          "row_count": 208,
+          "row_description": "eCheckbook rows under vendor code AUS6036990",
+          "source_title": "Austin Finance Online eCheckbook",
+          "dataset_id": "8c6z-qnmj",
+          "dataset_url": "https://data.austintexas.gov/d/8c6z-qnmj",
+          "official_rows_url": "https://data.austintexas.gov/resource/8c6z-qnmj.json?%24select=fy_dc%2Cper_cd%2Cdept_cd%2Cdept_nm%2Cfund_cd%2Cfund_nm%2Cdiv_cd%2Cdiv_nm%2Cgp_cd%2Cgp_nm%2Cocat_cd%2Cocat_nm%2Cobj_cd%2Cobj_nm%2Clgl_nm%2Cvend_cust_cd%2Cvend_cust_ind%2Crfed_doc_cd%2Crfed_doc_dept_cd%2Crfed_doc_id%2Ccomm_cd%2Ccomm_dscr%2Cchk_eft_iss_dt%2Ccvl_chk_sta_dv%2Crfed_vend_ln_no%2Crfed_comm_ln_no%2Crfed_actg_ln_no%2Crf_doc_cd%2Crf_doc_dept_cd%2Crf_doc_id%2Cactg_ln_dscr%2Camount%2Ccal_year%2Ccal_month&%24where=lgl_nm%20%3D%20%27AUSTIN%20BOARD%20OF%20REALTORS%27%20AND%20vend_cust_cd%20%3D%20%27AUS6036990%27&%24limit=50000",
+          "snapshot_sha256": "a4b9ec9541bb2a36fd433bedc61d83636a23f739c112326743c959e99f0dc23a"
+        }
+      ],
+      "snapshot_date": "August 18, 2026"
+    }
+  ]
+}

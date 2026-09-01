@@ -1,11 +1,9 @@
 # Money on Record — L0
 
-This directory is the repository-ready L0 workspace for **Money on Record**. It
-does not deploy anything and does not require Cloudflare or AWS credentials.
-Its purpose is to prove that the public sources are reproducible, safe to
-publish, and dense enough to justify building a deployed organization-profile
-beta. External usefulness is tested against that beta, not against this local
-workspace.
+This repository contains the reproducible source-safety workspace and the first
+browser-ready **Money on Record** static site. Local work does not require
+Cloudflare or AWS credentials. Each environment's Terraform apply owns both
+infrastructure and publication of the reviewed browser artifact.
 
 The initial scope is six official City of Austin open-data sources:
 
@@ -42,6 +40,37 @@ uv run pytest
 
 No app token is needed for occasional downloads, but Socrata rate limits are
 friendlier when `AUSTIN_SOCRATA_APP_TOKEN` is set. Never commit that value.
+
+## Static site
+
+The reviewed, privacy-safe site input is [`site/content.json`](site/content.json).
+Build it without network or cloud access:
+
+```bash
+uv run --locked mor-l0 build-site
+uv run --locked mor-l0 verify-site \
+  --archive build/money-on-record-site.zip \
+  --expected-sha256 "$(cut -d ' ' -f 1 build/money-on-record-site.zip.sha256)"
+```
+
+The command creates `build/site/`, a byte-for-byte reproducible ZIP, and its
+SHA-256 checksum. Generated files remain ignored; source content, builder code,
+and tests are reviewed in pull requests. The archive contains only rendered
+HTML, a content-hashed stylesheet, `robots.txt`, and a source-fingerprint
+manifest—never raw downloads or candidate-review worksheets.
+
+The environment's Terraform apply is the complete deployment. A UAT deployment
+builds and verifies the exact current `main` artifact before AWS authentication;
+Terraform then manages every rendered S3 object alongside the bucket and
+CloudFront configuration. HTML and manifests revalidate, content-hashed assets
+are immutable, and removing a generated path removes its state-owned object.
+There is no separate upload workflow or post-apply publication step.
+
+Production uses the same path but obtains `money-on-record-site-<version>.zip`
+and its checksum from the selected immutable GitHub release. The release asset
+is verified and extracted before the saved production plan is created, so that
+single Terraform apply publishes the exact released files rather than
+rebuilding them from a branch.
 
 ## Reproducible L0 workflow
 
@@ -87,7 +116,7 @@ aggregate-only review report under `reports/reviews/`.
 L0 deliberately does **not** do fuzzy person matching, infer household
 relationships, or trust `MIS...` vendor codes as stable identities. See
 [`docs/l0-acceptance.md`](docs/l0-acceptance.md) for the passed build gate and
-the validation deliberately deferred until a browser-accessible beta exists.
+the external validation that begins after this browser artifact is published.
 
 Current results and the repo-ready handoff are in
 [`docs/work-log.md`](docs/work-log.md) and

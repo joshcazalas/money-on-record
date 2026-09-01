@@ -22,6 +22,13 @@ variable "environment" {
   }
 }
 
+variable "site_artifact_directory" {
+  description = "Optional rendered site directory. Every file beneath it is managed as an S3 object."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "domain_aliases" {
   description = "Optional CloudFront aliases; leave empty until ACM and DNS are configured."
   type        = list(string)

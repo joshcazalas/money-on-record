@@ -93,7 +93,7 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
     assert "Check out pull-request source" in source
     assert "Check out trusted planning code" in source
-    assert source.count("persist-credentials: false") == 2
+    assert source.count("persist-credentials: false") == 3
     assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
     assert 'terraform -chdir="$root_directory" init' in runner
     assert "-backend-config=use_lockfile=false" in runner
@@ -253,6 +253,9 @@ def test_release_is_manual_attested_and_optionally_deploys_production() -> None:
     assert "uv export" in source
     assert "--format cyclonedx1.5" in source
     assert "uv build" in source
+    assert "mor-l0 build-site" in source
+    assert "money-on-record-site-${RELEASE_VERSION}.zip" in source
+    assert "money-on-record-site-${RELEASE_VERSION}.zip.sha256" in source
     assert "anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26" in source
     assert source.count("actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6") == 3
     assert "dependency-snapshot: true" in source

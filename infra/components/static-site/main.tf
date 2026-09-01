@@ -83,10 +83,11 @@ module "static_site" {
   count  = local.workspace_supported ? 1 : 0
   source = "../../modules/static_site"
 
-  bucket_name         = local.site_bucket_name
-  environment         = local.environment
-  domain_aliases      = local.domain_aliases
-  acm_certificate_arn = local.acm_certificate_arn
-  web_acl_id          = local.web_acl_id
-  tags                = var.tags
+  bucket_name             = local.site_bucket_name
+  environment             = local.environment
+  domain_aliases          = local.domain_aliases
+  acm_certificate_arn     = local.acm_certificate_arn
+  web_acl_id              = local.web_acl_id
+  site_artifact_directory = var.site_artifact_directory
+  tags                    = var.tags
 }

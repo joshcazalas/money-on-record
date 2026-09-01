@@ -1,6 +1,6 @@
-name: Deploy Terraform to UAT
+name: Deploy to UAT
 
-run-name: Deploy Terraform to UAT from ${{ github.sha }} by @${{ github.actor }}
+run-name: Deploy UAT from ${{ github.sha }} by @${{ github.actor }}
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions: {}
 
 jobs:
   deploy-uat:
-    name: Deploy Terraform to UAT
+    name: Deploy complete environment to UAT
     if: github.event_name == 'push' || inputs.confirm_uat_deployment
     permissions:
       contents: read

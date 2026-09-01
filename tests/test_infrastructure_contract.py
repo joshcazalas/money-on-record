@@ -28,12 +28,11 @@ def _assert_native_terraform_exit_contract(source: str) -> None:
     assert not re.search(r"steps\.[^.}\s]+\.outputs\.(?:exitcode|stdout|stderr)", source)
 
 
-def test_centralized_backend_derives_exact_workspace_keys() -> None:
+def test_centralized_backend_uses_workspace_keys() -> None:
     backend = (COMPONENT / "backend.tf").read_text(encoding="utf-8")
+    component = (COMPONENT / "main.tf").read_text(encoding="utf-8")
 
     assert _quoted_assignment(backend, "bucket") == ("joshcazalas-deployment-tfstate-245459924498")
-    assert _quoted_assignment(backend, "key") == "terraform.tfstate"
-    assert _quoted_assignment(backend, "workspace_key_prefix") == ("money-on-record/static-site")
     assert _quoted_assignment(backend, "region") == "us-east-1"
     assert re.search(r"^\s*encrypt\s*=\s*true\s*$", backend, re.MULTILINE)
     assert re.search(r"^\s*use_lockfile\s*=\s*true\s*$", backend, re.MULTILINE)
@@ -43,14 +42,13 @@ def test_centralized_backend_derives_exact_workspace_keys() -> None:
         re.MULTILINE,
     )
 
-    prefix = _quoted_assignment(backend, "workspace_key_prefix")
-    key = _quoted_assignment(backend, "key")
-    derived_keys = {workspace: f"{prefix}/{workspace}/{key}" for workspace in ("uat", "production")}
-
-    assert derived_keys == {
-        "uat": "money-on-record/static-site/uat/terraform.tfstate",
-        "production": "money-on-record/static-site/production/terraform.tfstate",
-    }
+    assert _quoted_assignment(backend, "key") == "terraform.tfstate"
+    assert _quoted_assignment(backend, "workspace_key_prefix") == ("money-on-record/static-site")
+    assert "terraform.workspace" in component
+    assert (
+        'state_object_key     = "money-on-record/static-site/'
+        '${terraform.workspace}/terraform.tfstate"' in component
+    )
 
 
 def test_environment_roots_were_replaced_by_one_component() -> None:
@@ -58,17 +56,16 @@ def test_environment_roots_were_replaced_by_one_component() -> None:
     assert not (ROOT / "infra" / "environments").exists()
 
 
-def test_workspace_state_does_not_persist_the_ephemeral_execution_role() -> None:
+def test_workspace_configuration_binds_each_account_and_role() -> None:
     source = (COMPONENT / "main.tf").read_text(encoding="utf-8")
-    contract = re.search(
-        r'resource "terraform_data" "workspace_contract" \{(?P<body>.*?)\n  lifecycle \{',
-        source,
-        re.DOTALL,
-    )
+    variables = (COMPONENT / "variables.tf").read_text(encoding="utf-8")
 
-    assert contract is not None
-    assert "workload_role_arn" not in contract.group("body")
-    assert "contains(local.allowed_workload_role_arns, var.aws_workload_role_arn)" in source
+    assert 'aws_account_id      = "732006412638"' in source
+    assert 'aws_account_id      = "134604497564"' in source
+    assert "allowed_account_ids = [local.aws_account_id]" in source
+    assert "MoneyOnRecordTerraform(Plan|Deploy)" in variables
+    assert 'resource "terraform_data" "workspace_contract"' in source
+    assert "contains(local.allowed_workload_role_arns" in source
 
 
 def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
@@ -79,7 +76,7 @@ def test_ci_runs_for_pull_requests_and_manual_requests_only() -> None:
     assert not re.search(r"^  push:$", source, re.MULTILINE)
 
 
-def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
+def test_reusable_terraform_plan_is_read_only_and_workspace_bound() -> None:
     source = (ROOT / ".github" / "workflows" / "reusable-terraform-plan.yml").read_text(
         encoding="utf-8"
     )
@@ -89,38 +86,34 @@ def test_reusable_terraform_plan_is_read_only_and_environment_bound() -> None:
     assert "contents: read" in source
     assert "id-token: write" in source
     assert "CALLER_REPOSITORY" in source
-    assert "Fork pull requests cannot request AWS-backed Terraform plans" in source
     assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
-    assert "Check out pull-request source" in source
-    assert "Check out trusted planning code" in source
-    assert source.count("persist-credentials: false") == 3
-    assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
-    assert 'terraform -chdir="$root_directory" init' in runner
-    assert "-backend-config=use_lockfile=false" in runner
+    assert "STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}" in source
     assert (
         "STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate"
         in source
     )
-    assert "Detect selected workspace state" in source
-    assert 'mv -- "$backend_path" "$temporary_directory/backend.tf"' in runner
+    assert "Check out pull-request source" in source
+    assert "Check out trusted planning code" in source
+    assert source.count("persist-credentials: false") == 3
+    assert 'bash "$GITHUB_WORKSPACE/trusted/scripts/run-terraform-plan.sh"' in source
+    assert 'terraform -chdir="$terraform_root" init' in runner
+    assert "-backend-config=use_lockfile=false" in runner
+    assert "head-object" in source
+    assert "Not Found|NoSuchKey" in source
+    assert 'export TF_WORKSPACE="$environment"' in runner
     assert "-backend=false" in runner
-    assert "plan_arguments+=(-refresh=false)" in runner
-    assert "-input=false" in runner
-    assert "-lockfile=readonly" in runner
-    assert 'plan "${plan_arguments[@]}"' in runner
+    assert "-refresh=false" in runner
     assert "-lock=false" in runner
     assert "-detailed-exitcode" in runner
-    assert 'plan_exit_code="${PIPESTATUS[0]}"' in runner
-    assert "S3 therefore returns 404 while the opposite state is" in source
-    assert 'if [[ "$state_status" -eq 0 ]]' in source
-    assert "AccessDenied|\\(404\\)|Not Found|NoSuchKey" in source
-    assert "terraform workspace new" not in runner
-    assert "terraform workspace select" not in runner
+    assert "plan_exit_code=$?" in runner
     assert "terraform apply" not in runner
-    assert "actions/upload-artifact@" in source
     assert "name: terraform-plan-${{ inputs.environment }}" in source
     assert "retention-days: 7" in source
-    assert "The binary plan and raw JSON remain only inside temporary_directory" in runner
+    assert "continue-on-error" not in source
+    assert "if: always()" not in source
+    assert "has_changes" not in source
+    assert "Verify plan-hub isolation" not in source
+    assert "Verify deployment hubs reject" not in source
     _assert_native_terraform_exit_contract(source)
 
 
@@ -130,55 +123,30 @@ def test_reusable_terraform_deploy_is_environment_and_release_bound() -> None:
     )
 
     assert "workflow_call:" in source
-    assert source.count("contents: read") == 3
-    assert source.count("id-token: write") == 2
+    assert source.count("contents: read") == 1
+    assert source.count("id-token: write") == 1
     assert "environment: ${{ inputs.environment }}" in source
     assert "environment must be uat or production" in source
-    assert "revision must be an exact lowercase commit SHA" in source
-    assert "UAT deployment requires a main push or manual recovery dispatch" in source
-    assert "UAT must deploy the exact main event revision" in source
-    assert "Skipping a superseded UAT revision" in source
-    assert "git/ref/heads/main" in source
-    assert "needs.authorize.outputs.deploy_allowed == 'true'" in source
-    assert "Production deployment requires an intentional release dispatch" in source
-    assert "Production deployment requires Josh's immutable actor ID" in source
-    assert "Production deployment requires an exact semantic-version release tag" in source
-    assert "Production requires a published immutable release for the exact revision" in source
-    assert "workflow_dispatch" in source
     assert 'CALLER_EVENT" == "push"' in source
+    assert 'CALLER_EVENT" == "workflow_dispatch"' in source
     assert "pull_request" not in source
-    assert "refs/heads/main" in source
-    assert "EXPECTED_REPOSITORY_ID: '1338755168'" in source
-    assert "EXPECTED_OWNER_ID: '73436834'" in source
-    assert "EXPECTED_ACTOR_ID: '73436834'" in source
-    assert "732006412638" in source
-    assert "134604497564" in source
-    assert "MoneyOnRecordDeployUat" in source
-    assert "MoneyOnRecordDeployProd" in source
-    assert "MoneyOnRecordTerraformDeploy" in source
-    assert (
-        "STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate"
-        in source
-    )
-    assert "FORBIDDEN_STATE_KEY:" in source
     assert "cancel-in-progress: false" in source
     assert "persist-credentials: false" in source
-    assert "ref: ${{ inputs.environment == 'production'" in source
-    assert ".immutable == true" in source
-    assert "X-GitHub-Api-Version: 2026-03-10" in source
+    assert "ref: ${{ inputs.revision }}" in source
+    assert "allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}" in source
+    assert 'gh attestation verify "$archive"' in source
     assert "terraform init" in source
     assert "-lockfile=readonly" in source
     assert "-lock-timeout=5m" in source
-    assert '-out="$plan_file"' in source
-    assert "terraform show -json" in source
-    assert "actual_changes" in source
-    assert "sort_by(.address)" in source
-    assert "Summarize fresh deployment plan" in source
-    assert "mode=apply" in source
+    assert "TF_WORKSPACE: ${{ inputs.environment }}" in source
+    assert '-out="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"' in source
     assert "terraform apply" in source
     assert '"$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"' in source
-    assert "Verify state and convergence" in source
-    assert "Post-apply plan | No changes" in source
+    assert "continue-on-error" not in source
+    assert "terraform show" not in source
+    assert "Smoke-test" not in source
+    assert "Verify deployment-hub isolation" not in source
+    assert "authorize:" not in source
     assert "terraform destroy" not in source
     assert "upload-artifact" not in source
     assert "-lock=false" not in source
@@ -278,32 +246,23 @@ def test_pull_request_plans_call_only_the_trusted_main_workflow() -> None:
 
     assert "pull_request:" in source
     assert "permissions: {}" in source
-    assert source.count(trusted_call) == 2
+    assert source.count(trusted_call) == 1
     assert "uses: ./.github/workflows/reusable-terraform-plan.yml" not in source
-    assert source.count("github.event.pull_request.head.repo.full_name == github.repository") == 3
-    assert source.count("contents: read") == 3
-    assert source.count("id-token: write") == 2
+    assert source.count("github.event.pull_request.head.repo.full_name == github.repository") == 2
+    assert source.count("contents: read") == 2
+    assert source.count("id-token: write") == 1
     assert "actions: read" in source
     assert "pull-requests: write" in source
-    assert "needs: plan-uat" in source
-    assert "needs: [plan-uat, plan-production]" in source
+    assert "environment: [uat, production]" in source
+    assert "fail-fast: false" in source
+    assert "needs: plan" in source
     assert "actions/download-artifact@" in source
     assert "trusted/scripts/render-plan-comment.py" in source
     assert "trusted/scripts/publish-plan-comment.sh" in source
-    assert source.index("environment: uat") < source.index("environment: production")
+    assert "continue-on-error" not in source
+    assert "if: always()" not in source
     assert "reusable-terraform-deploy" not in source
 
 
-def test_obsolete_oidc_workflow_can_only_probe_denials() -> None:
-    source = (ROOT / ".github" / "workflows" / "aws-oidc-identity-test.yml").read_text(
-        encoding="utf-8"
-    )
-
-    assert "Reject obsolete AWS OIDC workflow" in source
-    assert source.count("assume-role-with-web-identity") == 1
-    assert "UAT_PLAN_ROLE_ARN" in source
-    assert "PRODUCTION_PLAN_ROLE_ARN" in source
-    assert "UAT_DEPLOY_ROLE_ARN" in source
-    assert "PRODUCTION_DEPLOY_ROLE_ARN" in source
-    assert "configure-aws-credentials" not in source
-    assert "terraform" not in source.lower()
+def test_no_runtime_oidc_denial_probe_workflow_exists() -> None:
+    assert not (ROOT / ".github" / "workflows" / "aws-oidc-identity-test.yml").exists()

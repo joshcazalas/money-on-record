@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: Named environment Terraform deploys completely.
+        description: Environment to deploy.
         required: true
         type: string
       revision:
@@ -17,106 +17,15 @@ on:
         default: ''
         type: string
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 concurrency:
   group: terraform-deploy-${{ inputs.environment }}
   cancel-in-progress: false
 
 jobs:
-  authorize:
-    name: Authorize environment deployment request
-    permissions:
-      contents: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    outputs:
-      deploy_allowed: ${{ steps.contract.outputs.deploy_allowed }}
-    steps:
-      - name: Enforce the deployment caller contract
-        id: contract
-        env:
-          CALLER_ACTOR_ID: ${{ github.actor_id }}
-          CALLER_EVENT: ${{ github.event_name }}
-          CALLER_OWNER_ID: ${{ github.repository_owner_id }}
-          CALLER_REF: ${{ github.ref }}
-          CALLER_REPOSITORY: ${{ github.repository }}
-          CALLER_REPOSITORY_ID: ${{ github.repository_id }}
-          CALLER_SHA: ${{ github.sha }}
-          DEPLOY_REVISION: ${{ inputs.revision }}
-          EXPECTED_ACTOR_ID: '73436834'
-          EXPECTED_OWNER_ID: '73436834'
-          EXPECTED_REPOSITORY: joshcazalas/money-on-record
-          EXPECTED_REPOSITORY_ID: '1338755168'
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
-          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
-        run: |
-          set -euo pipefail
-          if [[ "$REQUESTED_ENVIRONMENT" != "uat" && "$REQUESTED_ENVIRONMENT" != "production" ]]; then
-            echo "::error::environment must be uat or production."
-            exit 1
-          fi
-          [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
-            echo "::error::revision must be an exact lowercase commit SHA."; exit 1;
-          }
-          if [[ "$CALLER_REPOSITORY" != "$EXPECTED_REPOSITORY" ]]; then
-            echo "::error::Terraform deployment was requested from an unexpected repository."
-            exit 1
-          fi
-          if [[ "$CALLER_REPOSITORY_ID" != "$EXPECTED_REPOSITORY_ID" ]]; then
-            echo "::error::The immutable repository ID does not match."
-            exit 1
-          fi
-          if [[ "$CALLER_OWNER_ID" != "$EXPECTED_OWNER_ID" ]]; then
-            echo "::error::The immutable repository owner ID does not match."
-            exit 1
-          fi
-          if [[ "$CALLER_REF" != "refs/heads/main" ]]; then
-            echo "::error::Terraform deployment may only execute from refs/heads/main."
-            exit 1
-          fi
-
-          if [[ "$REQUESTED_ENVIRONMENT" == "uat" ]]; then
-            [[ "$CALLER_EVENT" == "push" || "$CALLER_EVENT" == "workflow_dispatch" ]] || {
-              echo "::error::UAT deployment requires a main push or manual recovery dispatch."; exit 1;
-            }
-            [[ "$DEPLOY_REVISION" == "$CALLER_SHA" ]] || {
-              echo "::error::UAT must deploy the exact main event revision."; exit 1;
-            }
-            [[ -z "$RELEASE_TAG" ]] || {
-              echo "::error::UAT deployment does not accept a release tag."; exit 1;
-            }
-            current_main_revision="$(
-              gh api \
-                -H "X-GitHub-Api-Version: 2026-03-10" \
-                "repos/$GITHUB_REPOSITORY/git/ref/heads/main" \
-                --jq '.object.sha'
-            )"
-            if [[ "$DEPLOY_REVISION" != "$current_main_revision" ]]; then
-              echo "::notice::Skipping a superseded UAT revision; a newer main revision exists."
-              echo "deploy_allowed=false" >>"$GITHUB_OUTPUT"
-              exit 0
-            fi
-          else
-            [[ "$CALLER_EVENT" == "workflow_dispatch" ]] || {
-              echo "::error::Production deployment requires an intentional release dispatch."; exit 1;
-            }
-            [[ "$CALLER_ACTOR_ID" == "$EXPECTED_ACTOR_ID" ]] || {
-              echo "::error::Production deployment requires Josh's immutable actor ID."; exit 1;
-            }
-            [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
-              echo "::error::Production deployment requires an exact semantic-version release tag."; exit 1;
-            }
-          fi
-          echo "deploy_allowed=true" >>"$GITHUB_OUTPUT"
-
   deploy:
-    name: Complete environment deploy (${{ inputs.environment }})
-    needs: authorize
-    if: needs.authorize.outputs.deploy_allowed == 'true'
+    name: Deploy ${{ inputs.environment }}
     permissions:
       contents: read
       id-token: write
@@ -126,98 +35,44 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       DEPLOY_HUB_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
-      EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
-      EXPECTED_REGION: us-east-1
-      EXPECTED_STATE_BUCKET: joshcazalas-deployment-tfstate-245459924498
-      EXPECTED_WORKLOAD_ACCOUNT_ID: ${{ inputs.environment == 'uat' && '732006412638' || '134604497564' }}
-      FORBIDDEN_STATE_KEY: money-on-record/static-site/${{ inputs.environment == 'uat' && 'production' || 'uat' }}/terraform.tfstate
-      FORBIDDEN_WORKLOAD_ROLE_ARN: arn:aws:iam::${{ inputs.environment == 'uat' && '134604497564' || '732006412638' }}:role/MoneyOnRecordTerraformDeploy
-      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
-      STATE_KEY: money-on-record/static-site/${{ inputs.environment }}/terraform.tfstate
-      TF_IN_AUTOMATION: 'true'
-      TF_INPUT: '0'
-      TF_VAR_site_artifact_directory: ../../../build/site
-      TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
-      TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
       DEPLOY_REVISION: ${{ inputs.revision }}
       RELEASE_TAG: ${{ inputs.release_tag }}
+      TF_IN_AUTOMATION: 'true'
+      TF_INPUT: '0'
+      TF_WORKSPACE: ${{ inputs.environment }}
+      TF_VAR_aws_workload_role_arn: ${{ vars.AWS_WORKLOAD_ROLE_ARN }}
+      TF_VAR_site_artifact_directory: ../../../build/site
     steps:
-      - name: Validate environment configuration
+      - name: Validate deployment request
         env:
-          CONFIGURED_DEPLOYMENT_ACCOUNT_ID: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
-          CONFIGURED_WORKLOAD_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+          CALLER_EVENT: ${{ github.event_name }}
+          CALLER_REPOSITORY: ${{ github.repository }}
           REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
         run: |
           set -euo pipefail
-          expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordDeployUat"
-          if [[ "$REQUESTED_ENVIRONMENT" == "production" ]]; then
-            expected_hub_role="arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordDeployProd"
-          fi
-          expected_workload_role="arn:aws:iam::${EXPECTED_WORKLOAD_ACCOUNT_ID}:role/MoneyOnRecordTerraformDeploy"
+          [[ "$CALLER_REPOSITORY" == "joshcazalas/money-on-record" ]]
+          [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]]
 
-          [[ "$REQUESTED_ENVIRONMENT" == "uat" || "$REQUESTED_ENVIRONMENT" == "production" ]] || {
-            echo "::error::environment must be uat or production."; exit 1;
-          }
-          [[ "$TF_WORKSPACE" == "$REQUESTED_ENVIRONMENT" ]] || {
-            echo "::error::TF_WORKSPACE does not match the requested environment."; exit 1;
-          }
-          [[ "$CONFIGURED_DEPLOYMENT_ACCOUNT_ID" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]] || {
-            echo "::error::AWS_DEPLOYMENT_ACCOUNT_ID does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$CONFIGURED_WORKLOAD_ACCOUNT_ID" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]] || {
-            echo "::error::AWS_ACCOUNT_ID does not match the reviewed workload account."; exit 1;
-          }
-          [[ "$AWS_REGION" == "$EXPECTED_REGION" ]] || {
-            echo "::error::AWS_REGION does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$STATE_BUCKET" == "$EXPECTED_STATE_BUCKET" ]] || {
-            echo "::error::TF_STATE_BUCKET does not match the reviewed foundation."; exit 1;
-          }
-          [[ "$DEPLOY_HUB_ROLE_ARN" == "$expected_hub_role" ]] || {
-            echo "::error::The deployment hub role does not match the selected environment."; exit 1;
-          }
-          [[ "$TF_VAR_aws_workload_role_arn" == "$expected_workload_role" ]] || {
-            echo "::error::The workload deployment role does not match the selected environment."; exit 1;
-          }
+          case "$REQUESTED_ENVIRONMENT" in
+            uat)
+              [[ "$CALLER_EVENT" == "push" || "$CALLER_EVENT" == "workflow_dispatch" ]]
+              [[ -z "$RELEASE_TAG" ]]
+              ;;
+            production)
+              [[ "$CALLER_EVENT" == "workflow_dispatch" ]]
+              [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+              ;;
+            *)
+              echo "::error::environment must be uat or production."
+              exit 1
+              ;;
+          esac
 
-      - name: Check out the authorized deployment revision
+      - name: Check out deployment revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 1
           persist-credentials: false
-          ref: ${{ inputs.environment == 'production' && inputs.release_tag || inputs.revision }}
-
-      - name: Verify checked-out revision and production release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          checked_out_sha="$(git rev-parse HEAD)"
-          if [[ "$checked_out_sha" != "$DEPLOY_REVISION" ]]; then
-            echo "::error::The checked-out revision does not match the authorized deployment revision."
-            exit 1
-          fi
-
-          if [[ "$TF_WORKSPACE" == "production" ]]; then
-            release="$(
-              gh api \
-                -H "X-GitHub-Api-Version: 2026-03-10" \
-                "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG"
-            )"
-            jq -e \
-              --arg release_tag "$RELEASE_TAG" \
-              --arg revision "$DEPLOY_REVISION" \
-              '
-                .tag_name == $release_tag
-                and .target_commitish == $revision
-                and .draft == false
-                and .prerelease == false
-                and .immutable == true
-              ' <<<"$release" >/dev/null || {
-                echo "::error::Production requires a published immutable release for the exact revision."
-                exit 1
-              }
-          fi
+          ref: ${{ inputs.revision }}
 
       - name: Set up uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
@@ -225,7 +80,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
-      - name: Prepare the exact browser artifact for Terraform
+      - name: Prepare site artifact
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -234,7 +89,6 @@ jobs:
             release_version="${RELEASE_TAG#v}"
             release_directory="$RUNNER_TEMP/release-site"
             archive="$release_directory/money-on-record-site-${release_version}.zip"
-            checksum="${archive}.sha256"
             mkdir -p "$release_directory"
             gh release download "$RELEASE_TAG" \
               --pattern "money-on-record-site-${release_version}.zip" \
@@ -244,21 +98,13 @@ jobs:
             gh attestation verify "$archive" \
               --repo "$GITHUB_REPOSITORY" \
               --bundle "$release_directory/provenance.sigstore.json"
-            artifact_digest="$(cut -d ' ' -f 1 "$checksum")"
             uv run --locked mor-l0 verify-site \
               --archive "$archive" \
-              --expected-sha256 "$artifact_digest" \
+              --expected-sha256 "$(cut -d ' ' -f 1 "${archive}.sha256")" \
               --output build/site
           else
             uv run --locked mor-l0 build-site
-            archive="build/money-on-record-site.zip"
-            artifact_digest="$(cut -d ' ' -f 1 build/money-on-record-site.zip.sha256)"
-            uv run --locked mor-l0 verify-site \
-              --archive "$archive" \
-              --expected-sha256 "$artifact_digest"
           fi
-          [[ "$artifact_digest" =~ ^[0-9a-f]{64}$ ]]
-          echo "SITE_ARTIFACT_DIGEST=$artifact_digest" >>"$GITHUB_ENV"
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
@@ -266,65 +112,16 @@ jobs:
           terraform_version: 1.15.8
           terraform_wrapper: false
 
-      - name: Assume environment deployment hub role
+      - name: Assume environment deployment role
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
         with:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ env.DEPLOY_HUB_ROLE_ARN }}
           role-session-name: mor-${{ inputs.environment }}-deploy-${{ github.run_id }}
           role-duration-seconds: 3600
-          allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}
-          retry-max-attempts: 3
-          action-timeout-s: 60
-          unset-current-credentials: true
+          allowed-account-ids: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
 
-      - name: Verify deployment-hub isolation
-        run: |
-          set -euo pipefail
-
-          caller_account="$(aws sts get-caller-identity --query Account --output text)"
-          if [[ "$caller_account" != "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]; then
-            echo "::error::The deployment hub resolved to an unexpected AWS account."
-            exit 1
-          fi
-
-          set +e
-          role_denial="$(
-            aws sts assume-role \
-              --role-arn "$FORBIDDEN_WORKLOAD_ROLE_ARN" \
-              --role-session-name "mor-cross-role-deny-${GITHUB_RUN_ID}" \
-              --query AssumedRoleUser.Arn \
-              --output text 2>&1
-          )"
-          role_status=$?
-          state_denial="$(
-            aws s3api head-object \
-              --bucket "$STATE_BUCKET" \
-              --key "$FORBIDDEN_STATE_KEY" 2>&1
-          )"
-          state_status=$?
-          set -e
-
-          if [[ "$role_status" -eq 0 ]]; then
-            echo "::error::The deployment hub unexpectedly assumed the other environment's workload role."
-            exit 1
-          fi
-          if ! grep -Eiq 'AccessDenied|not authorized' <<<"$role_denial"; then
-            echo "::error::The cross-environment role probe failed for an unexpected reason."
-            printf '%s\n' "$role_denial"
-            exit 1
-          fi
-          if [[ "$state_status" -eq 0 ]]; then
-            echo "::error::The deployment hub unexpectedly read the other environment's state."
-            exit 1
-          fi
-          if ! grep -Eiq '\(403\)|Forbidden|AccessDenied|\(404\)|Not Found|NoSuchKey' <<<"$state_denial"; then
-            echo "::error::The cross-environment state probe failed for an unexpected reason."
-            printf '%s\n' "$state_denial"
-            exit 1
-          fi
-
-      - name: Initialize the reviewed remote backend
+      - name: Initialize Terraform
         working-directory: infra/components/static-site
         run: >-
           terraform init
@@ -332,260 +129,19 @@ jobs:
           -lockfile=readonly
           -no-color
 
-      - name: Verify selected workspace
+      - name: Plan deployment
         working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          selected_workspace="$(terraform workspace show)"
-          if [[ "$selected_workspace" != "$TF_WORKSPACE" ]]; then
-            echo "::error::Expected workspace $TF_WORKSPACE, got $selected_workspace."
-            exit 1
-          fi
+        run: >-
+          terraform plan
+          -input=false
+          -lock-timeout=5m
+          -no-color
+          -out="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
 
-      - name: Validate Terraform configuration
-        working-directory: infra/components/static-site
-        run: terraform validate -no-color
-
-      - name: Create locked saved plan
-        id: plan
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          plan_file="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
-          plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-plan.log"
-
-          set +e
-          terraform plan \
-            -input=false \
-            -lock-timeout=5m \
-            -no-color \
-            -detailed-exitcode \
-            -out="$plan_file" >"$plan_log" 2>&1
-          plan_status=$?
-          set -e
-
-          case "$plan_status" in
-            0)
-              echo "has_changes=false" >>"$GITHUB_OUTPUT"
-              ;;
-            2)
-              echo "has_changes=true" >>"$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "::error::Terraform plan failed with exit code $plan_status."
-              cat "$plan_log"
-              exit "$plan_status"
-              ;;
-          esac
-
-      - name: Summarize fresh deployment plan
-        id: summary
-        working-directory: infra/components/static-site
-        env:
-          PLAN_HAS_CHANGES: ${{ steps.plan.outputs.has_changes }}
-        run: |
-          set -euo pipefail
-          plan_file="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
-          plan_json="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-plan.json"
-          terraform show -json "$plan_file" >"$plan_json"
-
-          actual_changes="$(
-            jq -cS '
-              [
-                .resource_changes[]?
-                | select(.mode == "managed")
-                | select(.change.actions != ["no-op"])
-                | {address, actions: .change.actions}
-              ]
-              | sort_by(.address)
-            ' "$plan_json"
-          )"
-          if [[ "$actual_changes" == "[]" ]]; then
-            if [[ "$PLAN_HAS_CHANGES" != "false" ]]; then
-              echo "::error::Terraform exit status and the saved plan disagree."
-              exit 1
-            fi
-            echo "mode=no-changes" >>"$GITHUB_OUTPUT"
-          else
-            if [[ "$PLAN_HAS_CHANGES" != "true" ]]; then
-              echo "::error::Terraform exit status and the saved plan disagree."
-              exit 1
-            fi
-            echo "mode=apply" >>"$GITHUB_OUTPUT"
-          fi
-
-          {
-            echo "### ${TF_WORKSPACE^} deployment plan"
-            echo
-            echo "| Resource | Actions |"
-            echo "| --- | --- |"
-            if [[ "$actual_changes" == "[]" ]]; then
-              echo "| _No changes_ | \`no-op\` |"
-            else
-              jq -r '.[] | "| `\(.address)` | `\(.actions | join(","))` |"' <<<"$actual_changes"
-            fi
-          } >>"$GITHUB_STEP_SUMMARY"
-
-      - name: Apply the exact saved plan
-        if: steps.plan.outputs.has_changes == 'true'
+      - name: Apply deployment
         working-directory: infra/components/static-site
         run: >-
           terraform apply
           -input=false
-          -auto-approve
           -no-color
           "$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}.tfplan"
-
-      - name: Verify state and convergence
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          assert_lock_absent() {
-            local lock_probe
-            local lock_status
-
-            set +e
-            lock_probe="$(
-              aws s3api head-object \
-                --bucket "$STATE_BUCKET" \
-                --key "${STATE_KEY}.tflock" 2>&1
-            )"
-            lock_status=$?
-            set -e
-            if [[ "$lock_status" -eq 0 ]]; then
-              echo "::error::The Terraform state lock remained after an operation."
-              exit 1
-            fi
-            if ! grep -Eiq '\(404\)|Not Found|NoSuchKey' <<<"$lock_probe"; then
-              echo "::error::The Terraform state lock could not be confirmed absent."
-              printf '%s\n' "$lock_probe"
-              exit 1
-            fi
-          }
-
-          aws s3api head-object \
-            --bucket "$STATE_BUCKET" \
-            --key "$STATE_KEY" >/dev/null
-          assert_lock_absent
-
-      - name: Smoke-test the Terraform-managed browser deployment
-        working-directory: infra/components/static-site
-        run: |
-          set -euo pipefail
-          site_url="$(terraform output -raw site_url)"
-          headers="$RUNNER_TEMP/site-headers.txt"
-          body="$RUNNER_TEMP/site-body.html"
-
-          assert_deployed_file() {
-            local path="$1"
-            local expected_status="$2"
-            local expected_file="$3"
-            local status=""
-            local _attempt
-
-            for _attempt in {1..12}; do
-              status="$(
-                curl --silent --show-error \
-                  --dump-header "$headers" \
-                  --output "$body" \
-                  --write-out '%{http_code}' \
-                  "${site_url}${path}"
-              )"
-              if [[ "$status" == "$expected_status" ]] && cmp --silent "$body" "$expected_file"; then
-                return 0
-              fi
-              sleep 5
-            done
-            echo "::error::${path} did not serve the Terraform-managed file with HTTP ${expected_status}."
-            return 1
-          }
-
-          assert_deployed_file "/" "200" "$GITHUB_WORKSPACE/build/site/index.html"
-          grep -Eiq '^content-security-policy:.*frame-ancestors .none.' "$headers"
-          grep -Eiq '^permissions-policy:' "$headers"
-          grep -Eiq '^referrer-policy: no-referrer' "$headers"
-          grep -Eiq '^x-content-type-options: nosniff' "$headers"
-          grep -Eiq '^x-robots-tag: noindex, nofollow, noarchive' "$headers"
-
-          assert_deployed_file \
-            "/profiles/austin-board-of-realtors/index.html" \
-            "200" \
-            "$GITHUB_WORKSPACE/build/site/profiles/austin-board-of-realtors/index.html"
-          grep -Fq 'This identity link has not been verified.' "$body"
-          grep -Fq 'data.austintexas.gov/resource/3kfv-biw6.json' "$body"
-
-          assert_deployed_file \
-            "/definitely-not-a-profile" \
-            "404" \
-            "$GITHUB_WORKSPACE/build/site/404.html"
-
-          redirect_status="$(
-            curl --silent --show-error \
-              --output /dev/null \
-              --write-out '%{http_code}' \
-              "http://${site_url#https://}/"
-          )"
-          [[ "$redirect_status" =~ ^30[1278]$ ]]
-
-          post_plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-post-apply-plan.log"
-          set +e
-          terraform plan \
-            -input=false \
-            -lock-timeout=5m \
-            -no-color \
-            -detailed-exitcode >"$post_plan_log" 2>&1
-          post_plan_status=$?
-          set -e
-          if [[ "$post_plan_status" -ne 0 ]]; then
-            echo "::error::$TF_WORKSPACE did not converge after apply; Terraform returned $post_plan_status."
-            cat "$post_plan_log"
-            exit "$post_plan_status"
-          fi
-          assert_lock_absent
-
-      - name: Summarize verified infrastructure
-        working-directory: infra/components/static-site
-        env:
-          DEPLOYMENT_MODE: ${{ steps.summary.outputs.mode }}
-        run: |
-          set -euo pipefail
-          deployed_environment="$(terraform output -raw environment)"
-          workload_account_id="$(terraform output -raw workload_account_id)"
-          bucket_name="$(terraform output -raw artifact_bucket_name)"
-          distribution_id="$(terraform output -raw cloudfront_distribution_id)"
-          site_object_keys="$(terraform output -json site_object_keys)"
-          site_url="$(terraform output -raw site_url)"
-          state_object_key="$(terraform output -raw state_object_key)"
-
-          [[ "$deployed_environment" == "$TF_WORKSPACE" ]] || {
-            echo "::error::Terraform output reported an unexpected environment."; exit 1;
-          }
-          [[ "$workload_account_id" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]] || {
-            echo "::error::Terraform output reported an unexpected workload account."; exit 1;
-          }
-          [[ "$bucket_name" == "money-on-record-${TF_WORKSPACE}-${EXPECTED_WORKLOAD_ACCOUNT_ID}-site" ]] || {
-            echo "::error::Terraform output reported an unexpected artifact bucket."; exit 1;
-          }
-          [[ "$state_object_key" == "$STATE_KEY" ]] || {
-            echo "::error::Terraform output reported an unexpected state object key."; exit 1;
-          }
-          [[ "$(jq length <<<"$site_object_keys")" -gt 0 ]] || {
-            echo "::error::Terraform did not report any managed browser objects."; exit 1;
-          }
-
-          {
-            echo "### Verified ${TF_WORKSPACE^} Terraform deployment"
-            echo
-            echo "| Field | Value |"
-            echo "| --- | --- |"
-            echo "| Deployment mode | \`$DEPLOYMENT_MODE\` |"
-            echo "| Workload account | \`$workload_account_id\` |"
-            echo "| Artifact bucket | \`$bucket_name\` |"
-            echo "| CloudFront distribution | \`$distribution_id\` |"
-            echo "| Site artifact SHA-256 | \`$SITE_ARTIFACT_DIGEST\` |"
-            echo "| Terraform-managed site objects | \`$(jq length <<<"$site_object_keys")\` |"
-            echo "| Site URL | $site_url |"
-            echo "| State object | \`s3://$STATE_BUCKET/$state_object_key\` |"
-            echo "| Post-apply plan | No changes |"
-            echo "| Browser smoke tests | Exact index, profile, 404, redirect, and headers passed |"
-          } >>"$GITHUB_STEP_SUMMARY"

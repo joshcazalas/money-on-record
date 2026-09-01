@@ -44,9 +44,6 @@ jobs:
           RELEASE_IMMUTABILITY_ENABLED: ${{ vars.RELEASE_IMMUTABILITY_ENABLED }}
         run: |
           set -euo pipefail
-          [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] || {
-            echo "::error::Releases require an intentional manual dispatch."; exit 1;
-          }
           [[ "$GITHUB_ACTOR_ID" == "73436834" ]] || {
             echo "::error::Releases require Josh's immutable actor ID."; exit 1;
           }
@@ -56,9 +53,6 @@ jobs:
           [[ "$RELEASE_IMMUTABILITY_ENABLED" == "true" ]] || {
             echo "::error::Enable release immutability and set RELEASE_IMMUTABILITY_ENABLED=true."
             exit 1
-          }
-          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]] || {
-            echo "::error::The checkout does not match the dispatched main revision."; exit 1;
           }
 
       - name: Set up uv

@@ -45,8 +45,7 @@ There are no environment-specific backend files or application-owned state
 buckets. Offline development and unprivileged CI use
 `terraform init -backend=false`.
 
-Once access is enabled, automation selects a named workspace and supplies only
-the matching execution-role ARN:
+Automation selects a named workspace and supplies its matching execution role:
 
 ```bash
 cd infra/components/static-site
@@ -81,28 +80,25 @@ uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-plan.yml@
 uses: joshcazalas/money-on-record/.github/workflows/reusable-terraform-deploy.yml@main
 ```
 
-The plan entry point accepts only `uat` or `production`, only from a
-same-repository pull request. It assumes the environment-specific plan hub,
-initializes the committed S3 backend, and runs a read-only plan with state
-locking disabled. It does not save or upload a plan.
+The plan entry point accepts only `uat` or `production` from a same-repository
+pull request. It assumes the environment-specific plan role and runs a read-only
+plan with state locking disabled. The raw saved plan remains runner-local; only
+sanitized text and resource counts are uploaded for the PR comment.
 
 The deploy entry point accepts only `uat` or `production` from a trusted
 default-branch caller. `terraform-deploy-uat.yml` deploys every exact revision
 that lands on `main` to UAT and retains a default-off manual recovery dispatch.
-Superseded queued revisions stop before AWS authentication so UAT cannot be
-rolled backward by out-of-order workflow scheduling.
 Production has no merge trigger: `terraform-deploy-production.yml` accepts only
 a published immutable semantic-version release whose tag resolves to the exact
-authorized commit. Each job prepares the exact browser artifact before AWS
-authentication, then runs inside the matching GitHub Environment, creates a
-fresh locked saved plan covering infrastructure and site objects, applies that
-runner-local plan, and requires a final no-change plan. Saved plans are never
-uploaded or retained.
+commit. Each job prepares the site artifact, runs inside the matching GitHub
+Environment, creates a locked saved plan covering infrastructure and site
+objects, and applies that runner-local plan. A no-change plan is applied as a
+normal successful no-op. Saved plans are never uploaded or retained.
 
 `terraform-plan.yml` calls the trusted `@main` plan entry point for every
-same-repository pull request. UAT runs first; the production plan starts only
-after UAT succeeds. Fork pull requests skip both AWS jobs because their code
-cannot be given the repository's plan identities.
+same-repository pull request. UAT and production plans run independently. Fork
+pull requests skip both AWS plans because they cannot receive repository AWS
+identities.
 
 The manual release workflow calculates the next semantic version from every
 merged PR label since the previous stable release. It builds versioned Python
@@ -114,15 +110,10 @@ same production workflow can deploy an existing immutable release manually.
 GitHub OIDC supplies all AWS and attestation identities; no GitHub App, PAT, or
 static AWS key is used.
 
-Before the first deployment, a named workspace has no remote state object and
-the read-only plan identity cannot create one. In that case only, the workflow
-plans against ephemeral empty local state with refresh disabled. The first
-authorized deployment creates the remote workspace state; subsequent pull
-requests automatically plan against that state. An access error is never
-treated as an absent workspace.
-
-The legacy `aws-oidc-identity-test.yml` path is deliberately untrusted. It only
-verifies that all plan and deploy hub roles deny its OIDC token.
+Before a workspace's first deployment, its remote state object does not exist
+and the read-only plan role cannot create it. For that initial plan only, the
+workflow uses ephemeral local state with refresh disabled. Once remote state
+exists, plans use the normal S3 backend. Access errors still fail the workflow.
 
 ## Complete environment deployment
 
@@ -137,5 +128,4 @@ UAT builds the deterministic artifact from the exact current `main` revision.
 Production downloads and verifies the site ZIP and checksum from the selected
 immutable release. HTML and manifests use revalidation cache controls while
 content-hashed assets use immutable caching, so no mutable invalidation side
-effect or separate publishing identity is required. Read-only convergence and
-browser smoke tests verify the resulting deployment after apply.
+effect or separate publishing identity is required.

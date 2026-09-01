@@ -70,7 +70,7 @@ set -euo pipefail
 command_name=""
 for argument in "$@"; do
   case "$argument" in
-    init|workspace|validate|plan|show)
+    init|plan|show)
       command_name="$argument"
       break
       ;;
@@ -80,12 +80,6 @@ done
 case "$command_name" in
   init)
     echo "Initialized."
-    ;;
-  workspace)
-    echo "$TF_WORKSPACE"
-    ;;
-  validate)
-    echo "Success! The configuration is valid."
     ;;
   plan)
     for argument in "$@"; do
@@ -118,8 +112,6 @@ esac
     results = tmp_path / "results"
     environment = os.environ.copy()
     environment["PATH"] = f"{fake_bin}:{environment['PATH']}"
-    environment["TF_WORKSPACE"] = "uat"
-
     subprocess.run(
         [
             "bash",

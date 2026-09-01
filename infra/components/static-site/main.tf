@@ -76,6 +76,9 @@ resource "terraform_data" "workspace_contract" {
   }
 }
 
+# Keep workspace validation separate from the module dependency graph. A
+# module-level depends_on defers the CloudFront managed-policy data sources
+# until apply, which can invalidate the saved plan once their IDs are known.
 module "static_site" {
   count  = local.workspace_supported ? 1 : 0
   source = "../../modules/static_site"
@@ -86,6 +89,4 @@ module "static_site" {
   acm_certificate_arn = local.acm_certificate_arn
   web_acl_id          = local.web_acl_id
   tags                = var.tags
-
-  depends_on = [terraform_data.workspace_contract]
 }

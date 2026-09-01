@@ -46,6 +46,25 @@ def test_uat_deploy_builds_before_aws_and_terraform_apply_is_the_deployment() ->
     assert "reusable-site-publish" not in source
 
 
+def test_convergence_and_lock_checks_share_one_shell_step() -> None:
+    source = _workflow("reusable-terraform-deploy.yml")
+    convergence = source.split("      - name: Verify state and convergence\n", maxsplit=1)[1].split(
+        "      - name: Smoke-test the Terraform-managed browser deployment\n",
+        maxsplit=1,
+    )[0]
+    smoke = source.split(
+        "      - name: Smoke-test the Terraform-managed browser deployment\n",
+        maxsplit=1,
+    )[1].split("      - name: Summarize verified infrastructure\n", maxsplit=1)[0]
+
+    assert "assert_lock_absent()" in convergence
+    assert convergence.count("assert_lock_absent") == 3
+    assert "terraform plan" in convergence
+    assert "post-apply-plan.log" in convergence
+    assert "assert_lock_absent" not in smoke
+    assert "terraform plan" not in smoke
+
+
 def test_production_deploy_uses_the_exact_immutable_release_site_asset() -> None:
     source = _workflow("reusable-terraform-deploy.yml")
 

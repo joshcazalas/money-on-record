@@ -468,6 +468,22 @@ jobs:
             --key "$STATE_KEY" >/dev/null
           assert_lock_absent
 
+          post_plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-post-apply-plan.log"
+          set +e
+          terraform plan \
+            -input=false \
+            -lock-timeout=5m \
+            -no-color \
+            -detailed-exitcode >"$post_plan_log" 2>&1
+          post_plan_status=$?
+          set -e
+          if [[ "$post_plan_status" -ne 0 ]]; then
+            echo "::error::$TF_WORKSPACE did not converge after apply; Terraform returned $post_plan_status."
+            cat "$post_plan_log"
+            exit "$post_plan_status"
+          fi
+          assert_lock_absent
+
       - name: Smoke-test the Terraform-managed browser deployment
         working-directory: infra/components/static-site
         run: |
@@ -526,22 +542,6 @@ jobs:
               "http://${site_url#https://}/"
           )"
           [[ "$redirect_status" =~ ^30[1278]$ ]]
-
-          post_plan_log="$RUNNER_TEMP/money-on-record-${TF_WORKSPACE}-post-apply-plan.log"
-          set +e
-          terraform plan \
-            -input=false \
-            -lock-timeout=5m \
-            -no-color \
-            -detailed-exitcode >"$post_plan_log" 2>&1
-          post_plan_status=$?
-          set -e
-          if [[ "$post_plan_status" -ne 0 ]]; then
-            echo "::error::$TF_WORKSPACE did not converge after apply; Terraform returned $post_plan_status."
-            cat "$post_plan_log"
-            exit "$post_plan_status"
-          fi
-          assert_lock_absent
 
       - name: Summarize verified infrastructure
         working-directory: infra/components/static-site

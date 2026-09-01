@@ -47,8 +47,7 @@ def test_centralized_backend_uses_workspace_keys() -> None:
     assert "terraform.workspace" in component
     assert (
         'state_object_key     = "money-on-record/static-site/'
-        '${terraform.workspace}/terraform.tfstate"'
-        in component
+        '${terraform.workspace}/terraform.tfstate"' in component
     )
 
 

@@ -253,6 +253,9 @@ def test_release_is_manual_attested_and_optionally_deploys_production() -> None:
     assert "uv export" in source
     assert "--format cyclonedx1.5" in source
     assert "uv build" in source
+    assert "mor-l0 build-site" in source
+    assert "money-on-record-site-${RELEASE_VERSION}.zip" in source
+    assert "money-on-record-site-${RELEASE_VERSION}.zip.sha256" in source
     assert "anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26" in source
     assert source.count("actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6") == 3
     assert "dependency-snapshot: true" in source
@@ -298,9 +301,11 @@ def test_obsolete_oidc_workflow_can_only_probe_denials() -> None:
 
     assert "Reject obsolete AWS OIDC workflow" in source
     assert source.count("assume-role-with-web-identity") == 1
+    assert "UAT_ARTIFACT_PUBLISH_ROLE_ARN" in source
     assert "UAT_PLAN_ROLE_ARN" in source
     assert "PRODUCTION_PLAN_ROLE_ARN" in source
     assert "UAT_DEPLOY_ROLE_ARN" in source
     assert "PRODUCTION_DEPLOY_ROLE_ARN" in source
+    assert "uat-artifact-publish" in source
     assert "configure-aws-credentials" not in source
     assert "terraform" not in source.lower()

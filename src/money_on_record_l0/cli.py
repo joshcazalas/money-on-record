@@ -27,6 +27,7 @@ from .review import (
     validate_review,
     write_review_summary,
 )
+from .site import build_site, verify_site_archive
 from .versioned import VersionedDataError, validate_versioned_data
 
 
@@ -69,6 +70,19 @@ def build_parser() -> argparse.ArgumentParser:
         "validate-versioned",
         help="validate checked-in manifests, profiles, fixtures, and review summaries",
     )
+    build_site_parser = subparsers.add_parser(
+        "build-site", help="build the deterministic browser artifact"
+    )
+    build_site_parser.add_argument("--content", type=Path)
+    build_site_parser.add_argument("--output", type=Path)
+    build_site_parser.add_argument("--archive", type=Path)
+    build_site_parser.add_argument("--checksum", type=Path)
+    verify_site_parser = subparsers.add_parser(
+        "verify-site", help="verify and optionally extract a deterministic site archive"
+    )
+    verify_site_parser.add_argument("--archive", required=True, type=Path)
+    verify_site_parser.add_argument("--expected-sha256")
+    verify_site_parser.add_argument("--output", type=Path)
     freeze = subparsers.add_parser("freeze-metadata", help="save immutable Socrata metadata")
     _add_selection(freeze)
     acquire = subparsers.add_parser("acquire", help="save content-addressed source CSVs")
@@ -169,6 +183,35 @@ def run(args: argparse.Namespace) -> int:
             f"{summary.metadata_artifacts} metadata artifacts, "
             f"{summary.profiles} profiles, {summary.fixtures} redacted fixtures, "
             f"{summary.review_summaries} review summaries)"
+        )
+        return 0
+
+    if args.command == "build-site":
+        artifact = build_site(
+            content_path=_project_path(args.root, args.content, "site/content.json"),
+            output=_project_path(args.root, args.output, "build/site"),
+            archive=_project_path(args.root, args.archive, "build/money-on-record-site.zip"),
+            checksum=_project_path(
+                args.root,
+                args.checksum,
+                "build/money-on-record-site.zip.sha256",
+            ),
+        )
+        print(
+            f"PASS: deterministic site artifact {artifact.archive_sha256} "
+            f"({artifact.files} files, {artifact.bytes} bytes)"
+        )
+        return 0
+
+    if args.command == "verify-site":
+        artifact = verify_site_archive(
+            _project_path(args.root, args.archive, ""),
+            expected_sha256=args.expected_sha256,
+            output=None if args.output is None else _project_path(args.root, args.output, ""),
+        )
+        print(
+            f"PASS: verified site artifact {artifact.archive_sha256} "
+            f"({artifact.files} files, {artifact.bytes} bytes)"
         )
         return 0
 

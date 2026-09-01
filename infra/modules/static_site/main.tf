@@ -1,5 +1,38 @@
 locals {
-  origin_id = "site-artifacts"
+  origin_id                   = "site-artifacts"
+  response_headers_policy_key = "site-security"
+  custom_error_responses = [
+    {
+      error_caching_min_ttl = 0
+      error_code            = 403
+      response_code         = 404
+      response_page_path    = "/404.html"
+    },
+    {
+      error_caching_min_ttl = 0
+      error_code            = 404
+      response_code         = 404
+      response_page_path    = "/404.html"
+    },
+  ]
+  content_security_policy = join("; ", [
+    "default-src 'none'",
+    "style-src 'self'",
+    "base-uri 'none'",
+    "form-action 'none'",
+    "frame-ancestors 'none'",
+  ])
+  permissions_policy = join(", ", [
+    "accelerometer=()",
+    "autoplay=()",
+    "camera=()",
+    "geolocation=()",
+    "gyroscope=()",
+    "magnetometer=()",
+    "microphone=()",
+    "payment=()",
+    "usb=()",
+  ])
   tags = merge(var.tags, {
     Component   = "static-site"
     Environment = var.environment
@@ -8,10 +41,6 @@ locals {
 
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
-}
-
-data "aws_cloudfront_response_headers_policy" "security_headers" {
-  name = "Managed-SecurityHeadersPolicy"
 }
 
 module "site_bucket" {
@@ -56,6 +85,8 @@ module "cdn" {
   is_ipv6_enabled     = true
   web_acl_id          = var.web_acl_id
 
+  custom_error_response = local.custom_error_responses
+
   create_monitoring_subscription       = false
   realtime_metrics_subscription_status = "Disabled"
 
@@ -77,13 +108,62 @@ module "cdn" {
   }
 
   default_cache_behavior = {
-    target_origin_id           = local.origin_id
-    viewer_protocol_policy     = "redirect-to-https"
-    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
-    cached_methods             = ["GET", "HEAD"]
-    cache_policy_id            = data.aws_cloudfront_cache_policy.caching_optimized.id
-    response_headers_policy_id = data.aws_cloudfront_response_headers_policy.security_headers.id
-    compress                   = true
+    target_origin_id            = local.origin_id
+    viewer_protocol_policy      = "redirect-to-https"
+    allowed_methods             = ["GET", "HEAD", "OPTIONS"]
+    cached_methods              = ["GET", "HEAD"]
+    cache_policy_id             = data.aws_cloudfront_cache_policy.caching_optimized.id
+    response_headers_policy_key = local.response_headers_policy_key
+    compress                    = true
+  }
+
+  response_headers_policies = {
+    (local.response_headers_policy_key) = {
+      name    = "money-on-record-${var.environment}-security-v1"
+      comment = "Security and privacy headers for the Money on Record ${var.environment} site"
+      custom_headers_config = {
+        items = [
+          {
+            header   = "Permissions-Policy"
+            override = true
+            value    = local.permissions_policy
+          },
+          {
+            header   = "X-Robots-Tag"
+            override = true
+            value    = "noindex, nofollow, noarchive"
+          },
+        ]
+      }
+      security_headers_config = {
+        content_security_policy = {
+          content_security_policy = local.content_security_policy
+          override                = true
+        }
+        content_type_options = {
+          override = true
+        }
+        frame_options = {
+          frame_option = "DENY"
+          override     = true
+        }
+        referrer_policy = {
+          referrer_policy = "no-referrer"
+          override        = true
+        }
+        strict_transport_security = {
+          access_control_max_age_sec = 31536000
+          include_subdomains         = true
+          override                   = true
+          preload                    = true
+        }
+        xss_protection = {
+          mode_block = true
+          override   = true
+          protection = true
+        }
+      }
+    }
   }
 
   viewer_certificate = {

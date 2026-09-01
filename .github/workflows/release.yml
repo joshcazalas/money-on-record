@@ -101,9 +101,15 @@ jobs:
             --format cyclonedx1.5 \
             --output-file release/sboms/python.cdx.json
           uv build --out-dir release/assets
+          uv run --locked mor-l0 build-site \
+            --output release/site \
+            --archive "release/assets/money-on-record-site-${RELEASE_VERSION}.zip" \
+            --checksum "release/assets/money-on-record-site-${RELEASE_VERSION}.zip.sha256"
 
           test -f "release/assets/money_on_record_l0-${RELEASE_VERSION}-py3-none-any.whl"
           test -f "release/assets/money_on_record_l0-${RELEASE_VERSION}.tar.gz"
+          test -f "release/assets/money-on-record-site-${RELEASE_VERSION}.zip"
+          test -f "release/assets/money-on-record-site-${RELEASE_VERSION}.zip.sha256"
           git archive \
             --format=tar.gz \
             --prefix="money-on-record-${RELEASE_VERSION}/" \

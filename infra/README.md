@@ -3,7 +3,9 @@
 The first application stack is a private S3 artifact bucket behind CloudFront.
 S3 website hosting and public bucket access are intentionally disabled;
 CloudFront reads objects through Origin Access Control. No Lambda resources are
-created.
+created. A project-owned response-header policy supplies the site CSP, browser
+capability restrictions, anti-indexing, and other security headers. Private
+origin 403/404 responses render the reviewed `/404.html` page as HTTP 404.
 
 ```text
 infra/
@@ -118,4 +120,21 @@ requests automatically plan against that state. An access error is never
 treated as an absent workspace.
 
 The legacy `aws-oidc-identity-test.yml` path is deliberately untrusted. It only
-verifies that all plan and deploy hub roles deny its OIDC token.
+verifies that all plan, deploy, and artifact-publication hub roles deny its OIDC
+token.
+
+## Site artifact publication
+
+Application publication is deliberately not part of a Terraform apply. The
+manual, default-off `site-publish-uat.yml` entry point builds and tests the exact
+current `main` revision in a job without AWS identity. It passes that run-local
+artifact and SHA-256 to the trusted `reusable-site-publish.yml@main` workflow.
+
+The reusable job verifies the caller, current revision, archive digest,
+manifest, and safe extraction before assuming the dedicated artifact roles. The
+roles can manage objects only in the exact UAT site bucket and invalidations
+only for the exact UAT distribution; they cannot access Terraform state,
+production, or Terraform execution roles. HTML and manifests use no-cache,
+content-hashed assets use immutable caching, and only browser routes are
+invalidated. HTTPS, security headers, the index, representative profile,
+official-source link, and custom 404 are smoke-tested after publication.

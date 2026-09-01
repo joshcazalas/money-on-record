@@ -1,0 +1,327 @@
+name: Reusable site artifact publish
+
+on:
+  workflow_call:
+    inputs:
+      revision:
+        description: Exact current main revision that produced the artifact.
+        required: true
+        type: string
+      artifact_name:
+        description: Run-local artifact name bound to the revision.
+        required: true
+        type: string
+      artifact_digest:
+        description: SHA-256 of the deterministic site archive.
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+  id-token: write
+
+concurrency:
+  group: site-publish-uat
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    name: Authorize UAT site publication
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    outputs:
+      publish_allowed: ${{ steps.contract.outputs.publish_allowed }}
+    steps:
+      - name: Enforce the publication caller contract
+        id: contract
+        env:
+          ARTIFACT_DIGEST: ${{ inputs.artifact_digest }}
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
+          CALLER_ACTOR_ID: ${{ github.actor_id }}
+          CALLER_EVENT: ${{ github.event_name }}
+          CALLER_OWNER_ID: ${{ github.repository_owner_id }}
+          CALLER_REF: ${{ github.ref }}
+          CALLER_REPOSITORY: ${{ github.repository }}
+          CALLER_REPOSITORY_ID: ${{ github.repository_id }}
+          CALLER_SHA: ${{ github.sha }}
+          EXPECTED_ACTOR_ID: '73436834'
+          EXPECTED_OWNER_ID: '73436834'
+          EXPECTED_REPOSITORY: joshcazalas/money-on-record
+          EXPECTED_REPOSITORY_ID: '1338755168'
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_REVISION: ${{ inputs.revision }}
+        run: |
+          set -euo pipefail
+          [[ "$CALLER_EVENT" == "workflow_dispatch" ]] || {
+            echo "::error::UAT site publication requires an intentional manual dispatch."
+            exit 1
+          }
+          [[ "$CALLER_ACTOR_ID" == "$EXPECTED_ACTOR_ID" ]] || {
+            echo "::error::UAT site publication requires Josh's immutable actor ID."
+            exit 1
+          }
+          [[ "$CALLER_REPOSITORY" == "$EXPECTED_REPOSITORY" ]]
+          [[ "$CALLER_REPOSITORY_ID" == "$EXPECTED_REPOSITORY_ID" ]]
+          [[ "$CALLER_OWNER_ID" == "$EXPECTED_OWNER_ID" ]]
+          [[ "$CALLER_REF" == "refs/heads/main" ]]
+          [[ "$PUBLISH_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$PUBLISH_REVISION" == "$CALLER_SHA" ]]
+          [[ "$ARTIFACT_NAME" == "money-on-record-site-${PUBLISH_REVISION}" ]]
+          [[ "$ARTIFACT_DIGEST" =~ ^[0-9a-f]{64}$ ]]
+
+          current_main_revision="$(
+            gh api \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/$GITHUB_REPOSITORY/git/ref/heads/main" \
+              --jq '.object.sha'
+          )"
+          [[ "$PUBLISH_REVISION" == "$current_main_revision" ]] || {
+            echo "::error::Only the current main revision may be published to UAT."
+            exit 1
+          }
+          echo "publish_allowed=true" >>"$GITHUB_OUTPUT"
+
+  publish:
+    name: Publish site artifact (uat)
+    needs: authorize
+    if: needs.authorize.outputs.publish_allowed == 'true'
+    environment: uat
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    env:
+      ARTIFACT_DIGEST: ${{ inputs.artifact_digest }}
+      ARTIFACT_NAME: ${{ inputs.artifact_name }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      EXPECTED_DEPLOYMENT_ACCOUNT_ID: '245459924498'
+      EXPECTED_REGION: us-east-1
+      EXPECTED_SITE_BUCKET: money-on-record-uat-732006412638-site
+      EXPECTED_SITE_DISTRIBUTION_ID: EEZ2CUTI93E10
+      EXPECTED_SITE_URL: https://d32c1cs24r00f5.cloudfront.net
+      EXPECTED_WORKLOAD_ACCOUNT_ID: '732006412638'
+      FORBIDDEN_STATE_BUCKET: joshcazalas-deployment-tfstate-245459924498
+      FORBIDDEN_STATE_KEY: money-on-record/static-site/uat/terraform.tfstate
+      FORBIDDEN_WORKLOAD_ROLE_ARN: arn:aws:iam::134604497564:role/MoneyOnRecordTerraformDeploy
+      PUBLISH_HUB_ROLE_ARN: ${{ vars.AWS_ARTIFACT_PUBLISH_ROLE_ARN }}
+      PUBLISH_REVISION: ${{ inputs.revision }}
+      PUBLISH_WORKLOAD_ROLE_ARN: ${{ vars.AWS_ARTIFACT_PUBLISH_WORKLOAD_ROLE_ARN }}
+      SITE_BUCKET: ${{ vars.SITE_ARTIFACT_BUCKET }}
+      SITE_DISTRIBUTION_ID: ${{ vars.SITE_CLOUDFRONT_DISTRIBUTION_ID }}
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - name: Validate exact UAT configuration
+        env:
+          CONFIGURED_DEPLOYMENT_ACCOUNT_ID: ${{ vars.AWS_DEPLOYMENT_ACCOUNT_ID }}
+          CONFIGURED_WORKLOAD_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          [[ "$CONFIGURED_DEPLOYMENT_ACCOUNT_ID" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]
+          [[ "$CONFIGURED_WORKLOAD_ACCOUNT_ID" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]]
+          [[ "$AWS_REGION" == "$EXPECTED_REGION" ]]
+          [[ "$PUBLISH_HUB_ROLE_ARN" == "arn:aws:iam::${EXPECTED_DEPLOYMENT_ACCOUNT_ID}:role/MoneyOnRecordArtifactPublishUat" ]]
+          [[ "$PUBLISH_WORKLOAD_ROLE_ARN" == "arn:aws:iam::${EXPECTED_WORKLOAD_ACCOUNT_ID}:role/MoneyOnRecordArtifactPublish" ]]
+          [[ "$SITE_BUCKET" == "$EXPECTED_SITE_BUCKET" ]]
+          [[ "$SITE_DISTRIBUTION_ID" == "$EXPECTED_SITE_DISTRIBUTION_ID" ]]
+          [[ "$SITE_URL" == "$EXPECTED_SITE_URL" ]]
+
+      - name: Check out trusted artifact verification code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: trusted
+          persist-credentials: false
+          ref: ${{ inputs.revision }}
+
+      - name: Verify trusted revision
+        working-directory: trusted
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$PUBLISH_REVISION" ]]
+
+      - name: Download run-local site artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: artifact
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: trusted/uv.lock
+
+      - name: Verify and extract the authorized artifact
+        run: |
+          set -euo pipefail
+          mapfile -t artifact_files < <(find artifact -maxdepth 1 -type f -printf '%f\n' | sort)
+          [[ "${artifact_files[*]}" == "money-on-record-site.zip money-on-record-site.zip.sha256" ]] || {
+            echo "::error::The run artifact contains unexpected files."
+            exit 1
+          }
+          checksum_digest="$(cut -d ' ' -f 1 artifact/money-on-record-site.zip.sha256)"
+          [[ "$checksum_digest" == "$ARTIFACT_DIGEST" ]] || {
+            echo "::error::The checksum file does not match the authorized artifact digest."
+            exit 1
+          }
+          uv run --project trusted --locked mor-l0 verify-site \
+            --archive "$GITHUB_WORKSPACE/artifact/money-on-record-site.zip" \
+            --expected-sha256 "$ARTIFACT_DIGEST" \
+            --output "$RUNNER_TEMP/verified-site"
+
+      - name: Assume UAT artifact publishing hub role
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.PUBLISH_HUB_ROLE_ARN }}
+          role-session-name: mor-uat-artifact-hub-${{ github.run_id }}
+          role-duration-seconds: 3600
+          allowed-account-ids: ${{ env.EXPECTED_DEPLOYMENT_ACCOUNT_ID }}
+          retry-max-attempts: 3
+          action-timeout-s: 60
+          unset-current-credentials: true
+
+      - name: Prove artifact-hub isolation
+        run: |
+          set -euo pipefail
+          [[ "$(aws sts get-caller-identity --query Account --output text)" == "$EXPECTED_DEPLOYMENT_ACCOUNT_ID" ]]
+
+          set +e
+          denial="$(
+            aws sts assume-role \
+              --role-arn "$FORBIDDEN_WORKLOAD_ROLE_ARN" \
+              --role-session-name "mor-artifact-cross-role-deny-${GITHUB_RUN_ID}" \
+              --query AssumedRoleUser.Arn \
+              --output text 2>&1
+          )"
+          status=$?
+          set -e
+          if [[ "$status" -eq 0 ]] || ! grep -Eiq 'AccessDenied|not authorized' <<<"$denial"; then
+            echo "::error::The artifact hub did not prove cross-environment role denial."
+            exit 1
+          fi
+
+      - name: Assume UAT artifact publishing workload role
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.PUBLISH_WORKLOAD_ROLE_ARN }}
+          role-session-name: mor-uat-artifact-${{ github.run_id }}
+          role-duration-seconds: 3600
+          allowed-account-ids: ${{ env.EXPECTED_WORKLOAD_ACCOUNT_ID }}
+          retry-max-attempts: 3
+          action-timeout-s: 60
+          role-chaining: true
+
+      - name: Prove workload isolation
+        run: |
+          set -euo pipefail
+          [[ "$(aws sts get-caller-identity --query Account --output text)" == "$EXPECTED_WORKLOAD_ACCOUNT_ID" ]]
+
+          set +e
+          aws s3api head-bucket \
+            --bucket "money-on-record-production-134604497564-site" >/dev/null 2>&1
+          cross_environment_status=$?
+          aws s3api head-object \
+            --bucket "$FORBIDDEN_STATE_BUCKET" \
+            --key "$FORBIDDEN_STATE_KEY" >/dev/null 2>&1
+          state_status=$?
+          set -e
+          [[ "$cross_environment_status" -ne 0 ]] || {
+            echo "::error::The UAT artifact role unexpectedly accessed the production site bucket."
+            exit 1
+          }
+          [[ "$state_status" -ne 0 ]] || {
+            echo "::error::The artifact role unexpectedly read Terraform state."
+            exit 1
+          }
+
+      - name: Publish exact site files
+        run: |
+          set -euo pipefail
+          aws s3 sync \
+            "$RUNNER_TEMP/verified-site" \
+            "s3://${SITE_BUCKET}" \
+            --delete \
+            --exclude 'assets/*' \
+            --cache-control 'no-cache, max-age=0, must-revalidate' \
+            --only-show-errors \
+            --no-follow-symlinks
+          aws s3 sync \
+            "$RUNNER_TEMP/verified-site/assets" \
+            "s3://${SITE_BUCKET}/assets" \
+            --delete \
+            --cache-control 'public, max-age=31536000, immutable' \
+            --only-show-errors \
+            --no-follow-symlinks
+
+      - name: Invalidate and wait for CloudFront
+        id: invalidation
+        run: |
+          set -euo pipefail
+          invalidation_id="$(
+            aws cloudfront create-invalidation \
+              --distribution-id "$SITE_DISTRIBUTION_ID" \
+              --paths \
+                '/' \
+                '/index.html' \
+                '/404.html' \
+                '/robots.txt' \
+                '/site-manifest.json' \
+                '/profiles/*' \
+              --query 'Invalidation.Id' \
+              --output text
+          )"
+          [[ "$invalidation_id" =~ ^[A-Z0-9]+$ ]]
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "$SITE_DISTRIBUTION_ID" \
+            --id "$invalidation_id"
+          echo "invalidation_id=$invalidation_id" >>"$GITHUB_OUTPUT"
+
+      - name: Smoke-test the browser artifact and headers
+        run: |
+          set -euo pipefail
+          headers="$RUNNER_TEMP/site-headers.txt"
+          body="$RUNNER_TEMP/site-body.html"
+          status="$(curl --silent --show-error --dump-header "$headers" --output "$body" --write-out '%{http_code}' "${SITE_URL}/")"
+          [[ "$status" == "200" ]]
+          grep -Fq '<title>Money on Record — research beta</title>' "$body"
+          grep -Eiq '^content-security-policy:.*frame-ancestors .none.' "$headers"
+          grep -Eiq '^permissions-policy:' "$headers"
+          grep -Eiq '^referrer-policy: no-referrer' "$headers"
+          grep -Eiq '^x-content-type-options: nosniff' "$headers"
+          grep -Eiq '^x-robots-tag: noindex, nofollow, noarchive' "$headers"
+
+          profile_status="$(curl --silent --show-error --output "$body" --write-out '%{http_code}' "${SITE_URL}/profiles/austin-board-of-realtors/index.html")"
+          [[ "$profile_status" == "200" ]]
+          grep -Fq 'This identity link has not been verified.' "$body"
+          grep -Fq 'data.austintexas.gov/resource/3kfv-biw6.json' "$body"
+
+          missing_status="$(curl --silent --show-error --output "$body" --write-out '%{http_code}' "${SITE_URL}/definitely-not-a-profile")"
+          [[ "$missing_status" == "404" ]]
+          grep -Fq 'There is no profile at this address.' "$body"
+
+          redirect_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "http://${SITE_URL#https://}/")"
+          [[ "$redirect_status" =~ ^30[1278]$ ]]
+
+      - name: Summarize verified UAT publication
+        env:
+          INVALIDATION_ID: ${{ steps.invalidation.outputs.invalidation_id }}
+        run: |
+          {
+            echo '### Verified UAT site publication'
+            echo
+            echo '| Field | Value |'
+            echo '| --- | --- |'
+            echo "| Revision | \`$PUBLISH_REVISION\` |"
+            echo "| Artifact SHA-256 | \`$ARTIFACT_DIGEST\` |"
+            echo "| Bucket | \`$SITE_BUCKET\` |"
+            echo "| CloudFront distribution | \`$SITE_DISTRIBUTION_ID\` |"
+            echo "| Invalidation | \`$INVALIDATION_ID\` |"
+            echo "| Site | $SITE_URL |"
+            echo '| Smoke tests | HTTPS, redirect, index, profile, 404, and security headers passed |'
+          } >>"$GITHUB_STEP_SUMMARY"

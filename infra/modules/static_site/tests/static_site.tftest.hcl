@@ -7,9 +7,9 @@ mock_provider "aws" {
     }
   }
 
-  mock_data "aws_cloudfront_response_headers_policy" {
+  mock_resource "aws_cloudfront_response_headers_policy" {
     defaults = {
-      id = "managed-response-headers-policy-id"
+      id = "site-response-headers-policy-id"
     }
   }
 
@@ -37,6 +37,14 @@ run "private_static_site" {
   variables {
     bucket_name = "money-on-record-uat-123456789012-site"
     environment = "uat"
+  }
+
+  assert {
+    condition = (
+      module.cdn.cloudfront_response_headers_policies[local.response_headers_policy_key].id ==
+      "site-response-headers-policy-id"
+    )
+    error_message = "The module must create the project-owned response header policy."
   }
 
   assert {
@@ -71,6 +79,30 @@ run "private_static_site" {
       "false"
     )
     error_message = "The bucket policy must deny insecure transport."
+  }
+
+  assert {
+    condition = strcontains(
+      module.cdn.cloudfront_response_headers_policies[local.response_headers_policy_key].security_headers_config[0].content_security_policy[0].content_security_policy,
+      "frame-ancestors 'none'",
+    )
+    error_message = "The response policy must prevent the site from being framed."
+  }
+
+  assert {
+    condition = one([
+      for item in module.cdn.cloudfront_response_headers_policies[local.response_headers_policy_key].custom_headers_config[0].items :
+      item.value if item.header == "Permissions-Policy"
+    ]) == local.permissions_policy
+    error_message = "The response policy must disable unused browser capabilities."
+  }
+
+  assert {
+    condition = toset([
+      for response in local.custom_error_responses :
+      response.error_code
+    ]) == toset([403, 404])
+    error_message = "Missing private-origin objects must use the browser-visible 404 page."
   }
 }
 

@@ -71,6 +71,17 @@ run "private_static_site" {
   }
 
   assert {
+    condition = (
+      aws_s3_object.site["assets/app-fixture.js"].content_type == "text/javascript; charset=utf-8" &&
+      aws_s3_object.site["assets/icon-fixture.svg"].content_type == "image/svg+xml" &&
+      strcontains(local.content_security_policy, "script-src 'self'") &&
+      strcontains(local.content_security_policy, "connect-src 'self'") &&
+      strcontains(local.content_security_policy, "img-src 'self'")
+    )
+    error_message = "The browser must receive executable modules, same-origin data, and SVG icons."
+  }
+
+  assert {
     condition     = output.bucket_name == "money-on-record-uat-123456789012-site"
     error_message = "The module must expose the exact private artifact bucket."
   }

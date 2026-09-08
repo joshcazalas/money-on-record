@@ -43,7 +43,23 @@ friendlier when `AUSTIN_SOCRATA_APP_TOKEN` is set. Never commit that value.
 
 ## Static site
 
-The reviewed, privacy-safe site input is [`site/content.json`](site/content.json).
+Start the local frontend with automatic reload:
+
+```bash
+uv run python tools/dev.py
+```
+
+Open **http://localhost:5173**. Search, filters, record details, and CSV downloads
+use the checked-in, privacy-checked extracts. No raw downloads or CI run are
+needed. See [`frontend/README.md`](frontend/README.md) for the development workflow.
+
+The site input manifest is [`site/content.json`](site/content.json), which pins
+the bounded publications in `site/data/` by checksum. The browser currently
+includes 709 organization contribution records and 208 payment lines for one
+vendor, from the August 18, 2026 snapshots. Scheduled ingestion and publication
+remain tracked in [#28](https://github.com/joshcazalas/money-on-record/issues/28)
+and [#30](https://github.com/joshcazalas/money-on-record/issues/30).
+
 Build it without network or cloud access:
 
 ```bash
@@ -56,8 +72,9 @@ uv run --locked mor-l0 verify-site \
 The command creates `build/site/`, a byte-for-byte reproducible ZIP, and its
 SHA-256 checksum. Generated files remain ignored; source content, builder code,
 and tests are reviewed in pull requests. The archive contains only rendered
-HTML, a content-hashed stylesheet, `robots.txt`, and a source-fingerprint
-manifest—never raw downloads or candidate-review worksheets.
+HTML, content-hashed CSS/JavaScript/icon assets, the validated public extracts,
+`robots.txt`, and a source-fingerprint manifest. Raw downloads and candidate
+review worksheets are excluded. The local reload script is excluded from builds.
 
 The environment's Terraform apply is the complete deployment. A UAT deployment
 builds and verifies the exact current `main` artifact before AWS authentication;

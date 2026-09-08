@@ -17,6 +17,9 @@ locals {
   ]
   content_security_policy = join("; ", [
     "default-src 'none'",
+    "script-src 'self'",
+    "connect-src 'self'",
+    "img-src 'self'",
     "style-src 'self'",
     "base-uri 'none'",
     "form-action 'none'",
@@ -231,7 +234,11 @@ resource "aws_s3_object" "site" {
   content_language = endswith(each.value, ".html") ? "en" : null
   content_type = endswith(each.value, ".html") ? "text/html; charset=utf-8" : (
     endswith(each.value, ".css") ? "text/css; charset=utf-8" : (
-      endswith(each.value, ".json") ? "application/json; charset=utf-8" : "text/plain; charset=utf-8"
+      endswith(each.value, ".js") ? "text/javascript; charset=utf-8" : (
+        endswith(each.value, ".svg") ? "image/svg+xml" : (
+          endswith(each.value, ".json") ? "application/json; charset=utf-8" : "text/plain; charset=utf-8"
+        )
+      )
     )
   )
   etag                   = filemd5("${var.site_artifact_directory}/${each.value}")

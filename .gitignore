@@ -10,6 +10,7 @@ coverage.xml
 htmlcov/
 build/
 dist/
+frontend/_data/
 *.egg-info/
 
 # Local secrets and overrides.

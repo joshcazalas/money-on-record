@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import shutil
 import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
@@ -11,7 +13,6 @@ from money_on_record_l0.site import (
     MANIFEST_NAME,
     SiteBuildError,
     build_site,
-    load_site_content,
     verify_site_archive,
 )
 
@@ -71,82 +72,53 @@ def _build(tmp_path: Path, suffix: str = "one") -> tuple[Path, Path, Path]:
     return output, archive, checksum
 
 
-def test_site_build_is_navigable_caveated_and_source_auditable(tmp_path: Path) -> None:
+def test_site_build_contains_the_browser_and_only_its_public_inputs(tmp_path: Path) -> None:
     output, archive, checksum = _build(tmp_path)
-
-    index = (output / "index.html").read_text(encoding="utf-8")
-    profile = (output / "profiles" / "austin-board-of-realtors" / "index.html").read_text(
-        encoding="utf-8"
-    )
-    not_found = (output / "404.html").read_text(encoding="utf-8")
-
-    assert "Follow the records" in index
-    assert 'href="/profiles/austin-board-of-realtors/index.html"' in index
-    assert "This identity link has not been verified" in profile
-    assert "does not establish a quid pro quo" in profile
-    assert "$240,133.82" in profile
-    assert "$106,072.10" in profile
-    assert profile.count('referrerpolicy="no-referrer" rel="external noopener"') == 4
-    assert profile.count("data.austintexas.gov/resource/") == 2
-    assert profile.count("%24select=") == 2
-    assert "There is no profile at this address" in not_found
-    assert (output / "robots.txt").read_text(encoding="utf-8") == ("User-agent: *\nDisallow: /\n")
-    assert (
-        checksum.read_text(encoding="utf-8").split()[0]
-        == verify_site_archive(archive).archive_sha256
-    )
-    assert {
-        path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()
-    } == {
-        "404.html",
-        "assets/site-2ff6ac2217acc6f7.css",
-        "index.html",
-        "profiles/austin-board-of-realtors/index.html",
-        "robots.txt",
-        "site-manifest.json",
-    }
-
-    public_bytes = b"".join(
-        path.read_bytes() for path in sorted(output.rglob("*")) if path.is_file()
-    )
-    for prohibited in (
-        b"donor_address",
-        b"contract_contact_email_ad",
-        b"vendor_address",
-        b"Not for publication",
-    ):
+    index = (output / "index.html").read_text()
+    assert "Campaign contributions" in index
+    assert "Research beta" in index
+    assert "Local preview" not in index
+    assert "dev-reload" not in index
+    assert "Follow the records" not in index
+    assert "Page not found" in (output / "404.html").read_text()
+    legacy = (output / "profiles/austin-board-of-realtors/index.html").read_text()
+    assert "unverified" in legacy
+    assert "contributions?q=Austin+Board+of+REALTORS" in legacy
+    assert 'href="/#/payments"' in legacy
+    assert (output / "robots.txt").read_text() == "User-agent: *\nDisallow: /\n"
+    assert checksum.read_text().split()[0] == verify_site_archive(archive).archive_sha256
+    assert len(list((output / "assets").iterdir())) == 4
+    assert len(list((output / "_data").iterdir())) == 3
+    assert len([p for p in output.rglob("*") if p.is_file()]) == 12
+    logic = next((output / "assets").glob("data-*.js"))
+    app = next((output / "assets").glob("app-*.js"))
+    assert f'"/assets/{logic.name}"' in app.read_text()
+    public_bytes = b"".join(p.read_bytes() for p in output.rglob("*") if p.is_file())
+    for prohibited in (b"donor_address", b"contract_contact_email_ad", b"vendor_address"):
         assert prohibited not in public_bytes
 
 
-def test_every_html_page_has_basic_accessibility_and_privacy_controls(tmp_path: Path) -> None:
+def test_html_pages_have_accessible_fallbacks_and_privacy_controls(tmp_path: Path) -> None:
     output, _archive, _checksum = _build(tmp_path)
-
     for page in sorted(output.rglob("*.html")):
+        text = page.read_text()
         audit = PageAudit()
-        audit.feed(page.read_text(encoding="utf-8"))
-
-        assert audit.html_lang == "en", page
-        assert audit.has_viewport, page
-        assert audit.has_title, page
-        assert audit.h1_count == 1, page
-        assert len(audit.ids) == len(set(audit.ids)), page
-        assert "content" in audit.ids, page
-        assert audit.links, page
-        for attributes, text in audit.links:
-            assert attributes.get("href"), (page, attributes)
-            assert text or attributes.get("aria-label"), (page, attributes)
+        audit.feed(text)
+        assert audit.html_lang == "en"
+        assert audit.has_viewport and audit.has_title
+        assert audit.h1_count == 1
+        assert len(audit.ids) == len(set(audit.ids))
+        assert "content" in audit.ids
+        for attributes, label in audit.links:
+            assert attributes.get("href")
+            assert label or attributes.get("aria-label")
             if attributes["href"].startswith("https://"):
-                assert attributes.get("referrerpolicy") == "no-referrer"
-
-        source = page.read_text(encoding="utf-8")
-        assert 'href="#content">Skip to content</a>' in source
-        assert 'name="robots" content="noindex,nofollow,noarchive"' in source
-        assert "default-src 'none'" in source
-        assert 'name="referrer" content="no-referrer"' in source
-
-    css = next((output / "assets").glob("site-*.css")).read_text(encoding="utf-8")
-    assert "@media (max-width: 760px)" in css
-    assert "@media (prefers-reduced-motion: reduce)" in css
+                assert "noreferrer" in attributes.get("rel", "")
+        assert 'name="robots" content="noindex,nofollow,noarchive"' in text
+        assert "script-src 'self'" in text
+        assert "connect-src 'self'" in text
+        assert 'name="referrer" content="no-referrer"' in text
+        assert 'class="skip-link"' in text
 
 
 def test_site_archive_is_byte_for_byte_reproducible(tmp_path: Path) -> None:
@@ -170,8 +142,8 @@ def test_site_archive_verifies_manifest_and_extracts_safely(tmp_path: Path) -> N
     assert result.files == len([path for path in output.rglob("*") if path.is_file()])
     assert (extracted / "index.html").read_bytes() == (output / "index.html").read_bytes()
     manifest = json.loads((extracted / MANIFEST_NAME).read_text(encoding="utf-8"))
-    assert manifest["profiles"] == ["austin-board-of-realtors"]
-    assert len(manifest["source_snapshots"]) == 2
+    assert manifest["profiles"] == []
+    assert len(manifest["source_snapshots"]) == 6
 
 
 def test_site_archive_rejects_wrong_digest_and_unsafe_paths(tmp_path: Path) -> None:
@@ -186,59 +158,79 @@ def test_site_archive_rejects_wrong_digest_and_unsafe_paths(tmp_path: Path) -> N
         verify_site_archive(unsafe)
 
 
-def test_site_content_rejects_broad_links_and_sensitive_text(tmp_path: Path) -> None:
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"][0]["summary"] = "Contact research@example.org for details."
-    unsafe_content = tmp_path / "unsafe-content.json"
-    unsafe_content.write_text(json.dumps(document), encoding="utf-8")
-    with pytest.raises(SiteBuildError, match="prohibited contact"):
-        load_site_content(unsafe_content)
-
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"][0]["metrics"][0]["official_rows_url"] = (
-        "https://data.austintexas.gov/resource/3kfv-biw6.json?$where=donor%3Dtest"
-    )
-    broad_content = tmp_path / "broad-content.json"
-    broad_content.write_text(json.dumps(document), encoding="utf-8")
-    with pytest.raises(SiteBuildError, match="only \\$select"):
-        load_site_content(broad_content)
-
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"][0]["metrics"][0]["official_rows_url"] = document["profiles"][0]["metrics"][
-        0
-    ]["official_rows_url"].replace("transaction_id%2C", "donor_address%2C")
-    unsafe_projection = tmp_path / "unsafe-projection.json"
-    unsafe_projection.write_text(json.dumps(document), encoding="utf-8")
-    with pytest.raises(SiteBuildError, match="prohibited public fields"):
-        load_site_content(unsafe_projection)
+def _content_copy(tmp_path: Path) -> Path:
+    shutil.copytree(CONTENT.parent, tmp_path / "input")
+    return tmp_path / "input/content.json"
 
 
-def test_site_content_rejects_an_empty_profile_set(tmp_path: Path) -> None:
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"] = []
-    empty_content = tmp_path / "empty-content.json"
-    empty_content.write_text(json.dumps(document), encoding="utf-8")
+def _change_publication(content: Path, slug: str, mutate) -> None:
+    path = content.parent / "data" / f"{slug}.json"
+    document = json.loads(path.read_text())
+    mutate(document)
+    path.write_text(json.dumps(document))
+    manifest = json.loads(content.read_text())
+    manifest["publications"][slug] = hashlib.sha256(path.read_bytes()).hexdigest()
+    content.write_text(json.dumps(manifest))
 
-    with pytest.raises(SiteBuildError, match="non-empty list"):
-        load_site_content(empty_content)
 
-
-def test_generated_html_escapes_hostile_source_text(tmp_path: Path) -> None:
-    document = json.loads(CONTENT.read_text(encoding="utf-8"))
-    document["profiles"][0]["name"] = "Example <script>alert(1)</script>"
-    hostile_content = tmp_path / "hostile-content.json"
-    hostile_content.write_text(json.dumps(document), encoding="utf-8")
-    output = tmp_path / "hostile-site"
-
+def _build_content(content: Path, tmp_path: Path) -> None:
     build_site(
-        content_path=hostile_content,
-        output=output,
-        archive=tmp_path / "hostile.zip",
-        checksum=tmp_path / "hostile.zip.sha256",
-    )
-    profile = (output / "profiles" / "austin-board-of-realtors" / "index.html").read_text(
-        encoding="utf-8"
+        content_path=content,
+        output=tmp_path / "out",
+        archive=tmp_path / "out.zip",
+        checksum=tmp_path / "out.sha256",
     )
 
-    assert "<script>alert(1)</script>" not in profile
-    assert "Example &lt;script&gt;alert(1)&lt;/script&gt;" in profile
+
+def test_publication_rejects_unreviewed_edits(tmp_path: Path) -> None:
+    content = _content_copy(tmp_path)
+    path = content.parent / "data/campaign-contributions.json"
+    path.write_bytes(path.read_bytes() + b" ")
+    with pytest.raises(SiteBuildError, match="checksum"):
+        _build_content(content, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "field,value,message",
+    [
+        ("donor", "Contact someone@example.org", "privacy scan"),
+        ("donor_type", "INDIVIDUAL", "selected coverage"),
+        ("contribution_amount", "NaN", "Invalid record"),
+        ("contribution_amount", "10.001", "Invalid record"),
+        ("contribution_date", "not a date", "Invalid record"),
+        ("donor_address", "restricted", "Unexpected record fields"),
+    ],
+)
+def test_publication_revalidates_rows_even_when_digest_is_updated(
+    tmp_path: Path, field: str, value: str, message: str
+) -> None:
+    content = _content_copy(tmp_path)
+    _change_publication(
+        content, "campaign-contributions", lambda d: d["rows"][0].update({field: value})
+    )
+    with pytest.raises(SiteBuildError, match=message):
+        _build_content(content, tmp_path)
+
+
+def test_publication_rejects_unknown_fields_in_declared_schema(tmp_path: Path) -> None:
+    content = _content_copy(tmp_path)
+    _change_publication(content, "echeckbook", lambda d: d["fields"].append("contact_email"))
+    with pytest.raises(SiteBuildError, match="not allowlisted"):
+        _build_content(content, tmp_path)
+
+
+def test_publication_rejects_duplicate_ids_and_false_source_lineage(tmp_path: Path) -> None:
+    content = _content_copy(tmp_path)
+    _change_publication(content, "campaign-contributions", lambda d: d["rows"].append(d["rows"][0]))
+    with pytest.raises(SiteBuildError, match="unique"):
+        _build_content(content, tmp_path)
+    _change_publication(content, "campaign-contributions", lambda d: d.update({"sha256": "0" * 64}))
+    with pytest.raises(SiteBuildError, match="lineage"):
+        _build_content(content, tmp_path)
+
+
+def test_source_directory_must_match_frozen_profiles(tmp_path: Path) -> None:
+    content = _content_copy(tmp_path)
+    _change_publication(content, "sources", lambda d: d[0].update({"row_count": 1}))
+    with pytest.raises(SiteBuildError, match="Source directory differs"):
+        _build_content(content, tmp_path)

@@ -148,3 +148,6 @@ The development toolchain and proposed AWS/release lifecycle are documented in
 [`docs/engineering/delivery.md`](docs/engineering/delivery.md).
 The AWS account and immutable GitHub OIDC bootstrap is in
 [`docs/engineering/aws-bootstrap.md`](docs/engineering/aws-bootstrap.md).
+
+The local/S3 snapshot publication and rollback commands are documented in
+[`docs/engineering/snapshot-publication.md`](docs/engineering/snapshot-publication.md).

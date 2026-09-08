@@ -39,7 +39,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
-      - run: uv run --locked ty check
+      - run: uv run --locked --extra s3 ty check
 
   tests:
     name: pytest
@@ -50,7 +50,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
-      - run: uv run --locked pytest
+      - run: uv run --locked --extra s3 pytest
 
   frontend-tests:
     name: Frontend logic
